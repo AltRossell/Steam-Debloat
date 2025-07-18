@@ -12,7 +12,7 @@ $Debug = "off"
 $script:config = @{
     Title               = "Steam Downgrade"
     GitHub              = "Github.com/AltRossell/Steam-Debloat"
-    Version            = "v2.07"
+    Version            = "v3.10"
     Color              = @{Info = "White"; Success = "Magenta"; Warning = "DarkYellow"; Error = "DarkRed"; Debug = "Blue" }
     ErrorPage          = "https://github.com/AltRossell/Steam-Debloat/issues"
     Urls               = @{
@@ -306,6 +306,28 @@ function Remove-TempFiles {
     Write-DebugLog "Removed temporary files" -Level Info
 }
 
+function Remove-SteamFromStartup {
+    try {
+        $registryPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run"
+        
+        # Comprobar si Steam está en el registro de inicio
+        $steamEntry = Get-ItemProperty -Path $registryPath -Name "Steam" -ErrorAction SilentlyContinue
+        
+        if ($steamEntry) {
+            Remove-ItemProperty -Path $registryPath -Name "Steam" -Force
+            Write-DebugLog "Steam removed from startup registry successfully" -Level Success
+            return $true
+        } else {
+            Write-DebugLog "Steam entry not found in startup registry" -Level Warning
+            return $false
+        }
+    }
+    catch {
+        Write-DebugLog "Failed to remove Steam from startup: $_" -Level Error
+        return $false
+    }
+}
+
 function Start-SteamDowngrade {
     param (
         [string]$SelectedMode
@@ -394,9 +416,35 @@ function Start-SteamDowngrade {
             Remove-TempFiles
         }
 
+        if (-not $NoInteraction) {
+            Write-Host ""
+            do {
+                $choice = Read-Host "Do you want to remove Steam from startup? (Y/N)"
+                switch ($choice.ToUpper()) {
+                    "Y" { 
+                        $removeResult = Remove-SteamFromStartup
+                        if ($removeResult) {
+                            Write-DebugLog "Steam has been removed from Windows startup." -Level Success
+                        }
+                        break 
+                    }
+                    "N" { 
+                        Write-DebugLog "Steam startup configuration left unchanged." -Level Info
+                        break 
+                    }
+                    default { 
+                        Write-Host "Invalid choice. Please enter Y or N." -ForegroundColor Red
+                        continue
+                    }
+                }
+                break
+            } while ($true)
+        }
+
         Write-DebugLog "Steam Optimization process completed successfully!" -Level Success
         Write-DebugLog "Steam has been updated and configured for optimal performance." -Level Success
         Write-DebugLog "You can contribute to improve the repository at: $($script:config.GitHub)" -Level Success
+        
         if (-not $NoInteraction) { Read-Host "Press Enter to exit" }
     }
     catch {
