@@ -309,8 +309,6 @@ function Remove-TempFiles {
 function Remove-SteamFromStartup {
     try {
         $registryPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run"
-        
-        # Comprobar si Steam está en el registro de inicio
         $steamEntry = Get-ItemProperty -Path $registryPath -Name "Steam" -ErrorAction SilentlyContinue
         
         if ($steamEntry) {
