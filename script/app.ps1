@@ -10,7 +10,7 @@ $host.UI.RawUI.BackgroundColor = "Black"
 $Debug = "off"
 
 $script:config = @{
-    Title               = "Steam Downgrade"
+    Title               = "Steam Debloat"
     GitHub              = "Github.com/AltRossell/Steam-Debloat"
     Version            = "v3.10"
     Color              = @{Info = "White"; Success = "Magenta"; Warning = "DarkYellow"; Error = "DarkRed"; Debug = "Blue" }
@@ -326,7 +326,7 @@ function Remove-SteamFromStartup {
     }
 }
 
-function Start-SteamDowngrade {
+function Start-SteamDebloat {
     param (
         [string]$SelectedMode
     )
@@ -507,4 +507,4 @@ if (-not $SkipIntro -and -not $NoInteraction) {
     Write-DebugLog "Selected mode: $Mode" -Level Info
 }
 
-Start-SteamDowngrade -SelectedMode $Mode
+Start-SteamDebloat -SelectedMode $Mode
