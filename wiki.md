@@ -171,16 +171,6 @@ Yes, you can run the script again and select a different mode. We recommend rest
 
 ## Advanced Usage
 
-### Command Line Arguments **No Support**
-
-```powershell
--Mode       : Select operation mode (Normal/Lite/TEST/TEST-Lite/TEST-Version)
--SkipIntro  : Skip welcome message
--NoInteraction: Run without user prompts
--CustomVersion: Specify custom Steam version URL
--LogLevel   : Set logging detail level
-```
-
 ### Log File Location
 
 - Default: %TEMP%\Steam-Debloat.log
