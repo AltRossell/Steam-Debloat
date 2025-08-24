@@ -1,0 +1,218 @@
+{
+  "meta": {
+    "title": "Steam Debloat - 优化你的 Steam 体验",
+    "description": "通过特定版本的客户端优化你的 Steam 体验，获得更好的性能和兼容性。",
+    "ogDescription": "使用特定版本的 Steam 客户端，以获得最佳性能和兼容性。"
+  },
+  "nav": {
+    "version": "v5.02",
+    "home": "首页",
+    "downloads": "下载",
+    "features": "功能",
+    "docs": "文档",
+    "faq": "常见问题",
+    "github": "GitHub"
+  },
+  "hero": {
+    "badge": "新版本 v5.02 已发布",
+    "title": "优化你的",
+    "titleGradient": "Steam 体验",
+    "description": "使用特定版本的 Steam 客户端，获得<span class=\"text-steam-accent font-medium\">更高性能</span>、<span class=\"text-steam-accent font-medium\">更强兼容性</span>和<span class=\"text-steam-accent font-medium\">更佳的游戏体验</span>。",
+    "downloadNow": "立即下载",
+    "viewCode": "查看代码",
+    "stats": {
+      "downloads": "下载量",
+      "rating": "评分",
+      "openSource": "开源"
+    }
+  },
+  "downloads": {
+    "title": "选择你的",
+    "titleGradient": "版本",
+    "description": "选择最适合你需求和系统要求的配置",
+    "versions": {
+      "steam2025": {
+        "title": "Steam 2025",
+        "description": "最新版本，包含所有现代功能和性能改进。",
+        "features": [
+          "最新版本",
+          "最佳性能",
+          "新功能"
+        ]
+      },
+      "steam2022": {
+        "title": "Steam 2022",
+        "description": "2022 年 12 月的稳定版，适合最大兼容性。",
+        "features": [
+          "非常稳定",
+          "高度兼容",
+          "经过广泛测试"
+        ]
+      },
+      "steamLite": {
+        "title": "Steam Lite 2022",
+        "description": "超轻量版本，仅包含必要功能，速度更快，资源占用最小。",
+        "features": [
+          "超轻量",
+          "即时启动",
+          "最低资源消耗"
+        ]
+      },
+      "steamDual": {
+        "title": "Steam 双版本",
+        "description": "同时安装 2022 和 2025 两个版本，按需切换。",
+        "features": [
+          "最大灵活性",
+          "实验性",
+          "适合专家"
+        ]
+      }
+    },
+    "selectVersion": "请选择一个版本",
+    "downloadSelected": "下载 {version}",
+    "versionInfo": "版本 v5.02 • 需要管理员权限",
+    "security": {
+      "safe": "100% 安全",
+      "verified": "已验证代码",
+      "noMalware": "无恶意软件"
+    }
+  },
+  "features": {
+    "title": "为什么选择",
+    "titleGradient": "Steam Debloat",
+    "description": "发现优化 Steam 客户端的所有好处",
+    "list": [
+      {
+        "emoji": "⚙️",
+        "title": "自动优化",
+        "description": "智能设置会根据你的系统配置自动优化 Steam。"
+      },
+      {
+        "emoji": "⚡",
+        "title": "快速安装",
+        "description": "自动化流程，检测你的系统并立即应用最佳设置。"
+      },
+      {
+        "emoji": "🛡️",
+        "title": "100% 安全",
+        "description": "社区验证的开源代码。没有恶意修改或安全风险。"
+      },
+      {
+        "emoji": "📈",
+        "title": "性能提升",
+        "description": "加载速度提高至 250%，内存占用减少 40%，体验更流畅。"
+      },
+      {
+        "emoji": "🔄",
+        "title": "完全可逆",
+        "description": "所有更改都可以完全恢复。你可以随时回到原始版本。"
+      },
+      {
+        "emoji": "🎮",
+        "title": "游戏优化",
+        "description": "针对游戏的专用设置，减少延迟并提升整体游戏体验。"
+      }
+    ],
+    "performance": {
+      "title": "性能对比",
+      "original": "原版 Steam",
+      "optimized": "Steam Debloat",
+      "improvement": "改进",
+      "loadingTime": "加载时间",
+      "memoryUsage": "内存使用",
+      "speedBoost": "速度提升",
+      "memorySaved": "节省内存"
+    }
+  },
+  "docs": {
+    "title": "文档",
+    "description": "开始之前你需要了解的一切",
+    "systemRequirements": {
+      "title": "系统要求",
+      "list": [
+        "Windows 10/11 (64 位)",
+        "PowerShell 5.0 或更高版本",
+        "管理员权限",
+        "网络连接"
+      ]
+    },
+    "installation": {
+      "title": "安装指南",
+      "steps": [
+        {
+          "title": "下载脚本",
+          "description": "在上方下载部分选择你喜欢的版本"
+        },
+        {
+          "title": "以管理员身份运行",
+          "description": "右键点击 → \"以管理员身份运行\" 下载的文件"
+        },
+        {
+          "title": "自动化流程",
+          "description": "脚本会自动检测并优化你的 Steam 安装"
+        },
+        {
+          "title": "准备就绪！",
+          "description": "享受优化后的 Steam 体验"
+        }
+      ]
+    },
+    "codePreview": {
+      "title": "代码预览",
+      "comments": [
+        "# Steam Debloat v5.02",
+        "\"正在检测 Steam 安装...\"",
+        "\"找到 Steam，正在应用优化...\""
+      ]
+    }
+  },
+  "faq": {
+    "title": "常见问题",
+    "titleGradient": "解答",
+    "description": "我们回答关于 Steam Debloat 的常见问题",
+    "items": [
+      {
+        "question": "Steam Debloat 使用安全吗？",
+        "answer": "当然安全。Steam Debloat 是一个开源项目，你可以在 GitHub 上查看。它不会恶意修改系统文件，只会应用官方的 Steam 设置来优化性能。所有更改都可以完全恢复。"
+      },
+      {
+        "question": "不同版本之间有什么区别？",
+        "answer": "每个版本都针对不同的需求进行优化：",
+        "versions": [
+          "Steam 2025：最新版本，包含所有现代功能和优化",
+          "Steam 2022：稳定且经过测试，适合最大兼容性",
+          "Steam Lite：超轻量版本，适合资源有限的系统",
+          "Steam 双版本：允许根据需要在不同版本间切换"
+        ]
+      },
+      {
+        "question": "我可以恢复到原版 Steam 吗？",
+        "answer": "可以，所有更改都是完全可逆的。脚本会自动创建备份，你可以通过再次运行脚本并选择恢复选项来还原原始版本。"
+      },
+      {
+        "question": "这会影响我的游戏或存档数据吗？",
+        "answer": "不会，Steam Debloat 只会修改 Steam 客户端本身。它不会影响你的游戏、存档、成就或库中的任何内容。你的游戏会正常运行，只是性能更好。"
+      },
+      {
+        "question": "我需要技术知识才能使用吗？",
+        "answer": "完全不需要。Steam Debloat 设计为人人可用。只需下载文件，以管理员身份运行，并按照屏幕上的指示操作。整个过程完全自动化。"
+      }
+    ]
+  },
+  "footer": {
+    "title": "Steam Debloat",
+    "subtitle": "开源项目",
+    "links": {
+      "github": "GitHub",
+      "issues": "问题",
+      "releases": "版本",
+      "documentation": "文档"
+    },
+    "copyright": "© 2024-2025 Steam Debloat • 开源项目 • 与 Valve 公司无关",
+    "madeWith": "为游戏社区 ❤️ 而制作"
+  },
+  "ui": {
+    "downloading": "正在下载...",
+    "selectFirst": "请先选择一个版本"
+  }
+}
