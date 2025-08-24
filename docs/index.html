@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="https://raw.githubusercontent.com/AltRossell/Steam-Debloat/main/assets/logo.png" type="image/png">
-    <title>Steam Debloat</title>
-    <meta name="description" content="Optimize your Steam experience with specific client versions for better performance and compatibility.">
+    <title id="page-title">Steam Debloat</title>
+    <meta name="description" id="page-description" content="Optimize your Steam experience with specific client versions for better performance and compatibility.">
     
-    <meta property="og:title" content="Steam Debloat - Optimize your Steam experience">
-    <meta property="og:description" content="Use specific versions of the Steam client for best performance and compatibility.">
+    <meta property="og:title" id="og-title" content="Steam Debloat - Optimize your Steam experience">
+    <meta property="og:description" id="og-description" content="Use specific versions of the Steam client for best performance and compatibility.">
     <meta property="og:type" content="website">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -192,9 +192,117 @@
         .nav-link-apple:hover {
             color: #007AFF;
         }
+
+        .language-selector {
+            position: relative;
+        }
+
+        .language-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 8px;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            min-width: 140px;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+        }
+
+        .language-dropdown.active {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+        }
+
+        .language-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background-color 0.2s ease;
+            cursor: pointer;
+        }
+
+        .language-option:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .language-option.active {
+            background: rgba(0, 122, 255, 0.2);
+            color: #66C0F4;
+        }
+
+        .language-flag {
+            width: 20px;
+            height: 15px;
+            border-radius: 2px;
+            font-size: 14px;
+            line-height: 15px;
+            text-align: center;
+        }
+
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 60;
+            transform: translateY(-100%);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .mobile-menu.active {
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body class="bg-black text-white font-apple overflow-x-hidden">
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="mobile-menu md:hidden">
+        <div class="flex flex-col h-full">
+            <div class="flex justify-between items-center p-6 border-b border-white/10">
+                <h2 class="text-xl font-semibold">Menu</h2>
+                <button id="mobile-menu-close" class="w-10 h-10 rounded-full glass-apple flex items-center justify-center">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <nav class="flex-1 p-6">
+                <div class="space-y-6">
+                    <a href="#home" class="block text-xl font-medium" data-i18n="nav.home">Home</a>
+                    <a href="#downloads" class="block text-xl font-medium" data-i18n="nav.downloads">Downloads</a>
+                    <a href="#features" class="block text-xl font-medium" data-i18n="nav.features">Features</a>
+                    <a href="#docs" class="block text-xl font-medium" data-i18n="nav.docs">Documentation</a>
+                    <a href="#faq" class="block text-xl font-medium" data-i18n="nav.faq">FAQ</a>
+                    <a href="https://github.com/AltRossell/Steam-Debloat" target="_blank" class="block text-xl font-medium" data-i18n="nav.github">GitHub</a>
+                </div>
+                
+                <!-- Mobile Language Selector -->
+                <div class="mt-8 pt-6 border-t border-white/10">
+                    <h3 class="text-sm font-medium text-white/60 mb-4">Language / Idioma</h3>
+                    <div id="mobile-language-options" class="space-y-2">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
 
     <!-- Navigation -->
     <header class="fixed top-0 left-0 right-0 z-50 glass-apple">
@@ -210,21 +318,37 @@
                     </div>
                     <div>
                         <h1 class="text-lg font-semibold">Steam Debloat</h1>
-                        <p class="text-xs text-white/50">v5.02</p>
+                        <p class="text-xs text-white/50" data-i18n="nav.version">v5.02</p>
                     </div>
                 </div>
                 
                 <div class="hidden md:flex items-center space-x-8">
-                    <a href="#home" class="nav-link-apple text-sm font-medium text-white/80 hover:text-white">Home</a>
-                    <a href="#downloads" class="nav-link-apple text-sm font-medium text-white/80 hover:text-white">Downloads</a>
-                    <a href="#features" class="nav-link-apple text-sm font-medium text-white/80 hover:text-white">Features</a>
-                    <a href="#docs" class="nav-link-apple text-sm font-medium text-white/80 hover:text-white">Documentation</a>
-                    <a href="#faq" class="nav-link-apple text-sm font-medium text-white/80 hover:text-white">FAQ</a>
+                    <a href="#home" class="nav-link-apple text-sm font-medium text-white/80 hover:text-white" data-i18n="nav.home">Home</a>
+                    <a href="#downloads" class="nav-link-apple text-sm font-medium text-white/80 hover:text-white" data-i18n="nav.downloads">Downloads</a>
+                    <a href="#features" class="nav-link-apple text-sm font-medium text-white/80 hover:text-white" data-i18n="nav.features">Features</a>
+                    <a href="#docs" class="nav-link-apple text-sm font-medium text-white/80 hover:text-white" data-i18n="nav.docs">Documentation</a>
+                    <a href="#faq" class="nav-link-apple text-sm font-medium text-white/80 hover:text-white" data-i18n="nav.faq">FAQ</a>
+                    
+                    <!-- Language Selector -->
+                    <div class="language-selector">
+                        <button id="language-btn" class="btn-apple-secondary px-3 py-2 rounded-full text-sm font-medium flex items-center gap-2">
+                            <span class="language-flag">🇺🇸</span>
+                            <span>EN</span>
+                            <svg class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+                        <div id="language-dropdown" class="language-dropdown">
+                            <!-- Populated by JavaScript -->
+                        </div>
+                    </div>
+                    
                     <a 
                         href="https://github.com/AltRossell/Steam-Debloat" 
                         target="_blank" 
                         rel="noopener noreferrer"
                         class="btn-apple-secondary px-4 py-2 rounded-full text-sm font-medium"
+                        data-i18n="nav.github"
                     >
                         GitHub
                     </a>
@@ -246,26 +370,27 @@
                 <div class="space-y-8">
                     <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-apple border border-steam-accent/30">
                         <div class="w-2 h-2 bg-steam-accent rounded-full animate-pulse"></div>
-                        <span class="text-sm font-medium text-steam-accent">New version v5.02 available</span>
+                        <span class="text-sm font-medium text-steam-accent" data-i18n="hero.badge">New version v5.02 available</span>
                     </div>
                     
                     <h1 class="text-5xl md:text-7xl lg:text-8xl font-black leading-tight tracking-tight">
-                        <span class="block">Optimize your</span>
-                        <span class="block text-gradient-apple">Steam experience</span>
+                        <span class="block" data-i18n="hero.title">Optimize your</span>
+                        <span class="block text-gradient-apple" data-i18n="hero.titleGradient">Steam experience</span>
                     </h1>
                     
-                    <p class="text-xl md:text-2xl text-white/70 leading-relaxed max-w-4xl mx-auto font-light">
+                    <div class="text-xl md:text-2xl text-white/70 leading-relaxed max-w-4xl mx-auto font-light" data-i18n-html="hero.description">
                         Use specific versions of the Steam client for 
                         <span class="text-steam-accent font-medium">better performance</span>, 
                         <span class="text-steam-accent font-medium">enhanced compatibility</span>, and an 
                         <span class="text-steam-accent font-medium">optimized gaming experience</span>.
-                    </p>
+                    </div>
                 </div>
                 
                 <div class="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
                     <button 
                         onclick="scrollToSection('downloads')"
                         class="btn-apple px-8 py-4 rounded-full font-semibold text-lg text-white flex items-center justify-center gap-3"
+                        data-i18n="hero.downloadNow"
                     >
                         Download Now
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -278,6 +403,7 @@
                         target="_blank" 
                         rel="noopener noreferrer"
                         class="btn-apple-secondary px-8 py-4 rounded-full font-semibold text-lg text-white flex items-center justify-center gap-3"
+                        data-i18n="hero.viewCode"
                     >
                         View Code
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -289,15 +415,15 @@
                 <div class="flex flex-wrap justify-center gap-16 pt-16">
                     <div class="text-center">
                         <div class="text-4xl font-thin text-steam-accent counter" data-target="7500">0</div>
-                        <div class="text-sm text-white/50 font-medium">Downloads</div>
+                        <div class="text-sm text-white/50 font-medium" data-i18n="hero.stats.downloads">Downloads</div>
                     </div>
                     <div class="text-center">
                         <div class="text-4xl font-thin text-steam-accent">4.9★</div>
-                        <div class="text-sm text-white/50 font-medium">Rating</div>
+                        <div class="text-sm text-white/50 font-medium" data-i18n="hero.stats.rating">Rating</div>
                     </div>
                     <div class="text-center">
                         <div class="text-4xl font-thin text-steam-accent">100%</div>
-                        <div class="text-sm text-white/50 font-medium">Open Source</div>
+                        <div class="text-sm text-white/50 font-medium" data-i18n="hero.stats.openSource">Open Source</div>
                     </div>
                 </div>
             </div>
@@ -309,9 +435,9 @@
         <div class="max-w-7xl mx-auto">
             <div class="text-center mb-20 fade-on-scroll">
                 <h2 class="text-5xl md:text-6xl font-black mb-8 tracking-tight">
-                    Choose your <span class="text-gradient-apple">version</span>
+                    <span data-i18n="downloads.title">Choose your</span> <span class="text-gradient-apple" data-i18n="downloads.titleGradient">version</span>
                 </h2>
-                <p class="text-xl text-white/60 max-w-3xl mx-auto font-light leading-relaxed">
+                <p class="text-xl text-white/60 max-w-3xl mx-auto font-light leading-relaxed" data-i18n="downloads.description">
                     Select the configuration that best suits your needs and system requirements
                 </p>
             </div>
@@ -323,10 +449,10 @@
                             🚀
                         </div>
                         <div>
-                            <h3 class="text-2xl font-bold mb-3">Steam 2025</h3>
-                            <p class="text-sm text-white/60 mb-6 font-light leading-relaxed">Latest version with all modern features and performance improvements.</p>
+                            <h3 class="text-2xl font-bold mb-3" data-i18n="downloads.versions.steam2025.title">Steam 2025</h3>
+                            <p class="text-sm text-white/60 mb-6 font-light leading-relaxed" data-i18n="downloads.versions.steam2025.description">Latest version with all modern features and performance improvements.</p>
                         </div>
-                        <div class="space-y-3 text-xs">
+                        <div class="space-y-3 text-xs" data-version-features="steam2025">
                             <div class="flex items-center gap-3 justify-center">
                                 <div class="w-1.5 h-1.5 bg-green-400 rounded-full"></div>
                                 <span class="text-white/70 font-medium">Latest version</span>
@@ -349,10 +475,10 @@
                             ⚡
                         </div>
                         <div>
-                            <h3 class="text-2xl font-bold mb-3">Steam 2022</h3>
-                            <p class="text-sm text-white/60 mb-6 font-light leading-relaxed">December 2022 stable release, perfect for maximum compatibility.</p>
+                            <h3 class="text-2xl font-bold mb-3" data-i18n="downloads.versions.steam2022.title">Steam 2022</h3>
+                            <p class="text-sm text-white/60 mb-6 font-light leading-relaxed" data-i18n="downloads.versions.steam2022.description">December 2022 stable release, perfect for maximum compatibility.</p>
                         </div>
-                        <div class="space-y-3 text-xs">
+                        <div class="space-y-3 text-xs" data-version-features="steam2022">
                             <div class="flex items-center gap-3 justify-center">
                                 <div class="w-1.5 h-1.5 bg-blue-400 rounded-full"></div>
                                 <span class="text-white/70 font-medium">Very stable</span>
@@ -375,10 +501,10 @@
                             ⭐
                         </div>
                         <div>
-                            <h3 class="text-2xl font-bold mb-3">Steam Lite 2022</h3>
-                            <p class="text-sm text-white/60 mb-6 font-light leading-relaxed">Ultra-lightweight version with essentials for maximum speed and minimum resource usage.</p>
+                            <h3 class="text-2xl font-bold mb-3" data-i18n="downloads.versions.steamLite.title">Steam Lite 2022</h3>
+                            <p class="text-sm text-white/60 mb-6 font-light leading-relaxed" data-i18n="downloads.versions.steamLite.description">Ultra-lightweight version with essentials for maximum speed and minimum resource usage.</p>
                         </div>
-                        <div class="space-y-3 text-xs">
+                        <div class="space-y-3 text-xs" data-version-features="steamLite">
                             <div class="flex items-center gap-3 justify-center">
                                 <div class="w-1.5 h-1.5 bg-yellow-400 rounded-full"></div>
                                 <span class="text-white/70 font-medium">Ultra lightweight</span>
@@ -398,13 +524,13 @@
                 <div class="glass-apple mode-card p-8 rounded-3xl fade-on-scroll" onclick="selectMode(this, 'NormalBoth2022-2025')">
                     <div class="text-center space-y-6">
                         <div class="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-4xl">
-                            🔄
+                            🔥
                         </div>
                         <div>
-                            <h3 class="text-2xl font-bold mb-3">Steam Dual</h3>
-                            <p class="text-sm text-white/60 mb-6 font-light leading-relaxed">Install both versions (2022 and 2025) to switch between them as needed.</p>
+                            <h3 class="text-2xl font-bold mb-3" data-i18n="downloads.versions.steamDual.title">Steam Dual</h3>
+                            <p class="text-sm text-white/60 mb-6 font-light leading-relaxed" data-i18n="downloads.versions.steamDual.description">Install both versions (2022 and 2025) to switch between them as needed.</p>
                         </div>
-                        <div class="space-y-3 text-xs">
+                        <div class="space-y-3 text-xs" data-version-features="steamDual">
                             <div class="flex items-center gap-3 justify-center">
                                 <div class="w-1.5 h-1.5 bg-purple-400 rounded-full"></div>
                                 <span class="text-white/70 font-medium">Maximum flexibility</span>
@@ -431,31 +557,25 @@
                            disabled:opacity-40 disabled:cursor-not-allowed"
                     disabled
                 >
-                    <span id="downloadText">Select a version</span>
+                    <span id="downloadText" data-i18n="downloads.selectVersion">Select a version</span>
                 </button>
 
                 <div class="mt-8 space-y-3">
-                    <p class="text-white/40 text-sm font-light">
+                    <p class="text-white/40 text-sm font-light" data-i18n="downloads.versionInfo">
                         Version <span class="font-medium text-white/60">v5.02</span> • Requires administrator permissions
                     </p>
                     <div class="flex items-center justify-center gap-8 text-xs text-white/30">
                         <span class="flex items-center gap-2">
                             <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
-                            </svg>
-                            100% Safe
-                        </span>
-                        <span class="flex items-center gap-2">
-                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
-                            Verified Code
+                            <span data-i18n="downloads.security.verified">Verified Code</span>
                         </span>
                         <span class="flex items-center gap-2">
                             <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                             </svg>
-                            No Malware
+                            <span data-i18n="downloads.security.noMalware">No Malware</span>
                         </span>
                     </div>
                 </div>
@@ -468,79 +588,33 @@
         <div class="max-w-7xl mx-auto">
             <div class="text-center mb-20 fade-on-scroll">
                 <h2 class="text-5xl md:text-6xl font-black mb-8 tracking-tight">
-                    Why <span class="text-gradient-apple">Steam Debloat</span>?
+                    <span data-i18n="features.title">Why</span> <span class="text-gradient-apple" data-i18n="features.titleGradient">Steam Debloat</span>?
                 </h2>
-                <p class="text-xl text-white/60 max-w-3xl mx-auto font-light">
+                <p class="text-xl text-white/60 max-w-3xl mx-auto font-light" data-i18n="features.description">
                     Discover all the benefits of optimizing your Steam client
                 </p>
             </div>
             
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
-                <div class="glass-apple card-apple p-10 rounded-3xl text-center fade-on-scroll">
-                    <div class="w-16 h-16 mx-auto mb-8 rounded-2xl bg-gradient-to-br from-green-400 to-steam-accent flex items-center justify-center text-3xl">
-                        ⚙️
-                    </div>
-                    <h3 class="text-xl font-bold mb-4">Automatic Optimization</h3>
-                    <p class="text-white/60 leading-relaxed font-light">Smart settings that automatically optimize Steam for your specific system configuration.</p>
-                </div>
-                
-                <div class="glass-apple card-apple p-10 rounded-3xl text-center fade-on-scroll">
-                    <div class="w-16 h-16 mx-auto mb-8 rounded-2xl bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center text-3xl">
-                        ⚡
-                    </div>
-                    <h3 class="text-xl font-bold mb-4">Express Installation</h3>
-                    <p class="text-white/60 leading-relaxed font-light">Automated process that detects your system and applies the best settings instantly.</p>
-                </div>
-                
-                <div class="glass-apple card-apple p-10 rounded-3xl text-center fade-on-scroll">
-                    <div class="w-16 h-16 mx-auto mb-8 rounded-2xl bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-3xl">
-                        🛡️
-                    </div>
-                    <h3 class="text-xl font-bold mb-4">100% Secure</h3>
-                    <p class="text-white/60 leading-relaxed font-light">Open source code verified by the community. No malicious modifications or security risks.</p>
-                </div>
-
-                <div class="glass-apple card-apple p-10 rounded-3xl text-center fade-on-scroll">
-                    <div class="w-16 h-16 mx-auto mb-8 rounded-2xl bg-gradient-to-br from-cyan-400 to-steam-accent flex items-center justify-center text-3xl">
-                        📈
-                    </div>
-                    <h3 class="text-xl font-bold mb-4">Performance Boost</h3>
-                    <p class="text-white/60 leading-relaxed font-light">Up to 250% faster loading times and 40% less memory usage for a smooth experience.</p>
-                </div>
-
-                <div class="glass-apple card-apple p-10 rounded-3xl text-center fade-on-scroll">
-                    <div class="w-16 h-16 mx-auto mb-8 rounded-2xl bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-3xl">
-                        🔄
-                    </div>
-                    <h3 class="text-xl font-bold mb-4">Fully Reversible</h3>
-                    <p class="text-white/60 leading-relaxed font-light">All changes are completely reversible. Return to original version whenever you want.</p>
-                </div>
-
-                <div class="glass-apple card-apple p-10 rounded-3xl text-center fade-on-scroll">
-                    <div class="w-16 h-16 mx-auto mb-8 rounded-2xl bg-gradient-to-br from-rose-400 to-pink-500 flex items-center justify-center text-3xl">
-                        🎮
-                    </div>
-                    <h3 class="text-xl font-bold mb-4">Gaming Optimized</h3>
-                    <p class="text-white/60 leading-relaxed font-light">Specific gaming settings that reduce latency and improve overall gaming experience.</p>
-                </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20" id="features-grid">
+                <!-- Features will be populated by JavaScript -->
             </div>
 
             <!-- Performance Comparison -->
             <div class="glass-apple p-12 rounded-3xl fade-on-scroll">
-                <h3 class="text-3xl font-bold text-center mb-12 text-gradient-apple">Performance Comparison</h3>
+                <h3 class="text-3xl font-bold text-center mb-12 text-gradient-apple" data-i18n="features.performance.title">Performance Comparison</h3>
                 <div class="grid md:grid-cols-3 gap-12">
                     <div class="text-center">
-                        <div class="text-3xl font-thin text-red-400 mb-6">Original Steam</div>
+                        <div class="text-3xl font-thin text-red-400 mb-6" data-i18n="features.performance.original">Original Steam</div>
                         <div class="space-y-6">
                             <div class="flex justify-between items-center">
-                                <span class="text-sm font-light">Loading Time</span>
+                                <span class="text-sm font-light" data-i18n="features.performance.loadingTime">Loading Time</span>
                                 <span class="text-red-400 font-medium">15 seconds</span>
                             </div>
                             <div class="w-full bg-white/5 rounded-full h-2">
                                 <div class="bg-red-400 h-2 rounded-full w-1/3"></div>
                             </div>
                             <div class="flex justify-between items-center">
-                                <span class="text-sm font-light">Memory Usage</span>
+                                <span class="text-sm font-light" data-i18n="features.performance.memoryUsage">Memory Usage</span>
                                 <span class="text-red-400 font-medium">850 MB</span>
                             </div>
                             <div class="w-full bg-white/5 rounded-full h-2">
@@ -550,17 +624,17 @@
                     </div>
                     
                     <div class="text-center">
-                        <div class="text-3xl font-thin text-gradient-apple mb-6">Steam Debloat</div>
+                        <div class="text-3xl font-thin text-gradient-apple mb-6" data-i18n="features.performance.optimized">Steam Debloat</div>
                         <div class="space-y-6">
                             <div class="flex justify-between items-center">
-                                <span class="text-sm font-light">Loading Time</span>
+                                <span class="text-sm font-light" data-i18n="features.performance.loadingTime">Loading Time</span>
                                 <span class="text-steam-accent font-medium">4 seconds</span>
                             </div>
                             <div class="w-full bg-white/5 rounded-full h-2">
                                 <div class="bg-gradient-to-r from-steam-accent to-apple-blue h-2 rounded-full w-full"></div>
                             </div>
                             <div class="flex justify-between items-center">
-                                <span class="text-sm font-light">Memory Usage</span>
+                                <span class="text-sm font-light" data-i18n="features.performance.memoryUsage">Memory Usage</span>
                                 <span class="text-steam-accent font-medium">510 MB</span>
                             </div>
                             <div class="w-full bg-white/5 rounded-full h-2">
@@ -570,15 +644,15 @@
                     </div>
                     
                     <div class="text-center">
-                        <div class="text-3xl font-thin text-green-400 mb-6">Improvement</div>
+                        <div class="text-3xl font-thin text-green-400 mb-6" data-i18n="features.performance.improvement">Improvement</div>
                         <div class="space-y-6">
                             <div class="flex justify-between items-center">
-                                <span class="text-sm font-light">Speed Boost</span>
+                                <span class="text-sm font-light" data-i18n="features.performance.speedBoost">Speed Boost</span>
                                 <span class="text-green-400 font-medium">+275%</span>
                             </div>
                             <div class="text-4xl">🚀</div>
                             <div class="flex justify-between items-center">
-                                <span class="text-sm font-light">Memory Saved</span>
+                                <span class="text-sm font-light" data-i18n="features.performance.memorySaved">Memory Saved</span>
                                 <span class="text-green-400 font-medium">-40%</span>
                             </div>
                             <div class="text-4xl">💾</div>
@@ -594,9 +668,9 @@
         <div class="max-w-7xl mx-auto">
             <div class="text-center mb-20 fade-on-scroll">
                 <h2 class="text-5xl md:text-6xl font-black mb-8 tracking-tight">
-                    <span class="text-gradient-apple">Documentation</span>
+                    <span class="text-gradient-apple" data-i18n="docs.title">Documentation</span>
                 </h2>
-                <p class="text-xl text-white/60 max-w-3xl mx-auto font-light">
+                <p class="text-xl text-white/60 max-w-3xl mx-auto font-light" data-i18n="docs.description">
                     Everything you need to know to get started
                 </p>
             </div>
@@ -604,77 +678,19 @@
             <div class="grid lg:grid-cols-2 gap-12 mb-16">
                 <div class="glass-apple p-10 rounded-3xl fade-on-scroll">
                     <h3 class="text-2xl font-bold mb-8 flex items-center gap-3">
-                        <span class="text-3xl">💻</span> System Requirements
+                        <span class="text-3xl">💻</span> <span data-i18n="docs.systemRequirements.title">System Requirements</span>
                     </h3>
-                    <div class="space-y-4">
-                        <div class="flex items-center gap-4 p-4 rounded-2xl bg-white/5">
-                            <div class="w-8 h-8 rounded-full bg-green-400/20 flex items-center justify-center">
-                                <svg class="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                                </svg>
-                            </div>
-                            <span class="text-white/90 font-medium">Windows 10/11 (64-bit)</span>
-                        </div>
-                        <div class="flex items-center gap-4 p-4 rounded-2xl bg-white/5">
-                            <div class="w-8 h-8 rounded-full bg-green-400/20 flex items-center justify-center">
-                                <svg class="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                                </svg>
-                            </div>
-                            <span class="text-white/90 font-medium">PowerShell 5.0 or higher</span>
-                        </div>
-                        <div class="flex items-center gap-4 p-4 rounded-2xl bg-white/5">
-                            <div class="w-8 h-8 rounded-full bg-green-400/20 flex items-center justify-center">
-                                <svg class="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                                </svg>
-                            </div>
-                            <span class="text-white/90 font-medium">Administrator permissions</span>
-                        </div>
-                        <div class="flex items-center gap-4 p-4 rounded-2xl bg-white/5">
-                            <div class="w-8 h-8 rounded-full bg-green-400/20 flex items-center justify-center">
-                                <svg class="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                                </svg>
-                            </div>
-                            <span class="text-white/90 font-medium">Internet connection</span>
-                        </div>
+                    <div class="space-y-4" id="system-requirements">
+                        <!-- Requirements will be populated by JavaScript -->
                     </div>
                 </div>
                 
                 <div class="glass-apple p-10 rounded-3xl fade-on-scroll">
                     <h3 class="text-2xl font-bold mb-8 flex items-center gap-3">
-                        <span class="text-3xl">🚀</span> Installation Guide
+                        <span class="text-3xl">🚀</span> <span data-i18n="docs.installation.title">Installation Guide</span>
                     </h3>
-                    <div class="space-y-8">
-                        <div class="flex items-start gap-6">
-                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-steam-accent to-apple-blue flex items-center justify-center text-sm font-bold flex-shrink-0">1</div>
-                            <div>
-                                <p class="font-semibold text-white/90 mb-2">Download the script</p>
-                                <p class="text-sm text-white/50 font-light">Select your preferred version in the downloads section above</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start gap-6">
-                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-steam-accent to-apple-blue flex items-center justify-center text-sm font-bold flex-shrink-0">2</div>
-                            <div>
-                                <p class="font-semibold text-white/90 mb-2">Run as administrator</p>
-                                <p class="text-sm text-white/50 font-light">Right-click → "Run as administrator" on the downloaded file</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start gap-6">
-                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-steam-accent to-apple-blue flex items-center justify-center text-sm font-bold flex-shrink-0">3</div>
-                            <div>
-                                <p class="font-semibold text-white/90 mb-2">Automatic process</p>
-                                <p class="text-sm text-white/50 font-light">The script automatically detects and optimizes your Steam installation</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start gap-6">
-                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-steam-accent flex items-center justify-center text-sm font-bold flex-shrink-0">✓</div>
-                            <div>
-                                <p class="font-semibold text-white/90 mb-2">Ready to use!</p>
-                                <p class="text-sm text-white/50 font-light">Enjoy your optimized and enhanced Steam experience</p>
-                            </div>
-                        </div>
+                    <div class="space-y-8" id="installation-steps">
+                        <!-- Installation steps will be populated by JavaScript -->
                     </div>
                 </div>
             </div>
@@ -682,7 +698,7 @@
             <!-- Code Preview -->
             <div class="glass-apple p-10 rounded-3xl fade-on-scroll">
                 <h3 class="text-2xl font-bold mb-8 flex items-center gap-3">
-                    <span class="text-3xl">💻</span> Code Preview
+                    <span class="text-3xl">💻</span> <span data-i18n="docs.codePreview.title">Code Preview</span>
                 </h3>
                 <div class="bg-black/60 rounded-2xl p-8 font-mono text-sm overflow-x-auto border border-white/10">
                     <div class="text-green-400 mb-2"># Steam Debloat v5.02</div>
@@ -701,96 +717,15 @@
         <div class="max-w-4xl mx-auto">
             <div class="text-center mb-20 fade-on-scroll">
                 <h2 class="text-5xl md:text-6xl font-black mb-8 tracking-tight">
-                    Frequently Asked <span class="text-gradient-apple">Questions</span>
+                    <span data-i18n="faq.title">Frequently Asked</span> <span class="text-gradient-apple" data-i18n="faq.titleGradient">Questions</span>
                 </h2>
-                <p class="text-xl text-white/60 font-light">
+                <p class="text-xl text-white/60 font-light" data-i18n="faq.description">
                     We answer your most common questions about Steam Debloat
                 </p>
             </div>
             
-            <div class="glass-apple rounded-3xl overflow-hidden fade-on-scroll">
-                <div class="faq-item">
-                    <button class="w-full px-10 py-8 text-left flex items-center justify-between hover:bg-white/5 transition-colors" onclick="toggleFAQ(this)">
-                        <span class="font-semibold text-lg">Is Steam Debloat safe to use?</span>
-                        <svg class="w-6 h-6 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                        </svg>
-                    </button>
-                    <div class="hidden px-10 pb-8">
-                        <p class="text-white/60 leading-relaxed font-light">
-                            Absolutely. Steam Debloat is an open-source project that you can review on GitHub. 
-                            It doesn't maliciously modify system files—it only applies official Steam settings to optimize performance. 
-                            All changes are completely reversible.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="faq-item">
-                    <button class="w-full px-10 py-8 text-left flex items-center justify-between hover:bg-white/5 transition-colors" onclick="toggleFAQ(this)">
-                        <span class="font-semibold text-lg">What are the differences between versions?</span>
-                        <svg class="w-6 h-6 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                        </svg>
-                    </button>
-                    <div class="hidden px-10 pb-8">
-                        <p class="text-white/60 leading-relaxed font-light mb-6">
-                            Each version is optimized for different needs:
-                        </p>
-                        <div class="space-y-4 text-white/60 font-light">
-                            <div><strong class="text-steam-accent font-medium">Steam 2025:</strong> Latest version with all modern features and optimizations</div>
-                            <div><strong class="text-purple-400 font-medium">Steam 2022:</strong> Stable and tested version for maximum compatibility</div>
-                            <div><strong class="text-yellow-400 font-medium">Steam Lite:</strong> Ultra-lightweight version for systems with limited resources</div>
-                            <div><strong class="text-pink-400 font-medium">Steam Dual:</strong> Allows you to switch between versions as needed</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="faq-item">
-                    <button class="w-full px-10 py-8 text-left flex items-center justify-between hover:bg-white/5 transition-colors" onclick="toggleFAQ(this)">
-                        <span class="font-semibold text-lg">Can I revert to the original Steam version?</span>
-                        <svg class="w-6 h-6 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                        </svg>
-                    </button>
-                    <div class="hidden px-10 pb-8">
-                        <p class="text-white/60 leading-relaxed font-light">
-                            Yes, all changes are completely reversible. The script automatically creates backups, 
-                            and you can restore the original version by running the script again and selecting the restore option.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="faq-item">
-                    <button class="w-full px-10 py-8 text-left flex items-center justify-between hover:bg-white/5 transition-colors" onclick="toggleFAQ(this)">
-                        <span class="font-semibold text-lg">Does it affect my games or save data?</span>
-                        <svg class="w-6 h-6 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                        </svg>
-                    </button>
-                    <div class="hidden px-10 pb-8">
-                        <p class="text-white/60 leading-relaxed font-light">
-                            No, Steam Debloat only modifies the Steam client itself. It doesn't affect your games, 
-                            save data, achievements, or any content in your library. All your games will continue 
-                            to work exactly the same, but with improved performance.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="faq-item">
-                    <button class="w-full px-10 py-8 text-left flex items-center justify-between hover:bg-white/5 transition-colors" onclick="toggleFAQ(this)">
-                        <span class="font-semibold text-lg">Do I need technical knowledge to use it?</span>
-                        <svg class="w-6 h-6 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                        </svg>
-                    </button>
-                    <div class="hidden px-10 pb-8">
-                        <p class="text-white/60 leading-relaxed font-light">
-                            Not at all. Steam Debloat is designed to be used by anyone. 
-                            Simply download the file, run it as administrator, and follow the on-screen instructions. 
-                            The entire process is completely automated.
-                        </p>
-                    </div>
-                </div>
+            <div class="glass-apple rounded-3xl overflow-hidden fade-on-scroll" id="faq-container">
+                <!-- FAQ items will be populated by JavaScript -->
             </div>
         </div>
     </section>
@@ -809,28 +744,28 @@
                             />
                         </div>
                         <div>
-                            <h3 class="text-xl font-bold text-gradient-apple">Steam Debloat</h3>
-                            <p class="text-sm text-white/50 font-light">Open source project</p>
+                            <h3 class="text-xl font-bold text-gradient-apple" data-i18n="footer.title">Steam Debloat</h3>
+                            <p class="text-sm text-white/50 font-light" data-i18n="footer.subtitle">Open source project</p>
                         </div>
                     </div>
                     
                     <div class="flex flex-wrap justify-center lg:justify-end gap-8">
                         <a href="https://github.com/AltRossell/Steam-Debloat" target="_blank" rel="noopener noreferrer" 
-                           class="text-white/60 hover:text-white transition-colors font-medium">GitHub</a>
+                           class="text-white/60 hover:text-white transition-colors font-medium" data-i18n="footer.links.github">GitHub</a>
                         <a href="https://github.com/AltRossell/Steam-Debloat/issues" target="_blank" rel="noopener noreferrer" 
-                           class="text-white/60 hover:text-white transition-colors font-medium">Issues</a>
+                           class="text-white/60 hover:text-white transition-colors font-medium" data-i18n="footer.links.issues">Issues</a>
                         <a href="https://github.com/AltRossell/Steam-Debloat/releases" target="_blank" rel="noopener noreferrer" 
-                           class="text-white/60 hover:text-white transition-colors font-medium">Releases</a>
+                           class="text-white/60 hover:text-white transition-colors font-medium" data-i18n="footer.links.releases">Releases</a>
                         <a href="https://github.com/AltRossell/Steam-Debloat/wiki" target="_blank" rel="noopener noreferrer" 
-                           class="text-white/60 hover:text-white transition-colors font-medium">Documentation</a>
+                           class="text-white/60 hover:text-white transition-colors font-medium" data-i18n="footer.links.documentation">Documentation</a>
                     </div>
                 </div>
                 
                 <div class="border-t border-white/10 mt-10 pt-8 text-center">
-                    <p class="text-white/40 text-sm font-light">
+                    <p class="text-white/40 text-sm font-light" data-i18n="footer.copyright">
                         © 2024-2025 Steam Debloat • Open source project • Not affiliated with Valve Corporation
                     </p>
-                    <p class="text-white/30 text-xs mt-2 font-light">
+                    <p class="text-white/30 text-xs mt-2 font-light" data-i18n="footer.madeWith">
                         Made with ❤️ for the gaming community
                     </p>
                 </div>
@@ -840,18 +775,399 @@
 
 <script>
     let selectedMode = null;
+    let currentLang = 'en';
+    let translations = {};
+
+    const languageConfig = {
+        en: { flag: '🇺🇸', name: 'English', code: 'EN' },
+        es: { flag: '🇪🇸', name: 'Español', code: 'ES' },
+        pt: { flag: '🇧🇷', name: 'Português', code: 'PT' },
+        fr: { flag: '🇫🇷', name: 'Français', code: 'FR' },
+        de: { flag: '🇩🇪', name: 'Deutsch', code: 'DE' }
+    };
+
+    function detectBrowserLanguage() {
+        const browserLang = navigator.language.slice(0, 2).toLowerCase();
+        return languageConfig[browserLang] ? browserLang : 'en';
+    }
+
+    function initializeLanguage() {
+        // Priority: URL param > localStorage > browser language > default (en)
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlLang = urlParams.get('lang');
+        const savedLang = localStorage.getItem('preferred-language');
+        const browserLang = detectBrowserLanguage();
+        
+        let initialLang = 'en';
+        if (urlLang && languageConfig[urlLang]) {
+            initialLang = urlLang;
+        } else if (savedLang && languageConfig[savedLang]) {
+            initialLang = savedLang;
+        } else {
+            initialLang = browserLang;
+        }
+        
+        return initialLang;
+    }
+
+    const embeddedTranslations = {
+        en: {
+            meta: {
+                title: "Steam Debloat - Optimize your Steam experience",
+                description: "Optimize your Steam experience with specific client versions for better performance and compatibility.",
+                ogDescription: "Use specific versions of the Steam client for best performance and compatibility."
+            },
+            nav: {
+                version: "v5.02",
+                home: "Home",
+                downloads: "Downloads",
+                features: "Features",
+                docs: "Documentation",
+                faq: "FAQ",
+                github: "GitHub"
+            },
+            hero: {
+                badge: "New version v5.02 available",
+                title: "Optimize your",
+                titleGradient: "Steam experience",
+                description: 'Use specific versions of the Steam client for <span class="text-steam-accent font-medium">better performance</span>, <span class="text-steam-accent font-medium">enhanced compatibility</span>, and an <span class="text-steam-accent font-medium">optimized gaming experience</span>.',
+                downloadNow: "Download Now",
+                viewCode: "View Code",
+                stats: {
+                    downloads: "Downloads",
+                    rating: "Rating",
+                    openSource: "Open Source"
+                }
+            },
+            downloads: {
+                title: "Choose your",
+                titleGradient: "version",
+                description: "Select the configuration that best suits your needs and system requirements",
+                versions: {
+                    steam2025: {
+                        title: "Steam 2025",
+                        description: "Latest version with all modern features and performance improvements.",
+                        features: ["Latest version", "Maximum performance", "New features"]
+                    },
+                    steam2022: {
+                        title: "Steam 2022",
+                        description: "December 2022 stable release, perfect for maximum compatibility.",
+                        features: ["Very stable", "Wide compatibility", "Extensively tested"]
+                    },
+                    steamLite: {
+                        title: "Steam Lite 2022",
+                        description: "Ultra-lightweight version with essentials for maximum speed and minimum resource usage.",
+                        features: ["Ultra lightweight", "Instant loading", "Minimal consumption"]
+                    },
+                    steamDual: {
+                        title: "Steam Dual",
+                        description: "Install both versions (2022 and 2025) to switch between them as needed.",
+                        features: ["Maximum flexibility", "Experimental", "For experts"]
+                    }
+                },
+                selectVersion: "Select a version",
+                downloadSelected: "Download {version}",
+                versionInfo: "Version v5.02 • Requires administrator permissions",
+                security: {
+                    safe: "100% Safe",
+                    verified: "Verified Code",
+                    noMalware: "No Malware"
+                }
+            },
+            features: {
+                title: "Why",
+                titleGradient: "Steam Debloat",
+                description: "Discover all the benefits of optimizing your Steam client",
+                list: [
+                    {
+                        emoji: "⚙️",
+                        title: "Automatic Optimization",
+                        description: "Smart settings that automatically optimize Steam for your specific system configuration."
+                    },
+                    {
+                        emoji: "⚡",
+                        title: "Express Installation",
+                        description: "Automated process that detects your system and applies the best settings instantly."
+                    },
+                    {
+                        emoji: "🛡️",
+                        title: "100% Secure",
+                        description: "Open source code verified by the community. No malicious modifications or security risks."
+                    },
+                    {
+                        emoji: "📈",
+                        title: "Performance Boost",
+                        description: "Up to 250% faster loading times and 40% less memory usage for a smooth experience."
+                    },
+                    {
+                        emoji: "🔄",
+                        title: "Fully Reversible",
+                        description: "All changes are completely reversible. Return to original version whenever you want."
+                    },
+                    {
+                        emoji: "🎮",
+                        title: "Gaming Optimized",
+                        description: "Specific gaming settings that reduce latency and improve overall gaming experience."
+                    }
+                ],
+                performance: {
+                    title: "Performance Comparison",
+                    original: "Original Steam",
+                    optimized: "Steam Debloat",
+                    improvement: "Improvement",
+                    loadingTime: "Loading Time",
+                    memoryUsage: "Memory Usage",
+                    speedBoost: "Speed Boost",
+                    memorySaved: "Memory Saved"
+                }
+            },
+            docs: {
+                title: "Documentation",
+                description: "Everything you need to know to get started",
+                systemRequirements: {
+                    title: "System Requirements",
+                    list: [
+                        "Windows 10/11 (64-bit)",
+                        "PowerShell 5.0 or higher",
+                        "Administrator permissions",
+                        "Internet connection"
+                    ]
+                },
+                installation: {
+                    title: "Installation Guide",
+                    steps: [
+                        {
+                            title: "Download the script",
+                            description: "Select your preferred version in the downloads section above"
+                        },
+                        {
+                            title: "Run as administrator",
+                            description: 'Right-click → "Run as administrator" on the downloaded file'
+                        },
+                        {
+                            title: "Automatic process",
+                            description: "The script automatically detects and optimizes your Steam installation"
+                        },
+                        {
+                            title: "Ready to use!",
+                            description: "Enjoy your optimized and enhanced Steam experience"
+                        }
+                    ]
+                },
+                codePreview: {
+                    title: "Code Preview"
+                }
+            },
+            faq: {
+                title: "Frequently Asked",
+                titleGradient: "Questions",
+                description: "We answer your most common questions about Steam Debloat",
+                items: [
+                    {
+                        question: "Is Steam Debloat safe to use?",
+                        answer: "Absolutely. Steam Debloat is an open-source project that you can review on GitHub. It doesn't maliciously modify system files—it only applies official Steam settings to optimize performance. All changes are completely reversible."
+                    },
+                    {
+                        question: "What are the differences between versions?",
+                        answer: "Each version is optimized for different needs:",
+                        versions: [
+                            "Steam 2025: Latest version with all modern features and optimizations",
+                            "Steam 2022: Stable and tested version for maximum compatibility",
+                            "Steam Lite: Ultra-lightweight version for systems with limited resources",
+                            "Steam Dual: Allows you to switch between versions as needed"
+                        ]
+                    },
+                    {
+                        question: "Can I revert to the original Steam version?",
+                        answer: "Yes, all changes are completely reversible. The script automatically creates backups, and you can restore the original version by running the script again and selecting the restore option."
+                    },
+                    {
+                        question: "Does it affect my games or save data?",
+                        answer: "No, Steam Debloat only modifies the Steam client itself. It doesn't affect your games, save data, achievements, or any content in your library. All your games will continue to work exactly the same, but with improved performance."
+                    },
+                    {
+                        question: "Do I need technical knowledge to use it?",
+                        answer: "Not at all. Steam Debloat is designed to be used by anyone. Simply download the file, run it as administrator, and follow the on-screen instructions. The entire process is completely automated."
+                    }
+                ]
+            },
+            footer: {
+                title: "Steam Debloat",
+                subtitle: "Open source project",
+                links: {
+                    github: "GitHub",
+                    issues: "Issues",
+                    releases: "Releases",
+                    documentation: "Documentation"
+                },
+                copyright: "© 2024-2025 Steam Debloat • Open source project • Not affiliated with Valve Corporation",
+                madeWith: "Made with ❤️ for the gaming community"
+            },
+            ui: {
+                downloading: "Downloading...",
+                selectFirst: "Select a version first"
+            }
+        }
+    };
+
+    async function loadTranslations(lang) {
+        if (embeddedTranslations[lang]) {
+            return embeddedTranslations[lang];
+        }
+
+        try {
+            const response = await fetch(`./lang/${lang}.json`);
+            if (response.ok) {
+                return await response.json();
+            }
+        } catch (error) {
+            console.warn(`Could not load external translations for ${lang}:`, error);
+        }
+
+        return embeddedTranslations.en;
+    }
+
+    function updateContent(translations) {
+        document.getElementById('page-title').textContent = translations.meta.title;
+        document.getElementById('page-description').setAttribute('content', translations.meta.description);
+        document.getElementById('og-title').setAttribute('content', translations.meta.title);
+        document.getElementById('og-description').setAttribute('content', translations.meta.ogDescription);
+
+        document.querySelectorAll('[data-i18n]').forEach(element => {
+            const key = element.getAttribute('data-i18n');
+            const value = getNestedValue(translations, key);
+            if (value) {
+                element.textContent = value;
+            }
+        });
+
+        document.querySelectorAll('[data-i18n-html]').forEach(element => {
+            const key = element.getAttribute('data-i18n-html');
+            const value = getNestedValue(translations, key);
+            if (value) {
+                element.innerHTML = value;
+            }
+        });
+
+        updateFeatures(translations.features.list);
+        updateVersionFeatures(translations.downloads.versions);
+        updateSystemRequirements(translations.docs.systemRequirements.list);
+        updateInstallationSteps(translations.docs.installation.steps);
+        updateFAQ(translations.faq.items);
+
+        if (selectedMode) {
+            updateDownloadButton(selectedMode, translations);
+        }
+    }
+
+    function getNestedValue(obj, key) {
+        return key.split('.').reduce((o, k) => o && o[k], obj);
+    }
+
+    function initializeLanguageDropdowns() {
+        const desktopDropdown = document.getElementById('language-dropdown');
+        const mobileOptions = document.getElementById('mobile-language-options');
+       
+        desktopDropdown.innerHTML = '';
+        mobileOptions.innerHTML = '';
+        
+        Object.entries(languageConfig).forEach(([lang, config]) => {
+            const desktopOption = document.createElement('div');
+            desktopOption.className = 'language-option';
+            desktopOption.setAttribute('data-lang', lang);
+            desktopOption.innerHTML = `
+                <span class="language-flag">${config.flag}</span>
+                <span>${config.name}</span>
+            `;
+            desktopOption.addEventListener('click', () => switchLanguage(lang));
+            desktopDropdown.appendChild(desktopOption);
+            
+            const mobileOption = document.createElement('button');
+            mobileOption.className = `language-option block w-full text-left px-3 py-2 rounded-lg transition-colors ${
+                lang === currentLang ? 'bg-steam-accent/20 text-steam-accent' : 'hover:bg-white/5'
+            }`;
+            mobileOption.innerHTML = `
+                <span class="language-flag mr-3">${config.flag}</span>
+                <span>${config.name}</span>
+            `;
+            mobileOption.addEventListener('click', () => {
+                switchLanguage(lang);
+                closeMobileMenu();
+            });
+            mobileOptions.appendChild(mobileOption);
+        });
+    }
+
+    async function switchLanguage(lang) {
+        if (lang === currentLang) return;
+
+        try {
+            const newTranslations = await loadTranslations(lang);
+            if (newTranslations) {
+                currentLang = lang;
+                translations = newTranslations;
+                updateContent(translations);
+                updateLanguageButton();
+                
+                localStorage.setItem('preferred-language', lang);
+                
+                document.documentElement.lang = lang;
+                
+                const url = new URL(window.location);
+                url.searchParams.set('lang', lang);
+                window.history.replaceState({}, '', url);
+                
+                document.getElementById('language-dropdown').classList.remove('active');
+                
+                console.log(`Language switched to: ${languageConfig[lang].name}`);
+            }
+        } catch (error) {
+            console.error('Error switching language:', error);
+        }
+    }
+
+    function updateLanguageButton() {
+        const config = languageConfig[currentLang];
+        const button = document.getElementById('language-btn');
+        const flag = button.querySelector('.language-flag');
+        const code = button.querySelector('span:last-of-type');
+        
+        if (flag && code && config) {
+            flag.textContent = config.flag;
+            code.textContent = config.code;
+        }
+        
+        document.querySelectorAll('.language-option').forEach(option => {
+            const lang = option.getAttribute('data-lang');
+            option.classList.toggle('active', lang === currentLang);
+        });
+        
+        document.querySelectorAll('#mobile-language-options .language-option').forEach(option => {
+            const lang = option.getAttribute('data-lang');
+            if (lang === currentLang) {
+                option.className = 'language-option block w-full text-left px-3 py-2 rounded-lg transition-colors bg-steam-accent/20 text-steam-accent';
+            } else {
+                option.className = 'language-option block w-full text-left px-3 py-2 rounded-lg transition-colors hover:bg-white/5';
+            }
+        });
+    }
+
+    function updateDownloadButton(mode, translations) {
+        const downloadBtn = document.getElementById('downloadBtn');
+        const downloadText = document.getElementById('downloadText');
+        const versionName = getModeDisplayName(mode, translations);
+        
+        downloadText.textContent = translations.downloads.downloadSelected.replace('{version}', versionName);
+    }
 
     function selectMode(element, mode) {
-        // Remove selection from all cards
         document.querySelectorAll('.mode-card').forEach(card => {
             card.classList.remove('selected');
         });
 
-        // Add selection to clicked card
         element.classList.add('selected');
         selectedMode = mode;
 
-        // Update download button
         const downloadBtn = document.getElementById('downloadBtn');
         const downloadText = document.getElementById('downloadText');
 
@@ -859,15 +1175,18 @@
         downloadBtn.classList.remove('glass-apple');
         downloadBtn.classList.add('btn-apple');
 
-        downloadText.textContent = `Download ${getModeDisplayName(mode)}`;
+        const versionName = getModeDisplayName(mode, translations);
+        downloadText.textContent = translations.downloads.downloadSelected.replace('{version}', versionName);
     }
 
-    function getModeDisplayName(mode) {
+    function getModeDisplayName(mode, translations = null) {
+        if (!translations) translations = window.translations || embeddedTranslations.en;
+        
         const names = {
-            'Normal2025July': 'Steam 2025',
-            'Normal2022dec': 'Steam 2022',
-            'Lite2022dec': 'Steam Lite',
-            'NormalBoth2022-2025': 'Steam Dual'
+            'Normal2025July': translations.downloads?.versions?.steam2025?.title || 'Steam 2025',
+            'Normal2022dec': translations.downloads?.versions?.steam2022?.title || 'Steam 2022',
+            'Lite2022dec': translations.downloads?.versions?.steamLite?.title || 'Steam Lite',
+            'NormalBoth2022-2025': translations.downloads?.versions?.steamDual?.title || 'Steam Dual'
         };
         return names[mode] || mode;
     }
@@ -881,7 +1200,7 @@
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            Downloading...
+            ${translations.ui?.downloading || 'Downloading...'}
         `;
 
         setTimeout(() => {
@@ -918,6 +1237,138 @@
         }, 1000);
     }
 
+    function updateFeatures(features) {
+        const grid = document.getElementById('features-grid');
+        grid.innerHTML = '';
+
+        features.forEach(feature => {
+            const featureCard = document.createElement('div');
+            featureCard.className = 'glass-apple card-apple p-10 rounded-3xl text-center fade-on-scroll';
+            featureCard.innerHTML = `
+                <div class="w-16 h-16 mx-auto mb-8 rounded-2xl bg-gradient-to-br from-green-400 to-steam-accent flex items-center justify-center text-3xl">
+                    ${feature.emoji}
+                </div>
+                <h3 class="text-xl font-bold mb-4">${feature.title}</h3>
+                <p class="text-white/60 leading-relaxed font-light">${feature.description}</p>
+            `;
+            grid.appendChild(featureCard);
+        });
+    }
+
+    function updateVersionFeatures(versions) {
+        const featureContainers = document.querySelectorAll('[data-version-features]');
+        
+        featureContainers.forEach(container => {
+            const versionKey = container.getAttribute('data-version-features');
+            const versionData = versions[versionKey];
+            
+            if (versionData && versionData.features) {
+                const features = container.querySelectorAll('.text-white\\/70');
+                features.forEach((feature, index) => {
+                    if (versionData.features[index]) {
+                        feature.textContent = versionData.features[index];
+                    }
+                });
+            }
+        });
+    }
+
+    function updateSystemRequirements(requirements) {
+        const container = document.getElementById('system-requirements');
+        container.innerHTML = '';
+
+        requirements.forEach(requirement => {
+            const reqElement = document.createElement('div');
+            reqElement.className = 'flex items-center gap-4 p-4 rounded-2xl bg-white/5';
+            reqElement.innerHTML = `
+                <div class="w-8 h-8 rounded-full bg-green-400/20 flex items-center justify-center">
+                    <svg class="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                <span class="text-white/90 font-medium">${requirement}</span>
+            `;
+            container.appendChild(reqElement);
+        });
+    }
+
+    function updateInstallationSteps(steps) {
+        const container = document.getElementById('installation-steps');
+        container.innerHTML = '';
+
+        steps.forEach((step, index) => {
+            const stepElement = document.createElement('div');
+            stepElement.className = 'flex items-start gap-6';
+            
+            const isLast = index === steps.length - 1;
+            const bgClass = isLast ? 'from-green-400 to-steam-accent' : 'from-steam-accent to-apple-blue';
+            const icon = isLast ? '✓' : (index + 1).toString();
+            
+            stepElement.innerHTML = `
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br ${bgClass} flex items-center justify-center text-sm font-bold flex-shrink-0">${icon}</div>
+                <div>
+                    <p class="font-semibold text-white/90 mb-2">${step.title}</p>
+                    <p class="text-sm text-white/50 font-light">${step.description}</p>
+                </div>
+            `;
+            container.appendChild(stepElement);
+        });
+    }
+
+    function updateFAQ(faqItems) {
+        const container = document.getElementById('faq-container');
+        container.innerHTML = '';
+
+        faqItems.forEach((item, index) => {
+            const faqElement = document.createElement('div');
+            faqElement.className = 'faq-item';
+            
+            let answerContent = item.answer;
+            if (item.versions) {
+                answerContent += '<div class="space-y-4 text-white/60 font-light mt-6">';
+                item.versions.forEach(version => {
+                    const parts = version.split(': ');
+                    const title = parts[0];
+                    const description = parts[1] || '';
+                    const colorClass = getVersionColorClass(title);
+                    answerContent += `<div><strong class="${colorClass} font-medium">${title}:</strong> ${description}</div>`;
+                });
+                answerContent += '</div>';
+            }
+            
+            faqElement.innerHTML = `
+                <button class="w-full px-10 py-8 text-left flex items-center justify-between hover:bg-white/5 transition-colors" onclick="toggleFAQ(this)">
+                    <span class="font-semibold text-lg">${item.question}</span>
+                    <svg class="w-6 h-6 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </button>
+                <div class="hidden px-10 pb-8">
+                    <div class="text-white/60 leading-relaxed font-light">${answerContent}</div>
+                </div>
+            `;
+            container.appendChild(faqElement);
+        });
+    }
+
+    function getVersionColorClass(title) {
+        if (title.includes('2025')) return 'text-steam-accent';
+        if (title.includes('2022')) return 'text-purple-400';
+        if (title.includes('Lite')) return 'text-yellow-400';
+        if (title.includes('Dual')) return 'text-pink-400';
+        return 'text-steam-accent';
+    }
+
+    function openMobileMenu() {
+        document.getElementById('mobile-menu').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeMobileMenu() {
+        document.getElementById('mobile-menu').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
     function scrollToSection(sectionId) {
         const section = document.getElementById(sectionId);
         if (section) {
@@ -943,49 +1394,6 @@
         }
     }
 
-    document.getElementById('mobile-menu-btn')?.addEventListener('click', () => {
-        const menu = document.getElementById('mobile-menu');
-        menu?.classList.toggle('hidden');
-    });
-
-    document.addEventListener('DOMContentLoaded', () => {
-        const links = document.querySelectorAll('a[href^="#"]');
-        links.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const target = document.querySelector(link.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -100px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-
-                    const counter = entry.target.querySelector('.counter');
-                    if (counter) {
-                        animateCounter(counter);
-                    }
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.fade-on-scroll').forEach(el => {
-            observer.observe(el);
-        });
-    });
-
     function animateCounter(element) {
         const target = parseInt(element.getAttribute('data-target'));
         const duration = 2500;
@@ -1001,8 +1409,110 @@
             element.textContent = Math.floor(current).toLocaleString() + '+';
         }, 16);
     }
-</script>
 
+    document.addEventListener('DOMContentLoaded', async () => {
+        try {
+            const initialLang = initializeLanguage();
+            currentLang = initialLang;
+            translations = await loadTranslations(currentLang);
+            
+            initializeLanguageDropdowns();
+            updateContent(translations);
+            updateLanguageButton();
+            
+            console.log(`Initialized with language: ${languageConfig[currentLang].name}`);
+            
+            setupEventListeners();
+            setupScrollAnimations();
+            
+        } catch (error) {
+            console.error('Error initializing application:', error);
+            currentLang = 'en';
+            translations = embeddedTranslations.en;
+            updateContent(translations);
+        }
+    });
+
+    function setupEventListeners() {
+        const languageBtn = document.getElementById('language-btn');
+        const languageDropdown = document.getElementById('language-dropdown');
+        
+        if (languageBtn && languageDropdown) {
+            languageBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                languageDropdown.classList.toggle('active');
+                const svg = languageBtn.querySelector('svg');
+                if (svg) {
+                    svg.style.transform = languageDropdown.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0deg)';
+                }
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!languageBtn.contains(e.target) && !languageDropdown.contains(e.target)) {
+                    languageDropdown.classList.remove('active');
+                    const svg = languageBtn.querySelector('svg');
+                    if (svg) svg.style.transform = 'rotate(0deg)';
+                }
+            });
+        }
+
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenuClose = document.getElementById('mobile-menu-close');
+        
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', openMobileMenu);
+        }
+        if (mobileMenuClose) {
+            mobileMenuClose.addEventListener('click', closeMobileMenu);
+        }
+
+        const links = document.querySelectorAll('a[href^="#"]');
+        links.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(link.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    closeMobileMenu(); // Close mobile menu if open
+                }
+            });
+        });
+    }
+
+    function setupScrollAnimations() {
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+
+                    const counter = entry.target.querySelector('.counter');
+                    if (counter && !counter.classList.contains('animated')) {
+                        counter.classList.add('animated');
+                        animateCounter(counter);
+                    }
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-on-scroll').forEach(el => {
+            observer.observe(el);
+        });
+    }
+
+    window.scrollToSection = scrollToSection;
+    window.selectMode = selectMode;
+    window.downloadSelected = downloadSelected;
+    window.toggleFAQ = toggleFAQ;
+    window.switchLanguage = switchLanguage;
+</script>
 
 </body>
 </html>
