@@ -1,0 +1,12 @@
+{
+  "name": "steam-debloat",
+  "version": "8.25",
+  "private": true,
+  "scripts": {
+    "build": "astro build",
+    "dev": "astro dev"
+  },
+  "dependencies": {
+    "astro": "^3.7.0"
+  }
+}
