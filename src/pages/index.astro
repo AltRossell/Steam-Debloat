@@ -1,0 +1,52 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import Downloads from '../components/Downloads.astro';
+import Features from '../components/Features.astro';
+import Documentation from '../components/Documentation.astro';
+import FAQ from '../components/FAQ.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="Steam Debloat - Optimize your Steam experience">
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="mobile-menu md:hidden">
+    <div class="flex flex-col h-full">
+      <div class="flex justify-between items-center p-6 border-b border-white/10">
+        <h2 class="text-xl font-semibold">Menu</h2>
+        <button id="mobile-menu-close" class="w-10 h-10 rounded-full glass-apple flex items-center justify-center">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <nav class="flex-1 p-6">
+        <div class="space-y-6">
+          <a href="#home" class="block text-xl font-medium" data-i18n="nav.home">Home</a>
+          <a href="#downloads" class="block text-xl font-medium" data-i18n="nav.downloads">Downloads</a>
+          <a href="#features" class="block text-xl font-medium" data-i18n="nav.features">Features</a>
+          <a href="#docs" class="block text-xl font-medium" data-i18n="nav.docs">Documentation</a>
+          <a href="#faq" class="block text-xl font-medium" data-i18n="nav.faq">FAQ</a>
+          <a href="https://github.com/AltRossell/Steam-Debloat" target="_blank" class="block text-xl font-medium" data-i18n="nav.github">GitHub</a>
+        </div>
+        
+        <!-- Mobile Language Selector -->
+        <div class="mt-8 pt-6 border-t border-white/10">
+          <h3 class="text-sm font-medium text-white/60 mb-4">Language / Idioma</h3>
+          <div id="mobile-language-options" class="space-y-2">
+            <!-- Populated by JavaScript -->
+          </div>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <Header />
+  <Hero />
+  <Downloads />
+  <Features />
+  <Documentation />
+  <FAQ />
+  <Footer />
+</Layout>
