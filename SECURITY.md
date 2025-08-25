@@ -87,7 +87,7 @@ In case of security issues:
 | Date | Version | Security Update |
 |------|---------|----------------|
 | 2024-11-13 | 1.0.021 | Initial security policy |
-| 2025-08-02 | 5.02 | VirusTotal results update |
+| 2025-08-25 | 8.25 | VirusTotal results update |
 
 ---
 
