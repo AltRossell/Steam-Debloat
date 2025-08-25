@@ -54,7 +54,7 @@
 iex "& { $(iwr -useb 'https://raw.githubusercontent.com/AltRossell/Steam-Debloat/main/script/app.ps1') }"
 ```
 
-#### Option 2: [Installer.bat](https://github.com/AltRossell/Steam-Debloat/releases/download/v5.02/Installer.bat)
+#### Option 2: [Installer.bat](https://github.com/AltRossell/Steam-Debloat/releases/download/v8.25/Installer.bat)
 
 ### 2️⃣ 🔧 Optional Friends Fix (Steam 2022 Dec)
 #### Steam 2022 breaks friends/chat. This tool may help restore some functionality.
@@ -69,7 +69,7 @@ iex "& { $(iwr -useb 'https://raw.githubusercontent.com/AltRossell/Steam-Debloat
 
 ### 3️⃣ If you had problems uninstall
 
-####  Uninstall Steam Debloat: [Uninstall.bat](https://github.com/AltRossell/Steam-Debloat/releases/download/v5.02/Uninstall.bat)
+####  Uninstall Steam Debloat: [Uninstall.bat](https://github.com/AltRossell/Steam-Debloat/releases/download/v8.25/Uninstall.bat)
 
 ## 💎 Features
 
