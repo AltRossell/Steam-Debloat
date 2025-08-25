@@ -5,7 +5,7 @@
     "ogDescription": "Use versões específicas do cliente Steam para melhor desempenho e compatibilidade."
   },
   "nav": {
-    "version": "v5.02",
+    "version": "v8.25",
     "home": "Início",
     "downloads": "Downloads",
     "features": "Recursos",
@@ -14,7 +14,7 @@
     "github": "GitHub"
   },
   "hero": {
-    "badge": "Nova versão v5.02 disponível",
+    "badge": "Nova versão v8.25 disponível",
     "title": "Otimize sua",
     "titleGradient": "experiência Steam",
     "description": "Use versões específicas do cliente Steam para <span class=\"text-steam-accent font-medium\">melhor desempenho</span>, <span class=\"text-steam-accent font-medium\">compatibilidade aprimorada</span> e uma <span class=\"text-steam-accent font-medium\">experiência de jogo otimizada</span>.",
@@ -70,7 +70,7 @@
     },
     "selectVersion": "Selecione uma versão",
     "downloadSelected": "Baixar {version}",
-    "versionInfo": "Versão v5.02 • Requer permissões de administrador",
+    "versionInfo": "Versão v8.25 • Requer permissões de administrador",
     "security": {
       "safe": "100% Seguro",
       "verified": "Código Verificado",
@@ -160,7 +160,7 @@
     "codePreview": {
       "title": "Prévia do Código",
       "comments": [
-        "# Steam Debloat v5.02",
+        "# Steam Debloat v8.25",
         "\"Detectando instalação do Steam...\"",
         "\"Steam encontrado, aplicando otimizações...\""
       ]
