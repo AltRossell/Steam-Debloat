@@ -4,12 +4,21 @@ let currentLang = 'en';
 let translations = {};
 
 const languageConfig = {
-  en: { flag: '🇺🇸', name: 'English', code: 'EN' },
-  es: { flag: '🇪🇸', name: 'Español', code: 'ES' },
-  pt: { flag: '🇧🇷', name: 'Português', code: 'PT' },
-  fr: { flag: '🇫🇷', name: 'Français', code: 'FR' },
-  de: { flag: '🇩🇪', name: 'Deutsch', code: 'DE' },
-  zh: { flag: '🇨🇳', name: '中国人', code: 'ZH' }
+  en: { flag: '🇺🇸', name: 'English', file: 'en.json' },
+  es: { flag: '🇪🇸', name: 'Español', file: 'es.json' },
+  pt: { flag: '🇧🇷', name: 'Português', file: 'pt.json' },
+  fr: { flag: '🇫🇷', name: 'Français', file: 'fr.json' },
+  de: { flag: '🇩🇪', name: 'Deutsch', file: 'de.json' },
+  zh: { flag: '🇨🇳', name: '中文', file: 'zh.json' },
+  jp: { flag: '🇯🇵', name: '日本語', file: 'jp.json' },
+  kr: { flag: '🇰🇷', name: '한국어', file: 'kr.json' },
+  nl: { flag: '🇳🇱', name: 'Nederlands', file: 'nl.json' },
+  pl: { flag: '🇵🇱', name: 'Polski', file: 'pl.json' },
+  it: { flag: '🇮🇹', name: 'Italiano', file: 'it.json' },
+  in: { flag: '🇮🇳', name: 'हिंदी', file: 'in.json' },
+  ru: { flag: '🇷🇺', name: 'Русский', file: 'ru.json' },
+  sa: { flag: '🇸🇦', name: 'العربية', file: 'sa.json' },
+  tr: { flag: '🇹🇷', name: 'Türkçe', file: 'tr.json' }
 };
 
 function detectBrowserLanguage() {

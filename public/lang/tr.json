@@ -1,0 +1,218 @@
+{
+  "meta": {
+    "title": "Steam Debloat - Steam deneyiminizi optimize edin",
+    "description": "Daha iyi performans ve uyumluluk için belirli istemci sürümleriyle Steam deneyiminizi optimize edin.",
+    "ogDescription": "En iyi performans ve uyumluluk için Steam istemcisinin belirli sürümlerini kullanın."
+  },
+  "nav": {
+    "version": "v8.27",
+    "home": "Ana Sayfa",
+    "downloads": "İndirmeler",
+    "features": "Özellikler",
+    "docs": "Belgeler",
+    "faq": "Sık Sorulan Sorular",
+    "github": "GitHub"
+  },
+  "hero": {
+    "badge": "Yeni sürüm v8.27 mevcut",
+    "title": "Steam",
+    "titleGradient": "deneyiminizi optimize edin",
+    "description": "<span class=\"text-steam-accent font-medium\">Daha iyi performans</span>, <span class=\"text-steam-accent font-medium\">gelişmiş uyumluluk</span> ve <span class=\"text-steam-accent font-medium\">optimize edilmiş oyun deneyimi</span> için Steam istemcisinin belirli sürümlerini kullanın.",
+    "downloadNow": "Şimdi İndir",
+    "viewCode": "Kodu Görüntüle",
+    "stats": {
+      "downloads": "İndirmeler",
+      "rating": "Puan",
+      "openSource": "Açık Kaynak"
+    }
+  },
+  "downloads": {
+    "title": "Sürümünüzü",
+    "titleGradient": "seçin",
+    "description": "İhtiyaçlarınıza ve sistem gereksinimlerinize en uygun yapılandırmayı seçin",
+    "versions": {
+      "steam2025": {
+        "title": "Steam 2025",
+        "description": "Tüm modern özellikler ve performans iyileştirmelerini içeren en son sürüm.",
+        "features": [
+          "En son sürüm",
+          "Maksimum performans",
+          "Yeni özellikler"
+        ]
+      },
+      "steam2022": {
+        "title": "Steam 2022",
+        "description": "Aralık 2022 kararlı sürümü, maksimum uyumluluk için mükemmel.",
+        "features": [
+          "Çok kararlı",
+          "Geniş uyumluluk",
+          "Kapsamlı test edilmiş"
+        ]
+      },
+      "steamLite": {
+        "title": "Steam Lite 2022",
+        "description": "Maksimum hız ve minimum kaynak kullanımı için temel özelliklerle ultra hafif sürüm.",
+        "features": [
+          "Ultra hafif",
+          "Anında yükleme",
+          "Minimum tüketim"
+        ]
+      },
+      "steamDual": {
+        "title": "Steam Dual",
+        "description": "Gerektiğinde aralarında geçiş yapmak için her iki sürümü de (2022 ve 2025) yükleyin.",
+        "features": [
+          "Maksimum esneklik",
+          "Deneysel",
+          "Uzmanlar için"
+        ]
+      }
+    },
+    "selectVersion": "Bir sürüm seçin",
+    "downloadSelected": "{version} İndir",
+    "versionInfo": "Sürüm v8.27 • Yönetici izinleri gerekli",
+    "security": {
+      "safe": "%100 Güvenli",
+      "verified": "Doğrulanmış Kod",
+      "noMalware": "Kötü Amaçlı Yazılım Yok"
+    }
+  },
+  "features": {
+    "title": "Neden",
+    "titleGradient": "Steam Debloat",
+    "description": "Steam istemcinizi optimize etmenin tüm faydalarını keşfedin",
+    "list": [
+      {
+        "emoji": "⚙️",
+        "title": "Otomatik Optimizasyon",
+        "description": "Belirli sistem yapılandırmanız için Steam'i otomatik olarak optimize eden akıllı ayarlar."
+      },
+      {
+        "emoji": "⚡",
+        "title": "Hızlı Kurulum",
+        "description": "Sisteminizi tespit eden ve en iyi ayarları anında uygulayan otomatik süreç."
+      },
+      {
+        "emoji": "🛡️",
+        "title": "%100 Güvenli",
+        "description": "Topluluk tarafından doğrulanmış açık kaynak kodu. Kötü niyetli değişiklik veya güvenlik riski yok."
+      },
+      {
+        "emoji": "📈",
+        "title": "Performans Artışı",
+        "description": "%250'ye kadar daha hızlı yükleme süreleri ve %40 daha az bellek kullanımıyla pürüzsüz deneyim."
+      },
+      {
+        "emoji": "🔄",
+        "title": "Tamamen Geri Alınabilir",
+        "description": "Tüm değişiklikler tamamen geri alınabilir. İstediğiniz zaman orijinal sürüme dönün."
+      },
+      {
+        "emoji": "🎮",
+        "title": "Oyun için Optimize",
+        "description": "Gecikmeyi azaltan ve genel oyun deneyimini iyileştiren özel oyun ayarları."
+      }
+    ],
+    "performance": {
+      "title": "Performans Karşılaştırması",
+      "original": "Orijinal Steam",
+      "optimized": "Steam Debloat",
+      "improvement": "İyileştirme",
+      "loadingTime": "Yükleme Süresi",
+      "memoryUsage": "Bellek Kullanımı",
+      "speedBoost": "Hız Artışı",
+      "memorySaved": "Tasarruf Edilen Bellek"
+    }
+  },
+  "docs": {
+    "title": "Belgeler",
+    "description": "Başlamak için bilmeniz gereken her şey",
+    "systemRequirements": {
+      "title": "Sistem Gereksinimleri",
+      "list": [
+        "Windows 10/11 (64-bit)",
+        "PowerShell 5.0 veya üzeri",
+        "Yönetici izinleri",
+        "İnternet bağlantısı"
+      ]
+    },
+    "installation": {
+      "title": "Kurulum Kılavuzu",
+      "steps": [
+        {
+          "title": "Script'i indirin",
+          "description": "Yukarıdaki indirmeler bölümünden tercih ettiğiniz sürümü seçin"
+        },
+        {
+          "title": "Yönetici olarak çalıştırın",
+          "description": "İndirilen dosyaya sağ tıklayın → \"Yönetici olarak çalıştır\""
+        },
+        {
+          "title": "Otomatik süreç",
+          "description": "Script Steam kurulumunuzu otomatik olarak tespit eder ve optimize eder"
+        },
+        {
+          "title": "Kullanıma hazır!",
+          "description": "Optimize edilmiş ve geliştirilmiş Steam deneyiminizin keyfini çıkarın"
+        }
+      ]
+    },
+    "codePreview": {
+      "title": "Kod Önizlemesi",
+      "comments": [
+        "# Steam Debloat v8.27",
+        "\"Steam kurulumu tespit ediliyor...\"",
+        "\"Steam bulundu, optimizasyonlar uygulanıyor...\""
+      ]
+    }
+  },
+  "faq": {
+    "title": "Sık Sorulan",
+    "titleGradient": "Sorular",
+    "description": "Steam Debloat hakkında en yaygın sorularınızı yanıtlıyoruz",
+    "items": [
+      {
+        "question": "Steam Debloat kullanımı güvenli mi?",
+        "answer": "Kesinlikle. Steam Debloat, GitHub'da inceleyebileceğiniz açık kaynaklı bir projedir. Sistem dosyalarını kötü niyetle değiştirmez—sadece performansı optimize etmek için resmi Steam ayarlarını uygular. Tüm değişiklikler tamamen geri alınabilir."
+      },
+      {
+        "question": "Sürümler arasındaki farklar nelerdir?",
+        "answer": "Her sürüm farklı ihtiyaçlar için optimize edilmiştir:",
+        "versions": [
+          "Steam 2025: Tüm modern özellikler ve optimizasyonlarla en son sürüm",
+          "Steam 2022: Maksimum uyumluluk için kararlı ve test edilmiş sürüm",
+          "Steam Lite: Sınırlı kaynaklara sahip sistemler için ultra hafif sürüm",
+          "Steam Dual: Gerektiğinde sürümler arasında geçiş yapmanızı sağlar"
+        ]
+      },
+      {
+        "question": "Orijinal Steam sürümüne dönebilir miyim?",
+        "answer": "Evet, tüm değişiklikler tamamen geri alınabilir. Script otomatik olarak yedeklemeler oluşturur ve script'i tekrar çalıştırıp geri yükleme seçeneğini seçerek orijinal sürümü geri yükleyebilirsiniz."
+      },
+      {
+        "question": "Oyunlarımı veya kayıt verilerimi etkiler mi?",
+        "answer": "Hayır, Steam Debloat sadece Steam istemcisinin kendisini değiştirir. Oyunlarınızı, kayıt verilerinizi, başarımlarınızı veya kütüphanenizdeki herhangi bir içeriği etkilemez. Tüm oyunlarınız aynen çalışmaya devam edecek, ancak gelişmiş performansla."
+      },
+      {
+        "question": "Kullanmak için teknik bilgiye ihtiyacım var mı?",
+        "answer": "Hiç de değil. Steam Debloat herkes tarafından kullanılabilecek şekilde tasarlanmıştır. Sadece dosyayı indirin, yönetici olarak çalıştırın ve ekrandaki talimatları takip edin. Tüm süreç tamamen otomatiktir."
+      }
+    ]
+  },
+  "footer": {
+    "title": "Steam Debloat",
+    "subtitle": "Açık kaynak projesi",
+    "links": {
+      "github": "GitHub",
+      "issues": "Sorunlar",
+      "releases": "Sürümler",
+      "documentation": "Belgeler"
+    },
+    "copyright": "© 2024-2025 Steam Debloat • Açık kaynak projesi • Valve Corporation ile bağlantılı değildir",
+    "madeWith": "Oyun topluluğu için ❤️ ile yapıldı"
+  },
+"ui": {
+"downloading": "İndiriliyor...",
+"selectFirst": "Önce bir sürüm seçin"
+}
+}

@@ -1,0 +1,218 @@
+{
+  "meta": {
+    "title": "Steam Debloat - Steamエクスペリエンスを最適化",
+    "description": "より良いパフォーマンスと互換性のための特定のクライアントバージョンでSteamエクスペリエンスを最適化します。",
+    "ogDescription": "最高のパフォーマンスと互換性のための特定のSteamクライアントバージョンを使用してください。"
+  },
+  "nav": {
+    "version": "v8.27",
+    "home": "ホーム",
+    "downloads": "ダウンロード",
+    "features": "機能",
+    "docs": "ドキュメント",
+    "faq": "よくある質問",
+    "github": "GitHub"
+  },
+  "hero": {
+    "badge": "新バージョンv8.27が利用可能",
+    "title": "あなたの",
+    "titleGradient": "Steamエクスペリエンス",
+    "description": "<span class=\"text-steam-accent font-medium\">より良いパフォーマンス</span>、<span class=\"text-steam-accent font-medium\">強化された互換性</span>、そして<span class=\"text-steam-accent font-medium\">最適化されたゲーミング体験</span>のための特定のSteamクライアントバージョンを使用してください。",
+    "downloadNow": "今すぐダウンロード",
+    "viewCode": "コードを見る",
+    "stats": {
+      "downloads": "ダウンロード",
+      "rating": "評価",
+      "openSource": "オープンソース"
+    }
+  },
+  "downloads": {
+    "title": "あなたの",
+    "titleGradient": "バージョンを選択",
+    "description": "あなたのニーズとシステム要件に最適な構成を選択してください",
+    "versions": {
+      "steam2025": {
+        "title": "Steam 2025",
+        "description": "すべての最新機能とパフォーマンス改善を含む最新バージョン。",
+        "features": [
+          "最新バージョン",
+          "最大パフォーマンス",
+          "新機能"
+        ]
+      },
+      "steam2022": {
+        "title": "Steam 2022",
+        "description": "2022年12月の安定版リリース、最大の互換性に最適。",
+        "features": [
+          "非常に安定",
+          "幅広い互換性",
+          "広範囲にテスト済み"
+        ]
+      },
+      "steamLite": {
+        "title": "Steam Lite 2022",
+        "description": "最大速度と最小リソース使用量のためのエッセンシャルを含む超軽量バージョン。",
+        "features": [
+          "超軽量",
+          "瞬時読み込み",
+          "最小消費"
+        ]
+      },
+      "steamDual": {
+        "title": "Steam Dual",
+        "description": "必要に応じて切り替えるために両方のバージョン（2022と2025）をインストール。",
+        "features": [
+          "最大の柔軟性",
+          "実験的",
+          "エキスパート向け"
+        ]
+      }
+    },
+    "selectVersion": "バージョンを選択",
+    "downloadSelected": "{version}をダウンロード",
+    "versionInfo": "バージョン v8.27 • 管理者権限が必要",
+    "security": {
+      "safe": "100%安全",
+      "verified": "検証済みコード",
+      "noMalware": "マルウェアなし"
+    }
+  },
+  "features": {
+    "title": "なぜ",
+    "titleGradient": "Steam Debloat",
+    "description": "Steamクライアント最適化のすべての利点を発見してください",
+    "list": [
+      {
+        "emoji": "⚙️",
+        "title": "自動最適化",
+        "description": "あなたの特定のシステム構成に対してSteamを自動的に最適化するスマート設定。"
+      },
+      {
+        "emoji": "⚡",
+        "title": "高速インストール",
+        "description": "あなたのシステムを検出し、最適な設定を瞬時に適用する自動化プロセス。"
+      },
+      {
+        "emoji": "🛡️",
+        "title": "100%セキュア",
+        "description": "コミュニティによって検証されたオープンソースコード。悪意のある変更やセキュリティリスクはありません。"
+      },
+      {
+        "emoji": "📈",
+        "title": "パフォーマンス向上",
+        "description": "最大250%高速な読み込み時間と40%少ないメモリ使用量でスムーズな体験。"
+      },
+      {
+        "emoji": "🔄",
+        "title": "完全に可逆",
+        "description": "すべての変更は完全に可逆です。いつでも元のバージョンに戻すことができます。"
+      },
+      {
+        "emoji": "🎮",
+        "title": "ゲーミング最適化",
+        "description": "レイテンシを減らし、全体的なゲーミング体験を向上させる特定のゲーミング設定。"
+      }
+    ],
+    "performance": {
+      "title": "パフォーマンス比較",
+      "original": "オリジナルSteam",
+      "optimized": "Steam Debloat",
+      "improvement": "改善",
+      "loadingTime": "読み込み時間",
+      "memoryUsage": "メモリ使用量",
+      "speedBoost": "速度向上",
+      "memorySaved": "メモリ節約"
+    }
+  },
+  "docs": {
+    "title": "ドキュメント",
+    "description": "始めるために知っておくべきすべて",
+    "systemRequirements": {
+      "title": "システム要件",
+      "list": [
+        "Windows 10/11 (64-bit)",
+        "PowerShell 5.0以降",
+        "管理者権限",
+        "インターネット接続"
+      ]
+    },
+    "installation": {
+      "title": "インストールガイド",
+      "steps": [
+        {
+          "title": "スクリプトをダウンロード",
+          "description": "上記のダウンロードセクションで希望するバージョンを選択してください"
+        },
+        {
+          "title": "管理者として実行",
+          "description": "ダウンロードしたファイルを右クリック → \"管理者として実行\""
+        },
+        {
+          "title": "自動プロセス",
+          "description": "スクリプトが自動的にSteamインストールを検出し最適化します"
+        },
+        {
+          "title": "使用準備完了！",
+          "description": "最適化され強化されたSteam体験をお楽しみください"
+        }
+      ]
+    },
+    "codePreview": {
+      "title": "コードプレビュー",
+      "comments": [
+        "# Steam Debloat v8.27",
+        "\"Steamインストールを検出中...\"",
+        "\"Steam見つかりました、最適化を適用中...\""
+      ]
+    }
+  },
+  "faq": {
+    "title": "よくある",
+    "titleGradient": "質問",
+    "description": "Steam Debloatについて最も一般的な質問にお答えします",
+    "items": [
+      {
+        "question": "Steam Debloatは使用しても安全ですか？",
+        "answer": "絶対に安全です。Steam DebloatはGitHubでレビューできるオープンソースプロジェクトです。システムファイルを悪意を持って変更することはありません—パフォーマンスを最適化するための公式Steam設定のみを適用します。すべての変更は完全に可逆です。"
+      },
+      {
+        "question": "バージョン間の違いは何ですか？",
+        "answer": "各バージョンは異なるニーズに最適化されています：",
+        "versions": [
+          "Steam 2025: すべての最新機能と最適化を含む最新バージョン",
+          "Steam 2022: 最大の互換性のための安定でテスト済みのバージョン",
+          "Steam Lite: リソースが限られたシステムのための超軽量バージョン",
+          "Steam Dual: 必要に応じてバージョン間を切り替えることができます"
+        ]
+      },
+      {
+        "question": "元のSteamバージョンに戻すことはできますか？",
+        "answer": "はい、すべての変更は完全に可逆です。スクリプトは自動的にバックアップを作成し、スクリプトを再度実行して復元オプションを選択することで元のバージョンを復元できます。"
+      },
+      {
+        "question": "ゲームやセーブデータに影響しますか？",
+        "answer": "いいえ、Steam DebloatはSteamクライアント自体のみを変更します。ゲーム、セーブデータ、実績、またはライブラリのコンテンツには影響しません。すべてのゲームは全く同じように動作し続けますが、パフォーマンスが向上します。"
+      },
+      {
+        "question": "使用するために技術的知識が必要ですか？",
+        "answer": "全く必要ありません。Steam Debloatは誰でも使えるように設計されています。ファイルをダウンロードし、管理者として実行し、画面の指示に従うだけです。全プロセスは完全に自動化されています。"
+      }
+    ]
+  },
+  "footer": {
+    "title": "Steam Debloat",
+    "subtitle": "オープンソースプロジェクト",
+    "links": {
+      "github": "GitHub",
+      "issues": "問題",
+      "releases": "リリース",
+      "documentation": "ドキュメント"
+    },
+    "copyright": "© 2024-2025 Steam Debloat • オープンソースプロジェクト • Valve Corporationとは提携していません",
+    "madeWith": "ゲーミングコミュニティのために❤️で作られました"
+  },
+  "ui": {
+    "downloading": "ダウンロード中...",
+    "selectFirst": "まずバージョンを選択してください"
+  }
+}

@@ -1,0 +1,218 @@
+{
+  "meta": {
+    "title": "Steam Debloat - Ottimizza la tua esperienza Steam",
+    "description": "Ottimizza la tua esperienza Steam con versioni client specifiche per prestazioni e compatibilità migliori.",
+    "ogDescription": "Usa versioni specifiche del client Steam per le migliori prestazioni e compatibilità."
+  },
+  "nav": {
+    "version": "v8.27",
+    "home": "Home",
+    "downloads": "Download",
+    "features": "Caratteristiche",
+    "docs": "Documentazione",
+    "faq": "FAQ",
+    "github": "GitHub"
+  },
+  "hero": {
+    "badge": "Nuova versione v8.27 disponibile",
+    "title": "Ottimizza la tua",
+    "titleGradient": "esperienza Steam",
+    "description": "Usa versioni specifiche del client Steam per <span class=\"text-steam-accent font-medium\">prestazioni migliori</span>, <span class=\"text-steam-accent font-medium\">compatibilità potenziata</span> e un'<span class=\"text-steam-accent font-medium\">esperienza di gioco ottimizzata</span>.",
+    "downloadNow": "Scarica Ora",
+    "viewCode": "Visualizza Codice",
+    "stats": {
+      "downloads": "Download",
+      "rating": "Valutazione",
+      "openSource": "Open Source"
+    }
+  },
+  "downloads": {
+    "title": "Scegli la tua",
+    "titleGradient": "versione",
+    "description": "Seleziona la configurazione che meglio si adatta alle tue esigenze e requisiti di sistema",
+    "versions": {
+      "steam2025": {
+        "title": "Steam 2025",
+        "description": "Ultima versione con tutte le funzionalità moderne e i miglioramenti delle prestazioni.",
+        "features": [
+          "Ultima versione",
+          "Prestazioni massime",
+          "Nuove funzionalità"
+        ]
+      },
+      "steam2022": {
+        "title": "Steam 2022",
+        "description": "Versione stabile di dicembre 2022, perfetta per la massima compatibilità.",
+        "features": [
+          "Molto stabile",
+          "Ampia compatibilità",
+          "Ampiamente testata"
+        ]
+      },
+      "steamLite": {
+        "title": "Steam Lite 2022",
+        "description": "Versione ultra-leggera con gli essenziali per la massima velocità e il minimo utilizzo delle risorse.",
+        "features": [
+          "Ultra leggera",
+          "Caricamento istantaneo",
+          "Consumo minimo"
+        ]
+      },
+      "steamDual": {
+        "title": "Steam Dual",
+        "description": "Installa entrambe le versioni (2022 e 2025) per passare dall'una all'altra secondo necessità.",
+        "features": [
+          "Massima flessibilità",
+          "Sperimentale",
+          "Per esperti"
+        ]
+      }
+    },
+    "selectVersion": "Seleziona una versione",
+    "downloadSelected": "Scarica {version}",
+    "versionInfo": "Versione v8.27 • Richiede permessi amministratore",
+    "security": {
+      "safe": "100% Sicuro",
+      "verified": "Codice Verificato",
+      "noMalware": "Nessun Malware"
+    }
+  },
+  "features": {
+    "title": "Perché",
+    "titleGradient": "Steam Debloat",
+    "description": "Scopri tutti i vantaggi dell'ottimizzazione del tuo client Steam",
+    "list": [
+      {
+        "emoji": "⚙️",
+        "title": "Ottimizzazione Automatica",
+        "description": "Impostazioni intelligenti che ottimizzano automaticamente Steam per la tua configurazione di sistema specifica."
+      },
+      {
+        "emoji": "⚡",
+        "title": "Installazione Express",
+        "description": "Processo automatizzato che rileva il tuo sistema e applica le migliori impostazioni istantaneamente."
+      },
+      {
+        "emoji": "🛡️",
+        "title": "100% Sicuro",
+        "description": "Codice open source verificato dalla community. Nessuna modifica maliziosa o rischio di sicurezza."
+      },
+      {
+        "emoji": "📈",
+        "title": "Boost delle Prestazioni",
+        "description": "Fino al 250% di tempi di caricamento più veloci e 40% in meno di utilizzo della memoria per un'esperienza fluida."
+      },
+      {
+        "emoji": "🔄",
+        "title": "Completamente Reversibile",
+        "description": "Tutte le modifiche sono completamente reversibili. Torna alla versione originale quando vuoi."
+      },
+      {
+        "emoji": "🎮",
+        "title": "Ottimizzato per il Gaming",
+        "description": "Impostazioni specifiche per il gaming che riducono la latenza e migliorano l'esperienza di gioco complessiva."
+      }
+    ],
+    "performance": {
+      "title": "Confronto delle Prestazioni",
+      "original": "Steam Originale",
+      "optimized": "Steam Debloat",
+      "improvement": "Miglioramento",
+      "loadingTime": "Tempo di Caricamento",
+      "memoryUsage": "Utilizzo Memoria",
+      "speedBoost": "Boost di Velocità",
+      "memorySaved": "Memoria Risparmiata"
+    }
+  },
+  "docs": {
+    "title": "Documentazione",
+    "description": "Tutto quello che devi sapere per iniziare",
+    "systemRequirements": {
+      "title": "Requisiti di Sistema",
+      "list": [
+        "Windows 10/11 (64-bit)",
+        "PowerShell 5.0 o superiore",
+        "Permessi amministratore",
+        "Connessione internet"
+      ]
+    },
+    "installation": {
+      "title": "Guida all'Installazione",
+      "steps": [
+        {
+          "title": "Scarica lo script",
+          "description": "Seleziona la tua versione preferita nella sezione download sopra"
+        },
+        {
+          "title": "Esegui come amministratore",
+          "description": "Clic destro → \"Esegui come amministratore\" sul file scaricato"
+        },
+        {
+          "title": "Processo automatico",
+          "description": "Lo script rileva e ottimizza automaticamente la tua installazione Steam"
+        },
+        {
+          "title": "Pronto all'uso!",
+          "description": "Goditi la tua esperienza Steam ottimizzata e potenziata"
+        }
+      ]
+    },
+    "codePreview": {
+      "title": "Anteprima Codice",
+      "comments": [
+        "# Steam Debloat v8.27",
+        "\"Rilevamento installazione Steam...\"",
+        "\"Steam trovato, applicazione ottimizzazioni...\""
+      ]
+    }
+  },
+  "faq": {
+    "title": "Domande",
+    "titleGradient": "Frequenti",
+    "description": "Rispondiamo alle tue domande più comuni su Steam Debloat",
+    "items": [
+      {
+        "question": "È sicuro usare Steam Debloat?",
+        "answer": "Assolutamente. Steam Debloat è un progetto open source che puoi rivedere su GitHub. Non modifica maliziosamente i file di sistema—applica solo impostazioni ufficiali di Steam per ottimizzare le prestazioni. Tutte le modifiche sono completamente reversibili."
+      },
+      {
+        "question": "Quali sono le differenze tra le versioni?",
+        "answer": "Ogni versione è ottimizzata per diverse esigenze:",
+        "versions": [
+          "Steam 2025: Ultima versione con tutte le funzionalità moderne e ottimizzazioni",
+          "Steam 2022: Versione stabile e testata per la massima compatibilità",
+          "Steam Lite: Versione ultra-leggera per sistemi con risorse limitate",
+          "Steam Dual: Ti permette di passare tra versioni secondo necessità"
+        ]
+      },
+      {
+        "question": "Posso tornare alla versione originale di Steam?",
+        "answer": "Sì, tutte le modifiche sono completamente reversibili. Lo script crea automaticamente backup e puoi ripristinare la versione originale eseguendo nuovamente lo script e selezionando l'opzione di ripristino."
+      },
+      {
+        "question": "Influisce sui miei giochi o dati di salvataggio?",
+        "answer": "No, Steam Debloat modifica solo il client Steam stesso. Non influisce sui tuoi giochi, dati di salvataggio, achievement o qualsiasi contenuto nella tua libreria. Tutti i tuoi giochi continueranno a funzionare esattamente allo stesso modo, ma con prestazioni migliorate."
+      },
+      {
+        "question": "Ho bisogno di conoscenze tecniche per usarlo?",
+        "answer": "Per niente. Steam Debloat è progettato per essere usato da chiunque. Semplicemente scarica il file, eseguilo come amministratore e segui le istruzioni sullo schermo. L'intero processo è completamente automatizzato."
+      }
+    ]
+  },
+  "footer": {
+    "title": "Steam Debloat",
+    "subtitle": "Progetto open source",
+    "links": {
+      "github": "GitHub",
+      "issues": "Issues",
+      "releases": "Releases",
+      "documentation": "Documentazione"
+    },
+    "copyright": "© 2024-2025 Steam Debloat • Progetto open source • Non affiliato con Valve Corporation",
+    "madeWith": "Fatto con ❤️ per la community gaming"
+  },
+  "ui": {
+    "downloading": "Scaricamento...",
+    "selectFirst": "Seleziona prima una versione"
+  }
+}
