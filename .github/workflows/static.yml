@@ -33,10 +33,10 @@ jobs:
       - name: Build Astro site
         run: npm run build
 
-      - name: Upload dist folder
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./dist
+- name: Upload static folder
+  uses: actions/upload-pages-artifact@v3
+  with:
+    path: .vercel/output/static
 
   deploy:
     environment:
