@@ -43,7 +43,7 @@ const embeddedTranslations = {
       ogDescription: "Use specific versions of the Steam client for best performance and compatibility."
     },
     nav: {
-      version: "v8.25",
+      version: "v8.27",
       home: "Home",
       downloads: "Downloads",
       features: "Features",
@@ -52,7 +52,7 @@ const embeddedTranslations = {
       github: "GitHub"
     },
     hero: {
-      badge: "New version v8.25 available",
+      badge: "New version v8.27 available",
       title: "Optimize your",
       titleGradient: "Steam experience",
       description: 'Use specific versions of the Steam client for <span class="text-steam-accent font-medium">better performance</span>, <span class="text-steam-accent font-medium">enhanced compatibility</span>, and an <span class="text-steam-accent font-medium">optimized gaming experience</span>.',
@@ -92,7 +92,7 @@ const embeddedTranslations = {
       },
       selectVersion: "Select a version",
       downloadSelected: "Download {version}",
-      versionInfo: "Version v8.25 • Requires administrator permissions",
+      versionInfo: "Version v8.27 • Requires administrator permissions",
       security: {
         safe: "100% Safe",
         verified: "Verified Code",
@@ -439,10 +439,10 @@ function downloadSelected() {
 
   setTimeout(() => {
     const downloadUrls = {
-      'Normal2025July': 'https://github.com/AltRossell/Steam-Debloat/releases/download/v8.25/Installer2025.bat',
-      'Normal2022dec': 'https://github.com/AltRossell/Steam-Debloat/releases/download/v8.25/Installer2022dec.bat',
-      'Lite2022dec': 'https://github.com/AltRossell/Steam-Debloat/releases/download/v8.25/InstallerLite2022dec.bat',
-      'NormalBoth2022-2025': 'https://github.com/AltRossell/Steam-Debloat/releases/download/v8.25/Installer2022_2025.bat'
+      'Normal2025July': 'https://github.com/AltRossell/Steam-Debloat/releases/download/v8.27/Installer2025.bat',
+      'Normal2022dec': 'https://github.com/AltRossell/Steam-Debloat/releases/download/v8.27/Installer2022dec.bat',
+      'Lite2022dec': 'https://github.com/AltRossell/Steam-Debloat/releases/download/v8.27/InstallerLite2022dec.bat',
+      'NormalBoth2022-2025': 'https://github.com/AltRossell/Steam-Debloat/releases/download/v8.27/Installer2022_2025.bat'
     };
 
     const downloadUrl = downloadUrls[selectedMode];
