@@ -5,7 +5,7 @@
     "ogDescription": "使用特定版本的 Steam 客户端，以获得最佳性能和兼容性。"
   },
   "nav": {
-    "version": "v8.25",
+    "version": "v8.27",
     "home": "首页",
     "downloads": "下载",
     "features": "功能",
@@ -14,7 +14,7 @@
     "github": "GitHub"
   },
   "hero": {
-    "badge": "新版本 v8.25 已发布",
+    "badge": "新版本 v8.27 已发布",
     "title": "优化你的",
     "titleGradient": "Steam 体验",
     "description": "使用特定版本的 Steam 客户端，获得<span class=\"text-steam-accent font-medium\">更高性能</span>、<span class=\"text-steam-accent font-medium\">更强兼容性</span>和<span class=\"text-steam-accent font-medium\">更佳的游戏体验</span>。",
@@ -70,7 +70,7 @@
     },
     "selectVersion": "请选择一个版本",
     "downloadSelected": "下载 {version}",
-    "versionInfo": "版本 v8.25 • 需要管理员权限",
+    "versionInfo": "版本 v8.27 • 需要管理员权限",
     "security": {
       "safe": "100% 安全",
       "verified": "已验证代码",
@@ -160,7 +160,7 @@
     "codePreview": {
       "title": "代码预览",
       "comments": [
-        "# Steam Debloat v8.25",
+        "# Steam Debloat v8.27",
         "\"正在检测 Steam 安装...\"",
         "\"找到 Steam，正在应用优化...\""
       ]

@@ -9,22 +9,34 @@ param (
 $host.UI.RawUI.BackgroundColor = "Black"
 $Debug = "off"
 
+# Add Windows Forms for FolderBrowserDialog
+Add-Type -AssemblyName System.Windows.Forms
+
 $script:config = @{
     Title               = "Steam Debloat"
     GitHub              = "Github.com/AltRossell/Steam-Debloat"
-    Version            = "v8.25"
+    Version            = "v8.27"
     Color              = @{Info = "White"; Success = "Magenta"; Warning = "DarkYellow"; Error = "DarkRed"; Debug = "Blue" }
     ErrorPage          = "https://github.com/AltRossell/Steam-Debloat/issues"
     Urls               = @{
         "SteamSetup"       = "https://cdn.akamai.steamstatic.com/client/installer/SteamSetup.exe"
-        "SteamScript"      = "https://raw.githubusercontent.com/AltRossell/Steam-Debloat/refs/heads/main/script/steam.ps1"
     }
     SteamInstallDir    = "C:\Program Files (x86)\Steam"
     SteamInstallDirV2  = "C:\Program Files (x86)\Steamv2"
     RetryAttempts      = 3
     RetryDelay         = 5
     LogFile            = Join-Path $env:TEMP "Steam-Debloat.log"
-    SteamScriptPath    = Join-Path $env:TEMP "steam.ps1"
+}
+
+# Steam launch modes embedded directly
+$STEAM_MODES = @{
+    "normal2025july" = "-no-dwrite -no-cef-sandbox -nooverlay -nobigpicture -nofriendsui -noshaders -novid -noverifyfiles -nointro -skipstreamingdrivers -norepairfiles -nohltv -nofasthtml -nocrashmonitor -no-shared-textures -disablehighdpi -cef-single-process -cef-in-process-gpu -single_core -cef-disable-d3d11 -cef-disable-sandbox -disable-winh264 -vrdisable -cef-disable-breakpad -cef-disable-gpu -cef-disable-hang-timeouts -cef-disable-seccomp-sandbox -cef-disable-extensions -cef-disable-remote-fonts -cef-enable-media-stream -cef-disable-accelerated-video-decode steam://open/library"
+    "normal2022dec" = "-no-dwrite -no-cef-sandbox -nooverlay -nobigpicture -nofriendsui -noshaders -novid -noverifyfiles -nointro -skipstreamingdrivers -norepairfiles -nohltv -nofasthtml -nocrashmonitor -no-shared-textures -disablehighdpi -cef-single-process -cef-in-process-gpu -single_core -cef-disable-d3d11 -cef-disable-sandbox -disable-winh264 -vrdisable -cef-disable-breakpad -cef-disable-gpu -cef-disable-hang-timeouts -cef-disable-seccomp-sandbox -cef-disable-extensions -cef-disable-remote-fonts -cef-enable-media-stream -cef-disable-accelerated-video-decode steam://open/library"
+    "lite2022dec" = "-silent -cef-force-32bit -no-dwrite -no-cef-sandbox -nooverlay -nofriendsui -nobigpicture -noshaders -novid -noverifyfiles -nointro -skipstreamingdrivers -norepairfiles -nohltv -nofasthtml -nocrashmonitor -no-shared-textures -disablehighdpi -cef-single-process -cef-in-process-gpu -single_core -cef-disable-d3d11 -cef-disable-sandbox -disable-winh264 -vrdisable -cef-disable-breakpad -cef-disable-gpu -cef-disable-hang-timeouts -cef-disable-seccomp-sandbox -cef-disable-gpu-compositing -cef-disable-extensions -cef-disable-remote-fonts -cef-enable-media-stream -cef-disable-accelerated-video-decode steam://open/library"
+    "normalboth2022-2025" = @{
+        "steam2025" = "-no-dwrite -no-cef-sandbox -nooverlay -nobigpicture -nofriendsui -noshaders -novid -noverifyfiles -nointro -skipstreamingdrivers -norepairfiles -nohltv -nofasthtml -nocrashmonitor -no-shared-textures -disablehighdpi -cef-single-process -cef-in-process-gpu -single_core -cef-disable-d3d11 -cef-disable-sandbox -disable-winh264 -vrdisable -cef-disable-breakpad -cef-disable-gpu -cef-disable-hang-timeouts -cef-disable-seccomp-sandbox -cef-disable-extensions -cef-disable-remote-fonts -cef-enable-media-stream -cef-disable-accelerated-video-decode steam://open/library"
+        "steam2022" = "-no-dwrite -no-cef-sandbox -nooverlay -nobigpicture -nofriendsui -noshaders -novid -noverifyfiles -nointro -skipstreamingdrivers -norepairfiles -nohltv -nofasthtml -nocrashmonitor -no-shared-textures -disablehighdpi -cef-single-process -cef-in-process-gpu -single_core -cef-disable-d3d11 -cef-disable-sandbox -disable-winh264 -vrdisable -cef-disable-breakpad -cef-disable-gpu -cef-disable-hang-timeouts -cef-disable-seccomp-sandbox -cef-disable-extensions -cef-disable-remote-fonts -cef-enable-media-stream -cef-disable-accelerated-video-decode steam://open/library"
+    }
 }
 
 function Test-AdminPrivileges {
@@ -61,32 +73,142 @@ function Write-DebugLog {
     }
 }
 
+function Show-FolderBrowserDialog {
+    param (
+        [string]$Description = "Please select your Steam installation folder"
+    )
+    
+    $folderBrowser = New-Object System.Windows.Forms.FolderBrowserDialog
+    $folderBrowser.Description = $Description
+    $folderBrowser.RootFolder = [System.Environment+SpecialFolder]::MyComputer
+    $folderBrowser.ShowNewFolderButton = $false
+    
+    $result = $folderBrowser.ShowDialog()
+    
+    if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
+        return $folderBrowser.SelectedPath
+    }
+    return $null
+}
+
 function Test-SteamInstallation {
     param (
         [string]$InstallDir = $script:config.SteamInstallDir
     )
+    
+    # First check the default directory
     $steamExePath = Join-Path $InstallDir "steam.exe"
-    return Test-Path $steamExePath
+    if (Test-Path $steamExePath) {
+        Write-DebugLog "Steam found in default location: $InstallDir" -Level Success
+        return @{ Found = $true; Path = $InstallDir }
+    }
+    
+    Write-DebugLog "Steam not found in default location: $InstallDir" -Level Warning
+    
+    # Check common alternative locations
+    $commonPaths = @(
+        "C:\Program Files\Steam",
+        "D:\Steam",
+        "E:\Steam",
+        "C:\Steam",
+        "$env:USERPROFILE\Steam"
+    )
+    
+    foreach ($path in $commonPaths) {
+        $steamExePath = Join-Path $path "steam.exe"
+        if (Test-Path $steamExePath) {
+            Write-DebugLog "Steam found in alternative location: $path" -Level Success
+            return @{ Found = $true; Path = $path }
+        }
+    }
+    
+    # If not in NoInteraction mode, ask user to locate Steam
+    if (-not $NoInteraction) {
+        Write-Host ""
+        Write-DebugLog "Steam installation not found in common locations." -Level Warning
+        $choice = Read-Host "Do you have Steam installed in a different location? (Y/N)"
+        
+        if ($choice.ToUpper() -eq 'Y') {
+            Write-DebugLog "Please select your Steam installation folder in the dialog that will appear." -Level Info
+            Write-Host "Looking for the folder that contains 'steam.exe'..." -ForegroundColor Yellow
+            
+            $selectedPath = Show-FolderBrowserDialog -Description "Please select your Steam installation folder (the folder containing steam.exe)"
+            
+            if ($selectedPath) {
+                $steamExePath = Join-Path $selectedPath "steam.exe"
+                if (Test-Path $steamExePath) {
+                    Write-DebugLog "Steam verified in custom location: $selectedPath" -Level Success
+                    # Update the config to use this path
+                    $script:config.SteamInstallDir = $selectedPath
+                    return @{ Found = $true; Path = $selectedPath }
+                } else {
+                    Write-DebugLog "steam.exe not found in selected folder: $selectedPath" -Level Error
+                    Write-DebugLog "Please make sure you select the folder that contains steam.exe" -Level Warning
+                }
+            } else {
+                Write-DebugLog "No folder selected." -Level Warning
+            }
+        }
+    }
+    
+    return @{ Found = $false; Path = $null }
 }
 
-function Get-SteamScript {
-    $maxAttempts = 3
-    $attempt = 0
-    do {
-        $attempt++
-        try {
-            Invoke-SafeWebRequest -Uri $script:config.Urls.SteamScript -OutFile $script:config.SteamScriptPath
-            if (Test-Path $script:config.SteamScriptPath) {
-                $content = Get-Content $script:config.SteamScriptPath -Raw
-                if ($content) { return $true }
+function Create-SteamBatch {
+    param (
+        [string]$Mode,
+        [string]$SteamPath
+    )
+
+    $tempPath = [System.Environment]::GetEnvironmentVariable("TEMP")
+    $modeKey = $Mode.ToLower()
+    
+    try {
+        if ($modeKey -eq "normalboth2022-2025") {
+            # Create batch for Steam 2025
+            $batchPath2025 = Join-Path $tempPath "Steam2025.bat"
+            $batchContent2025 = @"
+@echo off
+echo Launching Steam 2025 (Latest) with optimized parameters...
+cd /d "$SteamPath"
+start Steam.exe $($STEAM_MODES[$modeKey]["steam2025"])
+"@
+            $batchContent2025 | Out-File -FilePath $batchPath2025 -Encoding ASCII -Force
+            Write-DebugLog "Created Steam 2025 batch file: $batchPath2025" -Level Success
+            
+            # Create batch for Steam 2022
+            $batchPath2022 = Join-Path $tempPath "Steam2022.bat"
+            $batchContent2022 = @"
+@echo off
+echo Launching Steam 2022 (December 2022) with optimized parameters...
+cd /d "$($script:config.SteamInstallDirV2)"
+start Steam.exe $($STEAM_MODES[$modeKey]["steam2022"])
+"@
+            $batchContent2022 | Out-File -FilePath $batchPath2022 -Encoding ASCII -Force
+            Write-DebugLog "Created Steam 2022 batch file: $batchPath2022" -Level Success
+            
+            return @{ 
+                SteamBat2025 = $batchPath2025
+                SteamBat2022 = $batchPath2022
             }
-        } catch {
-            Write-DebugLog "Attempt $attempt to download steam.ps1 failed: $_" -Level Warning
-            if ($attempt -ge $maxAttempts) { return $false }
-            Start-Sleep -Seconds 2
+        } else {
+            $batchPath = Join-Path $tempPath "Steam-$Mode.bat"
+            $batchContent = @"
+@echo off
+echo Launching Steam with optimized parameters...
+cd /d "$SteamPath"
+start Steam.exe $($STEAM_MODES[$modeKey])
+"@
+            $batchContent | Out-File -FilePath $batchPath -Encoding ASCII -Force
+            Write-DebugLog "Created Steam batch file: $batchPath" -Level Success
+            
+            return @{ SteamBat = $batchPath }
         }
-    } while ($attempt -lt $maxAttempts)
-    return $false
+    }
+    catch {
+        Write-DebugLog "Failed to create batch file: $_" -Level Error
+        return $null
+    }
 }
 
 function Wait-ForPath {
@@ -253,10 +375,14 @@ function Stop-SteamProcesses {
 
 function Get-RequiredFiles {
     param (
-        [string]$SelectedMode
+        [string]$SelectedMode,
+        [string]$SteamPath
     )
-    & $script:config.SteamScriptPath -SelectedMode $SelectedMode
-
+    
+    # Create batch files using embedded modes
+    $batchFiles = Create-SteamBatch -Mode $SelectedMode -SteamPath $SteamPath
+    
+    # Create steam.cfg
     $steamCfgPath = Join-Path $env:TEMP "steam.cfg"
     @"
 BootStrapperInhibitAll=enable
@@ -265,13 +391,13 @@ BootStrapperForceSelfUpdate=disable
 
     if ($SelectedMode.ToLower() -eq "normalboth2022-2025") {
         return @{ 
-            SteamBat2025 = Join-Path $env:TEMP "Steam2025.bat"
-            SteamBat2022 = Join-Path $env:TEMP "Steam2022.bat"
+            SteamBat2025 = $batchFiles.SteamBat2025
+            SteamBat2022 = $batchFiles.SteamBat2022
             SteamCfg = $steamCfgPath 
         }
     } else {
         return @{ 
-            SteamBat = Join-Path $env:TEMP "Steam-$SelectedMode.bat"
+            SteamBat = $batchFiles.SteamBat
             SteamCfg = $steamCfgPath 
         }
     }
@@ -326,7 +452,6 @@ function Remove-TempFiles {
     Remove-Item -Path (Join-Path $env:TEMP "Steam2025.bat") -Force -ErrorAction SilentlyContinue
     Remove-Item -Path (Join-Path $env:TEMP "Steam2022.bat") -Force -ErrorAction SilentlyContinue
     Remove-Item -Path (Join-Path $env:TEMP "steam.cfg") -Force -ErrorAction SilentlyContinue
-    Remove-Item -Path (Join-Path $env:TEMP "steam.ps1") -Force -ErrorAction SilentlyContinue
     Write-DebugLog "Removed temporary files" -Level Info
 }
 
@@ -403,7 +528,7 @@ function Start-OptimizationGuide {
         Write-DebugLog "STEP 1: Please login to Steam now" -Level Warning
         Write-DebugLog "Make sure you are logged in to your Steam account before continuing." -Level Info
         
-        # Siempre esperar Enter del usuario, incluso en modo NoInteraction
+        # Always wait for user confirmation, even in NoInteraction mode
         if ($NoInteraction) {
             Write-DebugLog "NoInteraction mode: Please ensure Steam is logged in, then press Enter to continue..." -Level Warning
         }
@@ -543,33 +668,43 @@ function Start-SteamDebloat {
         if ($SelectedMode -eq "NormalBoth2022-2025") {
             Write-DebugLog "Installing both Steam versions (2022 and 2025)..." -Level Info
             
-            # Install Steam 2025 version
-            Write-DebugLog "Installing Steam 2025 version..." -Level Info
-            if (-not (Test-SteamInstallation -InstallDir $script:config.SteamInstallDir)) {
+            # Check Steam 2025 version
+            $steamCheck2025 = Test-SteamInstallation -InstallDir $script:config.SteamInstallDir
+            if (-not $steamCheck2025.Found) {
+                Write-DebugLog "Installing Steam 2025 version..." -Level Info
                 $installSuccess2025 = Install-Steam -InstallDir $script:config.SteamInstallDir
                 if (-not $installSuccess2025) {
                     Write-DebugLog "Failed to install Steam 2025 version" -Level Error
                     return
                 }
+            } else {
+                Write-DebugLog "Steam 2025 version already installed at: $($steamCheck2025.Path)" -Level Success
+                $script:config.SteamInstallDir = $steamCheck2025.Path
             }
             Start-SteamWithParameters -Mode "Normal2025July" -InstallDir $script:config.SteamInstallDir
             
-            # Install Steam 2022 version
-            Write-DebugLog "Installing Steam 2022 version..." -Level Info
-            if (-not (Test-SteamInstallation -InstallDir $script:config.SteamInstallDirV2)) {
+            # Check Steam 2022 version
+            $steamCheck2022 = Test-SteamInstallation -InstallDir $script:config.SteamInstallDirV2
+            if (-not $steamCheck2022.Found) {
+                Write-DebugLog "Installing Steam 2022 version..." -Level Info
                 $installSuccess2022 = Install-Steam -InstallDir $script:config.SteamInstallDirV2
                 if (-not $installSuccess2022) {
                     Write-DebugLog "Failed to install Steam 2022 version" -Level Error
                     return
                 }
+            } else {
+                Write-DebugLog "Steam 2022 version already installed" -Level Success
             }
             Start-SteamWithParameters -Mode "Normal2022dec" -InstallDir $script:config.SteamInstallDirV2
             
             Stop-SteamProcesses
             
-            $files = Get-RequiredFiles -SelectedMode $SelectedMode
+            # Generate files using the detected Steam path
+            $files = Get-RequiredFiles -SelectedMode $SelectedMode -SteamPath $script:config.SteamInstallDir
             Move-ConfigFile -SourcePath $files.SteamCfg -InstallDir $script:config.SteamInstallDir
             Move-ConfigFile -SourcePath $files.SteamCfg -InstallDir $script:config.SteamInstallDirV2
+            
+            # Move batch files to desktop
             Move-SteamBatToDesktop -SourcePath $files.SteamBat2025 -FileName "Steam2025.bat"
             Move-SteamBatToDesktop -SourcePath $files.SteamBat2022 -FileName "Steam2022.bat"
             
@@ -586,10 +721,13 @@ function Start-SteamDebloat {
             Remove-TempFiles
         }
         else {
-            Write-DebugLog "Initializing Steam with optimized parameters..." -Level Info
+            Write-DebugLog "Checking Steam installation..." -Level Info
             
-            if (-not (Test-SteamInstallation)) {
-                Write-DebugLog "Steam is not installed on this system." -Level Warning
+            # Enhanced Steam detection
+            $steamCheck = Test-SteamInstallation
+            
+            if (-not $steamCheck.Found) {
+                Write-DebugLog "Steam is not installed or not found." -Level Warning
                 if (-not $NoInteraction) {
                     $choice = Read-Host "Would you like to install Steam? (Y/N)"
                     if ($choice.ToUpper() -ne 'Y') {
@@ -604,23 +742,30 @@ function Start-SteamDebloat {
                     Write-DebugLog "Cannot proceed without Steam installation." -Level Error
                     return
                 }
+            } else {
+                Write-DebugLog "Using Steam installation at: $($steamCheck.Path)" -Level Success
+                $script:config.SteamInstallDir = $steamCheck.Path
             }
             
-            $steamResult = Start-SteamWithParameters -Mode $SelectedMode
+            $steamResult = Start-SteamWithParameters -Mode $SelectedMode -InstallDir $script:config.SteamInstallDir
             if (-not $steamResult) {
                 Write-DebugLog "Failed to start Steam with parameters" -Level Warning
             }
             
             Stop-SteamProcesses
-            $files = Get-RequiredFiles -SelectedMode $SelectedMode
-            Move-ConfigFile -SourcePath $files.SteamCfg
-            Move-SteamBatToDesktop -SourcePath $files.SteamBat
+            
+            # Generate files using the detected/installed Steam path
+            $files = Get-RequiredFiles -SelectedMode $SelectedMode -SteamPath $script:config.SteamInstallDir
+            Move-ConfigFile -SourcePath $files.SteamCfg -InstallDir $script:config.SteamInstallDir
+            
+            # Move batch file to desktop
+            Move-SteamBatToDesktop -SourcePath $files.SteamBat -FileName "Steam-Optimized.bat"
             
             # Ask about Start Menu
             Write-Host ""
             $choice = Get-UserChoice -Prompt "Do you want to add the optimized Steam batch file to Start Menu? (Y/N)" -DefaultChoice "N"
             if ($choice -eq "Y") {
-                Move-SteamBatToStartMenu -SourcePath $files.SteamBat
+                Move-SteamBatToStartMenu -SourcePath $files.SteamBat -FileName "Steam-Optimized.bat"
             } else {
                 Write-DebugLog "Start Menu shortcut skipped." -Level Info
             }
@@ -630,7 +775,7 @@ function Start-SteamDebloat {
 
         # Ask about startup removal
         Write-Host ""
-        $choice = Get-UserChoice -Prompt "Do you want to remove Steam from startup? (Y/N)" -DefaultChoice "N"
+        $choice = Get-UserChoice -Prompt "Do you want to remove Steam from Windows startup? (Y/N)" -DefaultChoice "N"
         if ($choice -eq "Y") {
             $removeResult = Remove-SteamFromStartup
             if ($removeResult) {
@@ -646,6 +791,7 @@ function Start-SteamDebloat {
         Write-Host ""
         Write-DebugLog "Steam Optimization process completed successfully!" -Level Success
         Write-DebugLog "Steam has been updated and configured for optimal performance." -Level Success
+        Write-DebugLog "Optimized batch file(s) have been created on your desktop." -Level Success
         Write-DebugLog "You can contribute to improve the repository at: $($script:config.GitHub)" -Level Success
         
         if (-not $NoInteraction) { 
@@ -661,6 +807,7 @@ function Start-SteamDebloat {
     }
 }
 
+# Initialize debug logging if enabled
 if ($Debug -eq "on") {
     if (Test-Path $script:config.LogFile) {
         Clear-Content $script:config.LogFile
@@ -668,12 +815,10 @@ if ($Debug -eq "on") {
     Write-DebugLog "Debug logging enabled - Log file: $($script:config.LogFile)" -Level Info
 }
 
+# Set window title
 $host.UI.RawUI.WindowTitle = "$($script:config.GitHub)"
-if (-not (Get-SteamScript)) {
-    Write-DebugLog "Cannot proceed without steam.ps1 script." -Level Error
-    exit
-}
 
+# Show intro unless skipped
 if (-not $SkipIntro) {
     Clear-Host
     Write-Host @"
@@ -721,3 +866,6 @@ if (-not $SkipIntro) {
         Write-DebugLog "NoInteraction mode: Using mode $Mode" -Level Info
     }
 }
+
+# Start the main process
+Start-SteamDebloat -SelectedMode $Mode

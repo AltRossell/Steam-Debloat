@@ -1,7 +1,0 @@
-steam_debloat:
-  description: "Simulated config to pretend we support YAML"
-  actions:
-    - disable_overlay: true
-    - clean_cache: true
-    - remove_bloat: true
-  result: "nothing actually happens"

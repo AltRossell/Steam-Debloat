@@ -5,7 +5,7 @@
     "ogDescription": "Verwende bestimmte Versionen des Steam-Clients für beste Leistung und Kompatibilität."
   },
   "nav": {
-    "version": "v8.25",
+    "version": "v8.27",
     "home": "Startseite",
     "downloads": "Downloads",
     "features": "Funktionen",
@@ -14,7 +14,7 @@
     "github": "GitHub"
   },
   "hero": {
-    "badge": "Neue Version v8.25 verfügbar",
+    "badge": "Neue Version v8.27 verfügbar",
     "title": "Optimiere dein",
     "titleGradient": "Steam-Erlebnis",
     "description": "Verwende bestimmte Versionen des Steam-Clients für <span class=\"text-steam-accent font-medium\">bessere Leistung</span>, <span class=\"text-steam-accent font-medium\">höhere Kompatibilität</span> und ein <span class=\"text-steam-accent font-medium\">optimiertes Spielerlebnis</span>.",
@@ -70,7 +70,7 @@
     },
     "selectVersion": "Wähle eine Version",
     "downloadSelected": "Download {version}",
-    "versionInfo": "Version v8.25 • Administratorrechte erforderlich",
+    "versionInfo": "Version v8.27 • Administratorrechte erforderlich",
     "security": {
       "safe": "100% Sicher",
       "verified": "Verifizierter Code",
@@ -160,7 +160,7 @@
     "codePreview": {
       "title": "Code-Vorschau",
       "comments": [
-        "# Steam Debloat v8.25",
+        "# Steam Debloat v8.27",
         "\"Steam-Installation wird erkannt...\"",
         "\"Steam gefunden, Optimierungen werden angewendet...\""
       ]

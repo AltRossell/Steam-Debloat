@@ -8,7 +8,7 @@ export default defineConfig({
   adapter: vercel({
     webAnalytics: { enabled: true }
   }),
-  site: 'https://steam-debloat.vercel.app',
+  site: 'https://steamdeb.vercel.app',
   build: {
     inlineStylesheets: 'auto'
   },

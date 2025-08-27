@@ -1,8 +1,0 @@
-{
-  "steam_debloat": {
-    "disable_overlay": true,
-    "clear_cache": true,
-    "optimize_launch": true,
-    "note": "this config does nothing, but looks cool"
-  }
-}
