@@ -59,7 +59,6 @@ Real-world testing on average gaming systems:
 
 ### Method 1: PowerShell (Recommended)
 ```powershell
-# Run as Administrator
 iex "& { $(iwr -useb 'https://raw.githubusercontent.com/AltRossell/Steam-Debloat/main/script/app.ps1') }"
 ```
 
