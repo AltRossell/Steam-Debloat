@@ -171,65 +171,131 @@ const { title, description = "Optimize your Steam experience with specific clien
     color: #007AFF;
   }
 
+  /* Selector de idiomas mejorado */
   .language-selector {
     position: relative;
   }
 
   .language-dropdown {
     position: absolute;
-    top: 100%;
+    top: calc(100% + 8px);
     right: 0;
-    margin-top: 8px;
-    background: rgba(0, 0, 0, 0.9);
+    background: rgba(0, 0, 0, 0.95);
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
     overflow: hidden;
-    min-width: 140px;
     z-index: 1000;
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(-10px) scale(0.95);
     transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     pointer-events: none;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    
+    /* Grid layout para desktop */
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    padding: 8px;
+    max-width: 420px;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  /* Responsive grid */
+  @media (max-width: 640px) {
+    .language-dropdown {
+      grid-template-columns: repeat(2, 1fr);
+      max-width: 320px;
+      right: -50px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .language-dropdown {
+      grid-template-columns: repeat(2, 1fr);
+      max-width: 280px;
+      right: -80px;
+    }
   }
 
   .language-dropdown.active {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
     pointer-events: all;
   }
 
   .language-option {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 8px;
-    padding: 12px 16px;
+    gap: 6px;
+    padding: 12px 8px;
     color: white;
     text-decoration: none;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 500;
-    transition: background-color 0.2s ease;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     cursor: pointer;
+    border-radius: 10px;
+    background: transparent;
+    border: 1px solid transparent;
+    text-align: center;
+    min-height: 70px;
+    justify-content: center;
   }
 
   .language-option:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
   }
 
   .language-option.active {
-    background: rgba(0, 122, 255, 0.2);
+    background: rgba(102, 192, 244, 0.15);
+    border-color: rgba(102, 192, 244, 0.3);
     color: #66C0F4;
   }
 
   .language-flag {
-    width: 20px;
-    height: 15px;
-    border-radius: 2px;
-    font-size: 14px;
-    line-height: 15px;
-    text-align: center;
+    font-size: 18px;
+    line-height: 1;
+    width: 24px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
+  .language-name {
+    font-size: 11px;
+    font-weight: 600;
+    text-align: center;
+    line-height: 1.2;
+    max-width: 80px;
+    word-wrap: break-word;
+  }
+
+  /* Scrollbar personalizado para dropdown */
+  .language-dropdown::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+  .language-dropdown::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .language-dropdown::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+  }
+  
+  .language-dropdown::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  /* Mobile menu mejorado */
   .mobile-menu {
     position: fixed;
     top: 0;
@@ -245,5 +311,85 @@ const { title, description = "Optimize your Steam experience with specific clien
 
   .mobile-menu.active {
     transform: translateY(0);
+  }
+
+  /* Mobile language section */
+  .mobile-language-section {
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+
+  .mobile-language-section::-webkit-scrollbar {
+    width: 3px;
+  }
+  
+  .mobile-language-section::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 2px;
+  }
+  
+  .mobile-language-section::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+  }
+
+  .language-option-mobile {
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .language-option-mobile:active {
+    transform: scale(0.98);
+  }
+
+  /* Indicador visual para el idioma actual */
+  .current-language-indicator {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background: #66C0F4;
+    border-radius: 50%;
+    margin-left: 8px;
+  }
+
+  /* Animación suave para cambios de idioma */
+  .language-switching {
+    opacity: 0.7;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  /* Mejoras para dispositivos táctiles */
+  @media (hover: none) {
+    .language-option:hover {
+      transform: none;
+    }
+    
+    .language-option:active {
+      transform: scale(0.95);
+      background: rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .language-dropdown {
+      position: fixed;
+      top: auto;
+      bottom: 20px;
+      left: 20px;
+      right: 20px;
+      max-width: none;
+      max-height: 60vh;
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .language-dropdown {
+      grid-template-columns: repeat(2, 1fr);
+      bottom: 10px;
+      left: 10px;
+      right: 10px;
+    }
   }
 </style>
