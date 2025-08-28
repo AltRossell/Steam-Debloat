@@ -15,7 +15,7 @@ Add-Type -AssemblyName System.Windows.Forms
 $script:config = @{
     Title               = "Steam Debloat"
     GitHub              = "Github.com/AltRossell/Steam-Debloat"
-    Version            = "v8.27"
+    Version            = "v9.28"
     Color              = @{Info = "White"; Success = "Magenta"; Warning = "DarkYellow"; Error = "DarkRed"; Debug = "Blue" }
     ErrorPage          = "https://github.com/AltRossell/Steam-Debloat/issues"
     Urls               = @{
