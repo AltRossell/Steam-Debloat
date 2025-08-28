@@ -1,4 +1,3 @@
-
 let selectedMode = null;
 let currentLang = 'en';
 let translations = {};
@@ -293,6 +292,7 @@ function getNestedValue(obj, key) {
   return key.split('.').reduce((o, k) => o && o[k], obj);
 }
 
+// Función mejorada para inicializar los dropdowns de idiomas
 function initializeLanguageDropdowns() {
   const desktopDropdown = document.getElementById('language-dropdown');
   const mobileOptions = document.getElementById('mobile-language-options');
@@ -303,23 +303,27 @@ function initializeLanguageDropdowns() {
   mobileOptions.innerHTML = '';
   
   Object.entries(languageConfig).forEach(([lang, config]) => {
+    // Desktop dropdown con grid layout
     const desktopOption = document.createElement('div');
     desktopOption.className = 'language-option';
     desktopOption.setAttribute('data-lang', lang);
     desktopOption.innerHTML = `
       <span class="language-flag">${config.flag}</span>
-      <span>${config.name}</span>
+      <span class="language-name">${config.name}</span>
     `;
     desktopOption.addEventListener('click', () => switchLanguage(lang));
     desktopDropdown.appendChild(desktopOption);
     
+    // Mobile options mejorado
     const mobileOption = document.createElement('button');
-    mobileOption.className = `language-option block w-full text-left px-3 py-2 rounded-lg transition-colors ${
-      lang === currentLang ? 'bg-steam-accent/20 text-steam-accent' : 'hover:bg-white/5'
+    mobileOption.className = `language-option-mobile w-full text-left px-4 py-3 rounded-lg transition-all duration-200 flex items-center gap-3 ${
+      lang === currentLang ? 'bg-steam-accent/20 text-steam-accent border border-steam-accent/30' : 'hover:bg-white/5 border border-transparent'
     }`;
+    mobileOption.setAttribute('data-lang', lang);
     mobileOption.innerHTML = `
-      <span class="language-flag mr-3">${config.flag}</span>
-      <span>${config.name}</span>
+      <span class="language-flag text-lg">${config.flag}</span>
+      <span class="language-name font-medium">${config.name}</span>
+      ${lang === currentLang ? '<svg class="w-4 h-4 ml-auto text-steam-accent" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>' : ''}
     `;
     mobileOption.addEventListener('click', () => {
       switchLanguage(lang);
@@ -329,25 +333,32 @@ function initializeLanguageDropdowns() {
   });
 }
 
+// Función mejorada para cambiar idioma con feedback visual
 async function switchLanguage(lang) {
   if (lang === currentLang) return;
 
+  // Agregar clase de transición
+  document.body.classList.add('language-switching');
+  
   try {
     const newTranslations = await loadTranslations(lang);
     if (newTranslations) {
       currentLang = lang;
       translations = newTranslations;
+      
+      // Actualizar contenido
       updateContent(translations);
       updateLanguageButton();
+      updateMobileLanguageOptions();
       
       localStorage.setItem('preferred-language', lang);
-      
       document.documentElement.lang = lang;
       
       const url = new URL(window.location);
       url.searchParams.set('lang', lang);
       window.history.replaceState({}, '', url);
       
+      // Cerrar dropdown
       const dropdown = document.getElementById('language-dropdown');
       if (dropdown) dropdown.classList.remove('active');
       
@@ -355,9 +366,41 @@ async function switchLanguage(lang) {
     }
   } catch (error) {
     console.error('Error switching language:', error);
+  } finally {
+    // Remover clase de transición
+    setTimeout(() => {
+      document.body.classList.remove('language-switching');
+    }, 300);
   }
 }
 
+// Función para actualizar las opciones móviles
+function updateMobileLanguageOptions() {
+  const mobileOptions = document.getElementById('mobile-language-options');
+  if (!mobileOptions) return;
+  
+  const options = mobileOptions.querySelectorAll('.language-option-mobile');
+  options.forEach(option => {
+    const lang = option.getAttribute('data-lang');
+    
+    if (lang) {
+      const isActive = lang === currentLang;
+      option.className = `language-option-mobile w-full text-left px-4 py-3 rounded-lg transition-all duration-200 flex items-center gap-3 ${
+        isActive ? 'bg-steam-accent/20 text-steam-accent border border-steam-accent/30' : 'hover:bg-white/5 border border-transparent'
+      }`;
+      
+      // Actualizar el checkmark
+      const existingCheck = option.querySelector('svg');
+      if (existingCheck && !isActive) {
+        existingCheck.remove();
+      } else if (!existingCheck && isActive) {
+        option.innerHTML += '<svg class="w-4 h-4 ml-auto text-steam-accent" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>';
+      }
+    }
+  });
+}
+
+// Función mejorada para actualizar el botón de idioma
 function updateLanguageButton() {
   const config = languageConfig[currentLang];
   const button = document.getElementById('language-btn');
@@ -369,13 +412,30 @@ function updateLanguageButton() {
   
   if (flag && code) {
     flag.textContent = config.flag;
-    code.textContent = config.code;
+    code.textContent = currentLang.toUpperCase();
   }
   
+  // Actualizar opciones del dropdown
   document.querySelectorAll('.language-option').forEach(option => {
     const lang = option.getAttribute('data-lang');
     option.classList.toggle('active', lang === currentLang);
   });
+}
+
+// Función para manejar el scroll del dropdown en dispositivos pequeños
+function handleDropdownScroll() {
+  const dropdown = document.getElementById('language-dropdown');
+  if (!dropdown) return;
+  
+  const activeOption = dropdown.querySelector('.language-option.active');
+  if (activeOption && dropdown.classList.contains('active')) {
+    setTimeout(() => {
+      activeOption.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest'
+      });
+    }, 100);
+  }
 }
 
 function updateDownloadButton(mode, translations) {
