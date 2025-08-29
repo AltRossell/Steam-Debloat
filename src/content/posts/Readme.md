@@ -4,7 +4,7 @@ published: 2025-08-28
 description: 'Transform your Steam experience with measurable performance improvements - 70% faster startup, 50% memory reduction, and 86% lower CPU usage.'
 image: 'https://raw.githubusercontent.com/AltRossell/Steam-Debloat/main/assets/logo.png'
 tags: ['steam', 'optimization', 'performance', 'gaming', 'guide']
-category: 'Release'
+category: 'Documentation'
 draft: false 
 lang: ''
 ---
