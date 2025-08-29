@@ -15,7 +15,7 @@ Add-Type -AssemblyName System.Windows.Forms
 $script:config = @{
     Title               = "Steam Debloat"
     GitHub              = "Github.com/AltRossell/Steam-Debloat"
-    Version            = "v9.28"
+    Version            = "v10.29"
     Color              = @{Info = "White"; Success = "Magenta"; Warning = "DarkYellow"; Error = "DarkRed"; Debug = "Blue" }
     ErrorPage          = "https://github.com/AltRossell/Steam-Debloat/issues"
     Urls               = @{
@@ -105,27 +105,10 @@ function Test-SteamInstallation {
     
     Write-DebugLog "Steam not found in default location: $InstallDir" -Level Warning
     
-    # Check common alternative locations
-    $commonPaths = @(
-        "C:\Program Files\Steam",
-        "D:\Steam",
-        "E:\Steam",
-        "C:\Steam",
-        "$env:USERPROFILE\Steam"
-    )
-    
-    foreach ($path in $commonPaths) {
-        $steamExePath = Join-Path $path "steam.exe"
-        if (Test-Path $steamExePath) {
-            Write-DebugLog "Steam found in alternative location: $path" -Level Success
-            return @{ Found = $true; Path = $path }
-        }
-    }
-    
-    # If not in NoInteraction mode, ask user to locate Steam
+    # If not in NoInteraction mode, ask user to locate Steam directly
     if (-not $NoInteraction) {
         Write-Host ""
-        Write-DebugLog "Steam installation not found in common locations." -Level Warning
+        Write-DebugLog "Steam installation not found in the default location." -Level Warning
         $choice = Read-Host "Do you have Steam installed in a different location? (Y/N)"
         
         if ($choice.ToUpper() -eq 'Y') {
@@ -508,11 +491,11 @@ function Start-OptimizationGuide {
         Write-DebugLog "=== STEAM RAM & FPS OPTIMIZATION GUIDE ===" -Level Info
         Write-Host ""
         Write-DebugLog "This optimization will:" -Level Info
-        Write-DebugLog "• Disable GPU acceleration for web views" -Level Info
-        Write-DebugLog "• Disable smooth scroll in web views" -Level Info
-        Write-DebugLog "• Enable library low performance mode" -Level Info
-        Write-DebugLog "• Enable library low bandwidth mode" -Level Info
-        Write-DebugLog "• Disable library community content" -Level Info
+        Write-DebugLog "Disable GPU acceleration for web views" -Level Info
+        Write-DebugLog "Disable smooth scroll in web views" -Level Info
+        Write-DebugLog "Enable library low performance mode" -Level Info
+        Write-DebugLog "Enable library low bandwidth mode" -Level Info
+        Write-DebugLog "Disable library community content" -Level Info
         Write-Host ""
         
         $choice = Get-UserChoice -Prompt "Do you want to apply these RAM & FPS optimizations? (Y/N)" -DefaultChoice "N"
@@ -629,9 +612,9 @@ function Start-OptimizationGuide {
         Write-Host ""
         Write-DebugLog "Steam RAM & FPS optimization completed successfully!" -Level Success
         Write-DebugLog "The following optimizations have been applied:" -Level Success
-        Write-DebugLog "✓ Disabled GPU acceleration for web views" -Level Success
-        Write-DebugLog "✓ Disabled smooth scroll in web views" -Level Success
-        Write-DebugLog "✓ Enabled library performance optimizations" -Level Success
+        Write-DebugLog "- Disabled GPU acceleration for web views" -Level Success
+        Write-DebugLog "- Disabled smooth scroll in web views" -Level Success
+        Write-DebugLog "- Enabled library performance optimizations" -Level Success
         Write-Host ""
         
         return $true
@@ -759,13 +742,13 @@ function Start-SteamDebloat {
             Move-ConfigFile -SourcePath $files.SteamCfg -InstallDir $script:config.SteamInstallDir
             
             # Move batch file to desktop
-            Move-SteamBatToDesktop -SourcePath $files.SteamBat -FileName "Steam-Optimized.bat"
+            Move-SteamBatToDesktop -SourcePath $files.SteamBat -FileName "Steam.bat"
             
             # Ask about Start Menu
             Write-Host ""
             $choice = Get-UserChoice -Prompt "Do you want to add the optimized Steam batch file to Start Menu? (Y/N)" -DefaultChoice "N"
             if ($choice -eq "Y") {
-                Move-SteamBatToStartMenu -SourcePath $files.SteamBat -FileName "Steam-Optimized.bat"
+                Move-SteamBatToStartMenu -SourcePath $files.SteamBat -FileName "Steam.bat"
             } else {
                 Write-DebugLog "Start Menu shortcut skipped." -Level Info
             }
