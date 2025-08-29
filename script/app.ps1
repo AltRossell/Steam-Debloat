@@ -574,19 +574,19 @@ function Start-OptimizationGuide {
                         $content = Get-Content $localConfigPath -Raw
                         
                         # Modify library settings
-                        $content = $content -replace '"LibraryDisableCommunityContent"\s*"1"', '"LibraryDisableCommunityContent"		"0"'
-                        $content = $content -replace '"LibraryLowPerfMode"\s*"1"', '"LibraryLowPerfMode"		"0"'
-                        $content = $content -replace '"LibraryLowBandwidthMode"\s*"1"', '"LibraryLowBandwidthMode"		"0"'
+                        $content = $content -replace '"LibraryDisableCommunityContent"\s*"0"', '"LibraryDisableCommunityContent"		"1"'
+                        $content = $content -replace '"LibraryLowPerfMode"\s*"0"', '"LibraryLowPerfMode"		"0"'
+                        $content = $content -replace '"LibraryLowBandwidthMode"\s*"0"', '"LibraryLowBandwidthMode"		"1"'
                         
                         # If settings don't exist, add them
                         if ($content -notmatch '"LibraryDisableCommunityContent"') {
-                            $content = $content -replace '("UserLocalConfigStore"\s*{)', "`$1`n`t`"LibraryDisableCommunityContent`"`t`t`"0`""
+                            $content = $content -replace '("UserLocalConfigStore"\s*{)', "`$1`n`t`"LibraryDisableCommunityContent`"`t`t`"1`""
                         }
                         if ($content -notmatch '"LibraryLowPerfMode"') {
-                            $content = $content -replace '("UserLocalConfigStore"\s*{)', "`$1`n`t`"LibraryLowPerfMode`"`t`t`"0`""
+                            $content = $content -replace '("UserLocalConfigStore"\s*{)', "`$1`n`t`"LibraryLowPerfMode`"`t`t`"1`""
                         }
                         if ($content -notmatch '"LibraryLowBandwidthMode"') {
-                            $content = $content -replace '("UserLocalConfigStore"\s*{)', "`$1`n`t`"LibraryLowBandwidthMode`"`t`t`"0`""
+                            $content = $content -replace '("UserLocalConfigStore"\s*{)', "`$1`n`t`"LibraryLowBandwidthMode`"`t`t`"1`""
                         }
                         
                         # Create backup
