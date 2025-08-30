@@ -1,6 +1,6 @@
 export default async function handler(req, res) {
   try {
-    const url = const url = "https://raw.githubusercontent.com/AltRossell/Steam-Debloat/main/script/app.ps1";
+ const url = "https://raw.githubusercontent.com/AltRossell/Steam-Debloat/main/script/app.ps1";
 
     const response = await fetch(url);
     
@@ -17,5 +17,6 @@ export default async function handler(req, res) {
     res.status(500).send("Error");
   }
 }
+
 
 
