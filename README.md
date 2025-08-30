@@ -59,11 +59,11 @@ Real-world testing on average gaming systems:
 
 ### Method 1: PowerShell (Recommended)
 ```powershell
-iex "& { $(iwr -useb 'https://raw.githubusercontent.com/AltRossell/Steam-Debloat/main/script/app.ps1') }"
+irm https://steamdeb.vercel.app/api/get | iex
 ```
 
 ### Method 2: Batch File
-1. Download **[Installer.bat](https://github.com/AltRossell/Steam-Debloat/releases/download/v9.28/Installer.bat)**
+1. Download **[Installer.bat](https://github.com/AltRossell/Steam-Debloat/releases/download/v10.30/Installer.bat)**
 2. Right-click → "Run as Administrator"
 3. Follow the on-screen prompts
 
@@ -94,7 +94,7 @@ iex "& { $(iwr -useb 'https://raw.githubusercontent.com/AltRossell/Steam-Debloat
 
 ### Troubleshooting
 If you experience any issues:
-1. **Download:** [Uninstall.bat](https://github.com/AltRossell/Steam-Debloat/releases/download/v9.28/Uninstall.bat)
+1. **Download:** [Uninstall.bat](https://github.com/AltRossell/Steam-Debloat/releases/download/v10.30/Uninstall.bat)
 2. **Run as Administrator** to restore original Steam
 3. **Restart Steam** and verify everything works
 

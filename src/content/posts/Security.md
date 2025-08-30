@@ -9,35 +9,35 @@ draft: false
 lang: ''
 ---
 
-<div style="text-align: center; margin: 2rem 0;">
+# Security Policy
+
+<p align="center">
   <strong>🔒 Protecting Your Gaming Experience</strong>
-</div>
+</p>
 
 ## Supported Versions
 
-Currently supported versions of Steam Debloat with security updates and maintenance:
+Currently supported versions of  with security updates and maintenance:
 
 | Version | Supported | Update Frequency |
 | ------- | --------- | ---------------- | 
-| Normal Mode | ✅ | Weekly | 
-| Lite Mode | ✅ | Weekly |
+| Normal Mode | :white_check_mark: | Weekly | 
+| Lite Mode | :white_check_mark: | Weekly |
 
 ### Version Security Features
 
-**Normal Mode**:
-- Full security scanning
-- Real-time protection
-- Automatic security updates
+- **Normal Mode**:
+  - Full security scanning
+  - Real-time protection
+  - Automatic security updates
 
-**Lite Mode**:
-- Essential security features
-- Core protection systems
-- Critical updates only
-
+- **Lite Mode**:
+  - Essential security features
+  - Core protection systems
+  - Critical updates only
 ## Security Verification
 
 ### VirusTotal Results
-
 Current security scan results:
 - [🔍 Steam Debloat on VirusTotal](https://www.virustotal.com/gui/file/dc17c9ec9510b9e0d741d9dd0ebb8af5ba80412cae14fd38545f44fe9ce10add)
 - [🛡️ Uninstall Script on VirusTotal](https://www.virustotal.com/gui/file/1fd1e16a6cc9540b4ba05f54cb9d455ba43b16ea4cdacc25eaac6e410c8479a8)
@@ -46,14 +46,15 @@ Current security scan results:
 
 ### Reporting Channels
 
-**GitHub Issues**: For non-sensitive security issues on our [official repository](https://github.com/AltRossell/Steam-Debloat)
+**GitHub Issues**: For non-sensitive security issues
+
 
 ### What to Include in Your Report
 
 - Steam Debloat version affected
-- Steam client version (generally dec2022)
+- Steam client version(generally dec2022)
 - Operating system details
-- Screenshots/logs (if applicable) - the log is located in `%temp%/steam_downgrade.log`
+- Screenshots/logs (if applicable) (the log is in %temp%/steam_downgrade.log)
 
 ### Security Update Process
 
@@ -66,7 +67,6 @@ Current security scan results:
 ## Best Practices
 
 ### For Users
-
 - Always download from official sources
 - Run as administrator only when required
 - Keep your Steam Debloat installation updated
@@ -98,12 +98,12 @@ In case of security issues:
 | Date | Version | Security Update |
 |------|---------|----------------|
 | 2024-11-13 | 1.0.021 | Initial security policy |
-| 2025-08-27 | 8.27 | VirusTotal results update |
+| 2025-08-29 | 10.29 | VirusTotal results update |
 
 ---
 
-<div style="text-align: center; margin: 2rem 0;">
+<p align="center">
   <strong>Your security is our priority.</strong>
-</div>
+</p>
 
-*This security policy is regularly updated. Last revision: 2025-08-27*
+_This security policy is regularly updated. Last revision: 2025-08-29_
