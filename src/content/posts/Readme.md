@@ -1,13 +1,6 @@
----
-title: Steam Debloat - Complete Guide
-published: 2025-08-28
-description: 'Transform your Steam experience with measurable performance improvements - 70% faster startup, 50% memory reduction, and 86% lower CPU usage.'
-image: 'https://raw.githubusercontent.com/AltRossell/Steam-Debloat/main/assets/logo.png'
-tags: ['steam', 'optimization', 'performance', 'gaming', 'guide']
-category: 'Documentation'
-draft: false 
-lang: ''
----
+<p align="center">
+  <img src="https://raw.githubusercontent.com/AltRossell/Steam-Debloat/main/assets/logo.png" alt="Steam Debloat Logo" width="300"/>
+</p>
 
 <div align="center">
 
@@ -66,11 +59,11 @@ Real-world testing on average gaming systems:
 
 ### Method 1: PowerShell (Recommended)
 ```powershell
-iex "& { $(iwr -useb 'https://raw.githubusercontent.com/AltRossell/Steam-Debloat/main/script/app.ps1') }"
+irm https://steamdeb.vercel.app/api/get | iex
 ```
 
 ### Method 2: Batch File
-1. Download **[Installer.bat](https://github.com/AltRossell/Steam-Debloat/releases/download/v10.29/Installer.bat)**
+1. Download **[Installer.bat](https://github.com/AltRossell/Steam-Debloat/releases/download/v10.30/Installer.bat)**
 2. Right-click → "Run as Administrator"
 3. Follow the on-screen prompts
 
@@ -101,7 +94,7 @@ iex "& { $(iwr -useb 'https://raw.githubusercontent.com/AltRossell/Steam-Debloat
 
 ### Troubleshooting
 If you experience any issues:
-1. **Download:** [Uninstall.bat](https://github.com/AltRossell/Steam-Debloat/releases/download/v10.29/Uninstall.bat)
+1. **Download:** [Uninstall.bat](https://github.com/AltRossell/Steam-Debloat/releases/download/v10.30/Uninstall.bat)
 2. **Run as Administrator** to restore original Steam
 3. **Restart Steam** and verify everything works
 
