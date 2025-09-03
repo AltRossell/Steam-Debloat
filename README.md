@@ -6,7 +6,7 @@
 
 [![GitHub release](https://img.shields.io/github/v/release/AltRossell/Steam-Debloat?style=for-the-badge&color=4CAF50)](https://github.com/AltRossell/Steam-Debloat/releases)
 [![License](https://img.shields.io/github/license/AltRossell/Steam-Debloat?style=for-the-badge&color=FF9800)](LICENSE)
-[![VirusTotal](https://img.shields.io/badge/VirusTotal-Verified-brightgreen?style=for-the-badge&logo=virustotal)](https://www.virustotal.com/gui/file/099ab1fd3ee39acc48975d8e44d8b3f2a634fe3bf86ca7108a9e655dfa4334c8)
+[![VirusTotal](https://img.shields.io/badge/VirusTotal-Verified-brightgreen?style=for-the-badge&logo=virustotal)](https://www.virustotal.com/gui/file/994e1c503b70bbbd72a4a8271ff45f71a8e67ce6238294a9f16c3c648d7f565f)
 
 </div>
 
