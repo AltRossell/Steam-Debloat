@@ -162,7 +162,7 @@ We take security seriously. All releases undergo comprehensive scanning:
 
 | Component | VirusTotal Status | Last Scan |
 |:---------:|:-----------------:|:---------:|
-| **Main Installer** | [![VirusTotal](https://img.shields.io/badge/✅-Clean-brightgreen)](https://www.virustotal.com/gui/file/099ab1fd3ee39acc48975d8e44d8b3f2a634fe3bf86ca7108a9e655dfa4334c8?nocache=1) | Latest |
+| **Main Installer** | [![VirusTotal](https://img.shields.io/badge/✅-Clean-brightgreen)](https://www.virustotal.com/gui/file/994e1c503b70bbbd72a4a8271ff45f71a8e67ce6238294a9f16c3c648d7f565f?nocache=1) | Latest |
 | **Uninstaller** | [![VirusTotal](https://img.shields.io/badge/✅-Clean-brightgreen)](https://www.virustotal.com/gui/file/6964ca6b5f1b10d540c078bee7979dd61228c09b995e8c0f5f8ac336d912ce52?nocache=1) | Latest |
 
 </div>
