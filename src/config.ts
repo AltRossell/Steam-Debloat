@@ -31,13 +31,13 @@ export const siteConfig: SiteConfig = {
 	},
 	favicon: [
 		{
-			src: '/assets/images/logo.png',
-			sizes: '32x32',
+			src: "/assets/images/logo.png",
+			sizes: "32x32",
 		},
 		{
-			src: '/assets/images/logo.png',
-			sizes: '192x192',
-		}
+			src: "/assets/images/logo.png",
+			sizes: "192x192",
+		},
 	],
 };
 
