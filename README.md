@@ -143,17 +143,6 @@ If you experience any issues:
 [![Contributing](https://img.shields.io/badge/🔧-Contributing-orange?style=for-the-badge)](https://github.com/AltRossell/Steam-Debloat/blob/main/CONTRIBUTING.md)
 
 </div>
-
-### 💖 Support the Project
-
-If Steam Debloat improved your gaming experience, consider supporting development:
-
-<div align="center">
-
-[![Ko-fi](https://img.shields.io/badge/☕-Buy_Me_Coffee-ff5f5f?style=for-the-badge&logo=ko-fi)](https://ko-fi.com/l1lkid)
-
-</div>
-
 ## 🔒 Security & Verification
 
 We take security seriously. All releases undergo comprehensive scanning:
