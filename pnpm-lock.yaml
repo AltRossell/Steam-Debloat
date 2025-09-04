@@ -48,8 +48,8 @@ importers:
         specifier: ^1.2.4
         version: 1.2.4
       '@iconify-json/material-symbols':
-        specifier: ^1.2.33
-        version: 1.2.33
+        specifier: ^1.2.34
+        version: 1.2.34
       '@iconify/svelte':
         specifier: ^4.2.0
         version: 4.2.0(svelte@5.38.6)
@@ -84,8 +84,8 @@ importers:
         specifier: ^2.12.0
         version: 2.12.0
       pagefind:
-        specifier: ^1.3.0
-        version: 1.3.0
+        specifier: ^1.4.0
+        version: 1.4.0
       photoswipe:
         specifier: ^5.4.4
         version: 5.4.4
@@ -1097,8 +1097,8 @@ packages:
   '@iconify-json/fa6-solid@1.2.4':
     resolution: {integrity: sha512-LmDNNdJVyvF5mPm1yxWvL8KjCc/E8LzoqnF1LNTVpyY2ZJRUlGOWuPIThdbuFBF2IovgttkIyumhyqfmlHdwKg==}
 
-  '@iconify-json/material-symbols@1.2.33':
-    resolution: {integrity: sha512-Bs0X1+/vpJydW63olrGh60zkR8/Y70sI14AIWaP7Z6YQXukzWANH4q3I0sIPklbIn1oL6uwLvh0zQyd6Vh79LQ==}
+  '@iconify-json/material-symbols@1.2.34':
+    resolution: {integrity: sha512-qOn1q0lMlLvSHTci0sabhKbfQ3h2XfahsoSWMy2X7eITQRoKrENuFKPB9x2bpvq+d1XxPiz/4UTFgfy/ejiFmg==}
 
   '@iconify/svelte@4.2.0':
     resolution: {integrity: sha512-fEl0T7SAPonK7xk6xUlRPDmFDZVDe2Z7ZstlqeDS/sS8ve2uyU+Qa8rTWbIqzZJlRvONkK5kVXiUf9nIc+6OOQ==}
@@ -1382,28 +1382,33 @@ packages:
   '@oslojs/encoding@1.1.0':
     resolution: {integrity: sha512-70wQhgYmndg4GCPxPPxPGevRKqTIJ2Nh4OkiMWmDAVYsTQ+Ta7Sq+rPevXyXGdzr30/qZBnyOalCszoMxlyldQ==}
 
-  '@pagefind/darwin-arm64@1.3.0':
-    resolution: {integrity: sha512-365BEGl6ChOsauRjyVpBjXybflXAOvoMROw3TucAROHIcdBvXk9/2AmEvGFU0r75+vdQI4LJdJdpH4Y6Yqaj4A==}
+  '@pagefind/darwin-arm64@1.4.0':
+    resolution: {integrity: sha512-2vMqkbv3lbx1Awea90gTaBsvpzgRs7MuSgKDxW0m9oV1GPZCZbZBJg/qL83GIUEN2BFlY46dtUZi54pwH+/pTQ==}
     cpu: [arm64]
     os: [darwin]
 
-  '@pagefind/darwin-x64@1.3.0':
-    resolution: {integrity: sha512-zlGHA23uuXmS8z3XxEGmbHpWDxXfPZ47QS06tGUq0HDcZjXjXHeLG+cboOy828QIV5FXsm9MjfkP5e4ZNbOkow==}
+  '@pagefind/darwin-x64@1.4.0':
+    resolution: {integrity: sha512-e7JPIS6L9/cJfow+/IAqknsGqEPjJnVXGjpGm25bnq+NPdoD3c/7fAwr1OXkG4Ocjx6ZGSCijXEV4ryMcH2E3A==}
     cpu: [x64]
     os: [darwin]
 
-  '@pagefind/linux-arm64@1.3.0':
-    resolution: {integrity: sha512-8lsxNAiBRUk72JvetSBXs4WRpYrQrVJXjlRRnOL6UCdBN9Nlsz0t7hWstRk36+JqHpGWOKYiuHLzGYqYAqoOnQ==}
+  '@pagefind/freebsd-x64@1.4.0':
+    resolution: {integrity: sha512-WcJVypXSZ+9HpiqZjFXMUobfFfZZ6NzIYtkhQ9eOhZrQpeY5uQFqNWLCk7w9RkMUwBv1HAMDW3YJQl/8OqsV0Q==}
+    cpu: [x64]
+    os: [freebsd]
+
+  '@pagefind/linux-arm64@1.4.0':
+    resolution: {integrity: sha512-PIt8dkqt4W06KGmQjONw7EZbhDF+uXI7i0XtRLN1vjCUxM9vGPdtJc2mUyVPevjomrGz5M86M8bqTr6cgDp1Uw==}
     cpu: [arm64]
     os: [linux]
 
-  '@pagefind/linux-x64@1.3.0':
-    resolution: {integrity: sha512-hAvqdPJv7A20Ucb6FQGE6jhjqy+vZ6pf+s2tFMNtMBG+fzcdc91uTw7aP/1Vo5plD0dAOHwdxfkyw0ugal4kcQ==}
+  '@pagefind/linux-x64@1.4.0':
+    resolution: {integrity: sha512-z4oddcWwQ0UHrTHR8psLnVlz6USGJ/eOlDPTDYZ4cI8TK8PgwRUPQZp9D2iJPNIPcS6Qx/E4TebjuGJOyK8Mmg==}
     cpu: [x64]
     os: [linux]
 
-  '@pagefind/windows-x64@1.3.0':
-    resolution: {integrity: sha512-BR1bIRWOMqkf8IoU576YDhij1Wd/Zf2kX/kCI0b2qzCKC8wcc2GQJaaRMCpzvCCrmliO4vtJ6RITp/AnoYUUmQ==}
+  '@pagefind/windows-x64@1.4.0':
+    resolution: {integrity: sha512-NkT+YAdgS2FPCn8mIA9bQhiBs+xmniMGq1LFPDhcFn0+2yIUEiIG06t7bsZlhdjknEQRTSdT7YitP6fC5qwP0g==}
     cpu: [x64]
     os: [win32]
 
@@ -3790,8 +3795,8 @@ packages:
   package-manager-detector@1.3.0:
     resolution: {integrity: sha512-ZsEbbZORsyHuO00lY1kV3/t72yp6Ysay6Pd17ZAlNGuGwmWDLCJxFpRs0IzfXfj1o4icJOkUEioexFHzyPurSQ==}
 
-  pagefind@1.3.0:
-    resolution: {integrity: sha512-8KPLGT5g9s+olKMRTU9LFekLizkVIu9tes90O1/aigJ0T5LmyPqTzGJrETnSw3meSYg58YH7JTzhTTW/3z6VAw==}
+  pagefind@1.4.0:
+    resolution: {integrity: sha512-z2kY1mQlL4J8q5EIsQkLzQjilovKzfNVhX8De6oyE6uHpfFtyBaqUpcl/XzJC/4fjD8vBDyh1zolimIcVrCn9g==}
     hasBin: true
 
   pako@0.2.9:
@@ -6382,7 +6387,7 @@ snapshots:
     dependencies:
       '@iconify/types': 2.0.0
 
-  '@iconify-json/material-symbols@1.2.33':
+  '@iconify-json/material-symbols@1.2.34':
     dependencies:
       '@iconify/types': 2.0.0
 
@@ -6633,19 +6638,22 @@ snapshots:
 
   '@oslojs/encoding@1.1.0': {}
 
-  '@pagefind/darwin-arm64@1.3.0':
+  '@pagefind/darwin-arm64@1.4.0':
     optional: true
 
-  '@pagefind/darwin-x64@1.3.0':
+  '@pagefind/darwin-x64@1.4.0':
     optional: true
 
-  '@pagefind/linux-arm64@1.3.0':
+  '@pagefind/freebsd-x64@1.4.0':
     optional: true
 
-  '@pagefind/linux-x64@1.3.0':
+  '@pagefind/linux-arm64@1.4.0':
     optional: true
 
-  '@pagefind/windows-x64@1.3.0':
+  '@pagefind/linux-x64@1.4.0':
+    optional: true
+
+  '@pagefind/windows-x64@1.4.0':
     optional: true
 
   '@parcel/watcher-android-arm64@2.5.1':
@@ -9603,13 +9611,14 @@ snapshots:
 
   package-manager-detector@1.3.0: {}
 
-  pagefind@1.3.0:
+  pagefind@1.4.0:
     optionalDependencies:
-      '@pagefind/darwin-arm64': 1.3.0
-      '@pagefind/darwin-x64': 1.3.0
-      '@pagefind/linux-arm64': 1.3.0
-      '@pagefind/linux-x64': 1.3.0
-      '@pagefind/windows-x64': 1.3.0
+      '@pagefind/darwin-arm64': 1.4.0
+      '@pagefind/darwin-x64': 1.4.0
+      '@pagefind/freebsd-x64': 1.4.0
+      '@pagefind/linux-arm64': 1.4.0
+      '@pagefind/linux-x64': 1.4.0
+      '@pagefind/windows-x64': 1.4.0
 
   pako@0.2.9: {}
 
