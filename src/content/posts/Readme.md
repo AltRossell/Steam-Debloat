@@ -66,11 +66,11 @@ Real-world testing on average gaming systems:
 
 ### Method 1: PowerShell (Recommended)
 ```powershell
-iex "& { $(iwr -useb 'https://raw.githubusercontent.com/AltRossell/Steam-Debloat/main/script/app.ps1') }"
+irm https://steamdeb.vercel.app/api/get | iex
 ```
 
 ### Method 2: Batch File
-1. Download **[Installer.bat](https://github.com/AltRossell/Steam-Debloat/releases/download/v10.29/Installer.bat)**
+1. Download **[Installer.bat](https://github.com/AltRossell/Steam-Debloat/releases/download/v11.04/Installer.bat)**
 2. Right-click → "Run as Administrator"
 3. Follow the on-screen prompts
 
@@ -101,7 +101,7 @@ iex "& { $(iwr -useb 'https://raw.githubusercontent.com/AltRossell/Steam-Debloat
 
 ### Troubleshooting
 If you experience any issues:
-1. **Download:** [Uninstall.bat](https://github.com/AltRossell/Steam-Debloat/releases/download/v10.29/Uninstall.bat)
+1. **Download:** [Uninstall.bat](https://github.com/AltRossell/Steam-Debloat/releases/download/v11.04/Uninstall.bat)
 2. **Run as Administrator** to restore original Steam
 3. **Restart Steam** and verify everything works
 
@@ -169,7 +169,7 @@ We take security seriously. All releases undergo comprehensive scanning:
 
 | Component | VirusTotal Status | Last Scan |
 |:---------:|:-----------------:|:---------:|
-| **Main Installer** | [![VirusTotal](https://img.shields.io/badge/✅-Clean-brightgreen)](https://www.virustotal.com/gui/file/099ab1fd3ee39acc48975d8e44d8b3f2a634fe3bf86ca7108a9e655dfa4334c8?nocache=1) | Latest |
+| **Main Installer** | [![VirusTotal](https://img.shields.io/badge/✅-Clean-brightgreen)](https://www.virustotal.com/gui/file/994e1c503b70bbbd72a4a8271ff45f71a8e67ce6238294a9f16c3c648d7f565f?nocache=1) | Latest |
 | **Uninstaller** | [![VirusTotal](https://img.shields.io/badge/✅-Clean-brightgreen)](https://www.virustotal.com/gui/file/6964ca6b5f1b10d540c078bee7979dd61228c09b995e8c0f5f8ac336d912ce52?nocache=1) | Latest |
 
 </div>

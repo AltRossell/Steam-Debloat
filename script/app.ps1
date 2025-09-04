@@ -15,8 +15,15 @@ Add-Type -AssemblyName System.Windows.Forms
 $script:config = @{
     Title               = "Steam Debloat"
     GitHub              = "Github.com/AltRossell/Steam-Debloat"
-    Version            = "v10.30"
-    Color              = @{Info = "White"; Success = "Magenta"; Warning = "DarkYellow"; Error = "DarkRed" }
+    Version            = "v11.04"
+    Color              = @{
+        Info = "White"
+        Success = "White"
+        Warning = "Yellow"
+        Error = "Red"
+        Time = "Green"
+        Category = "Magenta"
+    }
     ErrorPage          = "https://github.com/AltRossell/Steam-Debloat/issues"
     Urls               = @{
         "SteamSetup"       = "https://cdn.akamai.steamstatic.com/client/installer/SteamSetup.exe"
@@ -38,6 +45,77 @@ $STEAM_MODES = @{
     }
 }
 
+function Get-TimeStamp {
+    return Get-Date -Format "HH:mm:ss.fff"
+}
+
+function Write-Message {
+    param (
+        [string]$Message,
+        [string]$Level = "Info",
+        [string]$Category = ""
+    )
+    
+    $color = switch ($Level) {
+        "Success" { "White" }
+        "Warning" { "Yellow" }
+        "Error" { "Red" }
+        "Loaded" { "White" }
+        default { "White" }
+    }
+
+    Write-Host "[" -NoNewline -ForegroundColor Green
+    Write-Host (Get-TimeStamp) -NoNewline -ForegroundColor Green
+    Write-Host "] " -NoNewline -ForegroundColor Green
+
+    if ($Category -ne "") {
+        Write-Host "[$Category] " -NoNewline -ForegroundColor Magenta
+    }
+
+    Write-Host "$Message" -ForegroundColor $color
+}
+
+function Clear-Screen {
+    [System.Console]::Clear()
+}
+
+function Show-SystemInfo {
+    param(
+        [string]$SelectedMode
+    )
+    
+    Write-Message "------------------------------" -Category "SYSTEM"
+    Write-Message "Steam-Debloat Latest" -Category "SYSTEM"
+    Write-Message "OS: $([System.Environment]::OSVersion.VersionString)" -Category "SYSTEM"
+    Write-Message "------------------------------" -Category "SYSTEM"
+    Write-Message "Script Version: $($script:config.Version)" -Category "SYSTEM"
+    $osArch = if ([System.Environment]::Is64BitOperatingSystem) { 'x64' } else { 'x86' }
+    Write-Message "OS Arch: $osArch" -Category "SYSTEM"
+    Write-Message "------------------------------" -Category "SYSTEM"
+    
+    # Check Steam paths
+    $steamPath = if (Test-Path $script:config.SteamInstallDir) { $script:config.SteamInstallDir } else { "No Found" }
+    $steamv2Path = if (Test-Path $script:config.SteamInstallDirV2) { $script:config.SteamInstallDirV2 } else { "No Found" }
+    
+    Write-Message "Steam::DataPath = $steamPath" -Category "SYSTEM"
+    Write-Message "Steamv2::DataPath = $steamv2Path" -Category "SYSTEM"
+    
+    # Add steam.cfg detection
+    $steamCfgPath = if (Test-Path $script:config.SteamInstallDir) { 
+        $cfgPath = Join-Path $script:config.SteamInstallDir "steam.cfg"
+        if (Test-Path $cfgPath) { $cfgPath } else { "No Found" }
+    } else { "No Found" }
+    Write-Message "Steam.cfg::DataPath = $steamCfgPath" -Category "SYSTEM"
+    
+    Write-Message "------------------------------" -Category "SYSTEM"
+    Write-Message "Script Name: Steam Debloat" -Category "SYSTEM"
+    Write-Message "Script Developer: AltRossell" -Category "SYSTEM"
+    Write-Message "------------------------------" -Category "SYSTEM"
+    
+    # Remove the selected mode message as requested
+    Write-Host ""
+}
+
 function Show-Menu {
     param(
         [string]$Title,
@@ -48,8 +126,12 @@ function Show-Menu {
     $selected = 0
     $startTop = $Line
 
-    # Write the fixed title
+    # Write the fixed title with timestamp and category
     [System.Console]::SetCursorPosition(0, $startTop)
+    Write-Host "[" -NoNewline -ForegroundColor Green
+    Write-Host (Get-TimeStamp) -NoNewline -ForegroundColor Green
+    Write-Host "] " -NoNewline -ForegroundColor Green
+    Write-Host "[MENU] " -NoNewline -ForegroundColor Magenta
     [System.Console]::ForegroundColor = "Yellow"
     [System.Console]::WriteLine($Title)
     [System.Console]::ForegroundColor = "White"
@@ -87,9 +169,45 @@ function Show-YesNoMenu {
         [int]$Line = 0
     )
     
+    $selected = 0
     $options = @("Yes", "No")
-    $result = Show-Menu -Title $Title -Options $options -Line $Line
-    return ($result -eq "Yes")
+    $startTop = $Line
+
+    # Write the question with timestamp and category
+    [System.Console]::SetCursorPosition(0, $startTop)
+    Write-Host "[" -NoNewline -ForegroundColor Green
+    Write-Host (Get-TimeStamp) -NoNewline -ForegroundColor Green
+    Write-Host "] " -NoNewline -ForegroundColor Green
+    Write-Host "[QUESTION] " -NoNewline -ForegroundColor Magenta
+    [System.Console]::ForegroundColor = "Yellow"
+    [System.Console]::WriteLine($Title)
+    [System.Console]::ForegroundColor = "White"
+
+    while ($true) {
+        # Draw options in fixed positions
+        for ($i = 0; $i -lt $options.Count; $i++) {
+            [System.Console]::SetCursorPosition(0, $startTop + $i + 1)
+            if ($i -eq $selected) {
+                # Highlighted option with > symbol
+                [System.Console]::ForegroundColor = "Magenta"
+                [System.Console]::Write("> " + $options[$i] + "   ")
+                [System.Console]::ForegroundColor = "White"
+            } else {
+                [System.Console]::Write("  " + $options[$i] + "   ")
+            }
+            # Clear rest of the line
+            [System.Console]::Write(" " * ([System.Console]::WindowWidth - [System.Console]::CursorLeft))
+        }
+
+        $key = [System.Console]::ReadKey($true)
+        switch ($key.Key) {
+            "UpArrow"   { if ($selected -gt 0) { $selected-- } }
+            "DownArrow" { if ($selected -lt $options.Count - 1) { $selected++ } }
+            "Enter"     {
+                return ($options[$selected] -eq "Yes")
+            }
+        }
+    }
 }
 
 function Test-AdminPrivileges {
@@ -102,30 +220,6 @@ function Start-ProcessAsAdmin {
         [string]$ArgumentList
     )
     Start-Process -FilePath $FilePath -ArgumentList $ArgumentList -Verb RunAs -Wait
-}
-
-function Write-Message {
-    param (
-        [string]$Message,
-        [string]$Level = "Info",
-        [switch]$IsPath
-    )
-    
-    $color = switch ($Level) {
-        "Success" { "Magenta" }
-        "Warning" { "DarkYellow" }
-        "Error" { "DarkRed" }
-        default { "White" }
-    }
-
-    Write-Host "== " -NoNewline -ForegroundColor Yellow
-    Write-Host "[$Level] " -NoNewline -ForegroundColor Yellow
-
-    if ($IsPath -or $Message -match '^[A-Za-z]:\\|\\\\|/|%\w+%|~|\.\\|\.\.\\') {
-        Write-Host "$Message" -ForegroundColor Magenta
-    } else {
-        Write-Host "$Message" -ForegroundColor $color
-    }
 }
 
 function Show-FolderBrowserDialog {
@@ -146,29 +240,60 @@ function Show-FolderBrowserDialog {
     return $null
 }
 
+function Test-ExistingFiles {
+    Write-Message "FileSystem::Validation" -Category "VALIDATION"
+    
+    $desktopPath = [Environment]::GetFolderPath("Desktop")
+    $startMenuPath = [System.IO.Path]::Combine($env:APPDATA, "Microsoft", "Windows", "Start Menu", "Programs", "Steam")
+    
+    $script:FilesStatus = @{
+        DesktopSteamBat = Test-Path (Join-Path $desktopPath "Steam.bat")
+        DesktopSteam2025Bat = Test-Path (Join-Path $desktopPath "Steam2025.bat")
+        DesktopSteam2022Bat = Test-Path (Join-Path $desktopPath "Steam2022.bat")
+        StartMenuSteamBat = Test-Path (Join-Path $startMenuPath "Steam.bat")
+        StartMenuSteam2025Bat = Test-Path (Join-Path $startMenuPath "Steam2025.bat")
+        StartMenuSteam2022Bat = Test-Path (Join-Path $startMenuPath "Steam2022.bat")
+        SteamCfg = Test-Path (Join-Path $script:config.SteamInstallDir "steam.cfg")
+        SteamCfgV2 = Test-Path (Join-Path $script:config.SteamInstallDirV2 "steam.cfg")
+    }
+    
+    # Report existing files
+    if ($script:FilesStatus.DesktopSteamBat) { Write-Message "Desktop Steam.bat loaded" -Level Loaded -Category "VALIDATION" }
+    if ($script:FilesStatus.DesktopSteam2025Bat) { Write-Message "Desktop Steam2025.bat loaded" -Level Loaded -Category "VALIDATION" }
+    if ($script:FilesStatus.DesktopSteam2022Bat) { Write-Message "Desktop Steam2022.bat loaded" -Level Loaded -Category "VALIDATION" }
+    if ($script:FilesStatus.StartMenuSteamBat) { Write-Message "Start Menu Steam.bat loaded" -Level Loaded -Category "VALIDATION" }
+    if ($script:FilesStatus.StartMenuSteam2025Bat) { Write-Message "Start Menu Steam2025.bat loaded" -Level Loaded -Category "VALIDATION" }
+    if ($script:FilesStatus.StartMenuSteam2022Bat) { Write-Message "Start Menu Steam2022.bat loaded" -Level Loaded -Category "VALIDATION" }
+    if ($script:FilesStatus.SteamCfg) { Write-Message "Steam steam.cfg loaded" -Level Loaded -Category "VALIDATION" }
+    if ($script:FilesStatus.SteamCfgV2) { Write-Message "Steamv2 steam.cfg loaded" -Level Loaded -Category "VALIDATION" }
+    
+    # Add space after validation
+    Write-Host ""
+}
+
 function Test-SteamInstallation {
     param (
         [string]$InstallDir = $script:config.SteamInstallDir
     )
     
-    # First check the default directory
+    # Don't show detection messages if Steam is already found in system info
     $steamExePath = Join-Path $InstallDir "steam.exe"
     if (Test-Path $steamExePath) {
-        Write-Message "Steam found in default location: $InstallDir" -Level Success
         return @{ Found = $true; Path = $InstallDir }
     }
     
-    Write-Message "Steam not found in default location: $InstallDir" -Level Warning
+    Write-Message "Steam::Detection" -Category "DETECTION"
+    Write-Message "Steam not found in default location: $InstallDir" -Level Warning -Category "DETECTION"
     
     # If not in NoInteraction mode, ask user to locate Steam directly
     if (-not $NoInteraction) {
         Write-Host ""
-        Write-Message "Steam installation not found in the default location." -Level Warning
+        Write-Message "Steam installation not found in the default location." -Level Warning -Category "DETECTION"
         
         $hasCustomLocation = Show-YesNoMenu -Title "Do you have Steam installed in a different location?" -Line ([Console]::CursorTop + 1)
         
         if ($hasCustomLocation) {
-            Write-Message "Please select your Steam installation folder in the dialog that will appear." -Level Info
+            Write-Message "Please select your Steam installation folder in the dialog that will appear." -Category "DETECTION"
             Write-Host "Looking for the folder that contains 'steam.exe'..." -ForegroundColor Yellow
             
             $selectedPath = Show-FolderBrowserDialog -Description "Please select your Steam installation folder (the folder containing steam.exe)"
@@ -176,16 +301,16 @@ function Test-SteamInstallation {
             if ($selectedPath) {
                 $steamExePath = Join-Path $selectedPath "steam.exe"
                 if (Test-Path $steamExePath) {
-                    Write-Message "Steam verified in custom location: $selectedPath" -Level Success
+                    Write-Message "Steam verified in custom location: $selectedPath" -Level Success -Category "DETECTION"
                     # Update the config to use this path
                     $script:config.SteamInstallDir = $selectedPath
                     return @{ Found = $true; Path = $selectedPath }
                 } else {
-                    Write-Message "steam.exe not found in selected folder: $selectedPath" -Level Error
-                    Write-Message "Please make sure you select the folder that contains steam.exe" -Level Warning
+                    Write-Message "steam.exe not found in selected folder: $selectedPath" -Level Error -Category "DETECTION"
+                    Write-Message "Please make sure you select the folder that contains steam.exe" -Level Warning -Category "DETECTION"
                 }
             } else {
-                Write-Message "No folder selected." -Level Warning
+                Write-Message "No folder selected." -Level Warning -Category "DETECTION"
             }
         }
     }
@@ -199,6 +324,8 @@ function Create-SteamBatch {
         [string]$SteamPath
     )
 
+    Write-Message "BatchFile::Generator" -Category "GENERATOR"
+    
     $tempPath = [System.Environment]::GetEnvironmentVariable("TEMP")
     $modeKey = $Mode.ToLower()
     
@@ -212,7 +339,7 @@ cd /d "$SteamPath"
 start Steam.exe $($STEAM_MODES[$modeKey]["steam2025"])
 "@
             $batchContent2025 | Out-File -FilePath $batchPath2025 -Encoding ASCII -Force
-            Write-Message "Created Steam 2025 batch file: $batchPath2025" -Level Success
+            Write-Message "Created Steam 2025 batch file: $batchPath2025" -Level Success -Category "GENERATOR"
             
             # Create batch for Steam 2022
             $batchPath2022 = Join-Path $tempPath "Steam2022.bat"
@@ -222,7 +349,7 @@ cd /d "$($script:config.SteamInstallDirV2)"
 start Steam.exe $($STEAM_MODES[$modeKey]["steam2022"])
 "@
             $batchContent2022 | Out-File -FilePath $batchPath2022 -Encoding ASCII -Force
-            Write-Message "Created Steam 2022 batch file: $batchPath2022" -Level Success
+            Write-Message "Created Steam 2022 batch file: $batchPath2022" -Level Success -Category "GENERATOR"
             
             return @{ 
                 SteamBat2025 = $batchPath2025
@@ -236,13 +363,13 @@ cd /d "$SteamPath"
 start Steam.exe $($STEAM_MODES[$modeKey])
 "@
             $batchContent | Out-File -FilePath $batchPath -Encoding ASCII -Force
-            Write-Message "Created Steam batch file: $batchPath" -Level Success
+            Write-Message "Created Steam batch file: $batchPath" -Level Success -Category "GENERATOR"
             
             return @{ SteamBat = $batchPath }
         }
     }
     catch {
-        Write-Message "Failed to create batch file: $_" -Level Error
+        Write-Message "Failed to create batch file: $_" -Level Error -Category "GENERATOR"
         return $null
     }
 }
@@ -255,7 +382,7 @@ function Wait-ForPath {
     $timer = [System.Diagnostics.Stopwatch]::StartNew()
     while (-not (Test-Path $Path)) {
         if ($timer.Elapsed.TotalSeconds -gt $TimeoutSeconds) {
-            Write-Message "Timeout waiting for: $Path" -Level Error
+            Write-Message "Timeout waiting for: $Path" -Level Error -Category "INSTALLATION"
             return $false
         }
         Start-Sleep -Seconds 1
@@ -267,17 +394,20 @@ function Install-SteamApplication {
     param (
         [string]$InstallDir = $script:config.SteamInstallDir
     )
+    
+    Write-Message "Steam::Installation" -Category "INSTALLATION"
+    
     $setupPath = Join-Path $env:TEMP "SteamSetup.exe"
 
     try {
         Invoke-SafeWebRequest -Uri $script:config.Urls.SteamSetup -OutFile $setupPath
-        Write-Message "Running Steam installer to $InstallDir..." -Level Info
+        Write-Message "Running Steam installer to $InstallDir..." -Category "INSTALLATION"
         
         if ($InstallDir -eq $script:config.SteamInstallDirV2) {
             Start-Process -FilePath $setupPath -ArgumentList "/S" -Wait
-            Write-Message "Waiting for installation to complete..." -Level Info
+            Write-Message "Waiting for installation to complete..." -Category "INSTALLATION"
             if (-not (Wait-ForPath -Path $script:config.SteamInstallDir -TimeoutSeconds 300)) {
-                Write-Message "Steam installation did not complete in the expected time" -Level Error
+                Write-Message "Steam installation did not complete in the expected time" -Level Error -Category "INSTALLATION"
                 return $false
             }
             
@@ -287,26 +417,26 @@ function Install-SteamApplication {
             Copy-Item -Path "$($script:config.SteamInstallDir)\*" -Destination $InstallDir -Recurse -Force
         } else {
             Start-Process -FilePath $setupPath -ArgumentList "/S" -Wait
-            Write-Message "Waiting for installation to complete..." -Level Info
+            Write-Message "Waiting for installation to complete..." -Category "INSTALLATION"
             if (-not (Wait-ForPath -Path $InstallDir -TimeoutSeconds 300)) {
-                Write-Message "Steam installation did not complete in the expected time" -Level Error
+                Write-Message "Steam installation did not complete in the expected time" -Level Error -Category "INSTALLATION"
                 return $false
             }
         }
         
         $steamExePath = Join-Path $InstallDir "steam.exe"
         if (Test-Path $steamExePath) {
-            Write-Message "Steam installed successfully to $InstallDir!" -Level Success
+            Write-Message "Steam installed successfully to $InstallDir!" -Level Success -Category "INSTALLATION"
             Remove-Item $setupPath -Force -ErrorAction SilentlyContinue
             return $true
         }
         else {
-            Write-Message "Steam installation failed - steam.exe not found in $InstallDir" -Level Error
+            Write-Message "Steam installation failed - steam.exe not found in $InstallDir" -Level Error -Category "INSTALLATION"
             return $false
         }
     }
     catch {
-        Write-Message "Failed to install Steam: $_" -Level Error
+        Write-Message "Failed to install Steam: $_" -Level Error -Category "INSTALLATION"
         return $false
     }
 }
@@ -327,7 +457,7 @@ function Install-Steam {
         return $true
     }
     catch {
-        Write-Message "An error occurred in Install-Steam: $_" -Level Error
+        Write-Message "An error occurred in Install-Steam: $_" -Level Error -Category "INSTALLATION"
         return $false
     }
 }
@@ -337,6 +467,9 @@ function Start-SteamWithParameters {
         [string]$Mode,
         [string]$InstallDir = $script:config.SteamInstallDir
     )
+    
+    Write-Message "Steam::UpdateProcess" -Category "UPDATE"
+    
     try {
         $steamExePath = Join-Path $InstallDir "steam.exe"
         if (-not (Test-Path $steamExePath)) {
@@ -350,23 +483,27 @@ function Start-SteamWithParameters {
             "-forcesteamupdate -forcepackagedownload -overridepackageurl -exitsteam"
         }
         
-        Write-Message "Starting Steam from $InstallDir with arguments: $arguments" -Level Info
+        Write-Message "Starting Steam from $InstallDir with arguments: $arguments" -Category "UPDATE"
         Start-Process -FilePath $steamExePath -ArgumentList $arguments
         $timeout = 300
         $timer = [Diagnostics.Stopwatch]::StartNew()
         while (Get-Process -Name "steam" -ErrorAction SilentlyContinue) {
             if ($timer.Elapsed.TotalSeconds -gt $timeout) {
-                Write-Message "Steam update process timed out after $timeout seconds." -Level Warning
+                Write-Message "Steam update process timed out after $timeout seconds." -Level Warning -Category "UPDATE"
                 break
             }
             Start-Sleep -Seconds 5
         }
         $timer.Stop()
-        Write-Message "Steam update process completed in $($timer.Elapsed.TotalSeconds) seconds." -Level Info
+        Write-Message "Steam update process completed in $($timer.Elapsed.TotalSeconds) seconds." -Level Success -Category "UPDATE"
+        
+        # Add space after update process
+        Write-Host ""
+        
         return $true
     }
     catch {
-        Write-Message "Failed to start Steam: $_" -Level Error
+        Write-Message "Failed to start Steam: $_" -Level Error -Category "UPDATE"
         return $false
     }
 }
@@ -376,34 +513,40 @@ function Invoke-SafeWebRequest {
         [string]$Uri,
         [string]$OutFile
     )
+    
+    Write-Message "Network::DownloadManager" -Category "DOWNLOAD"
+    
     $attempt = 0
     do {
         $attempt++
         try {
             Invoke-WebRequest -Uri $Uri -OutFile $OutFile -UseBasicParsing -ErrorAction Stop
+            Write-Message "Download completed successfully: $OutFile" -Level Success -Category "DOWNLOAD"
             return
         }
         catch {
             if ($attempt -ge $script:config.RetryAttempts) {
                 throw "Failed to download from $Uri after $($script:config.RetryAttempts) attempts: $_"
             }
-            Write-Message "Download attempt $attempt failed. Retrying in $($script:config.RetryDelay) seconds..." -Level Warning
+            Write-Message "Download attempt $attempt failed. Retrying in $($script:config.RetryDelay) seconds..." -Level Warning -Category "DOWNLOAD"
             Start-Sleep -Seconds $script:config.RetryDelay
         }
     } while ($true)
 }
 
 function Stop-SteamProcesses {
+    # Removed Process::Cleanup message as requested
+    
     $steamProcesses = Get-Process -Name "*steam*" -ErrorAction SilentlyContinue
     foreach ($process in $steamProcesses) {
         try {
             $process.Kill()
             $process.WaitForExit(5000)
-            Write-Message "Stopped process: $($process.ProcessName)" -Level Info
+            Write-Message "Stopped process: $($process.ProcessName)" -Level Success -Category "CLEANUP"
         }
         catch {
             if ($_.Exception.Message -notlike "*The process has already exited.*") {
-                Write-Message "Failed to stop process $($process.ProcessName): $_" -Level Warning
+                Write-Message "Failed to stop process $($process.ProcessName): $_" -Level Warning -Category "CLEANUP"
             }
         }
     }
@@ -418,23 +561,35 @@ function Get-RequiredFiles {
     # Create batch files using embedded modes
     $batchFiles = Create-SteamBatch -Mode $SelectedMode -SteamPath $SteamPath
     
-    # Create steam.cfg
-    $steamCfgPath = Join-Path $env:TEMP "steam.cfg"
-    @"
+    Write-Message "Config::Generator" -Category "CONFIG"
+    
+    # Check if steam.cfg already exists and skip creation if it does
+    $steamCfgPath = Join-Path $SteamPath "steam.cfg"
+    $steamCfgTempPath = Join-Path $env:TEMP "steam.cfg"
+    
+    if (-not (Test-Path $steamCfgPath)) {
+        # Create steam.cfg only if it doesn't exist
+        @"
 BootStrapperInhibitAll=enable
 BootStrapperForceSelfUpdate=disable
-"@ | Out-File -FilePath $steamCfgPath -Encoding ASCII -Force
+"@ | Out-File -FilePath $steamCfgTempPath -Encoding ASCII -Force
+
+        Write-Message "Created steam.cfg configuration file" -Level Success -Category "CONFIG"
+    } else {
+        Write-Message "Steam.cfg already exists, skipping creation" -Level Warning -Category "CONFIG"
+        $steamCfgTempPath = $null
+    }
 
     if ($SelectedMode.ToLower() -eq "normalboth2022-2025") {
         return @{ 
             SteamBat2025 = $batchFiles.SteamBat2025
             SteamBat2022 = $batchFiles.SteamBat2022
-            SteamCfg = $steamCfgPath 
+            SteamCfg = $steamCfgTempPath 
         }
     } else {
         return @{ 
             SteamBat = $batchFiles.SteamBat
-            SteamCfg = $steamCfgPath 
+            SteamCfg = $steamCfgTempPath 
         }
     }
 }
@@ -444,9 +599,16 @@ function Move-ConfigFile {
         [string]$SourcePath,
         [string]$InstallDir = $script:config.SteamInstallDir
     )
-    $destinationPath = Join-Path $InstallDir "steam.cfg"
-    Copy-Item -Path $SourcePath -Destination $destinationPath -Force
-    Write-Message "Moved steam.cfg to $destinationPath" -Level Info
+    
+    # Only move if source exists and destination doesn't exist
+    if ($SourcePath -and (Test-Path $SourcePath)) {
+        $destinationPath = Join-Path $InstallDir "steam.cfg"
+        if (-not (Test-Path $destinationPath)) {
+            Write-Message "Config::Deployment" -Category "DEPLOY"
+            Copy-Item -Path $SourcePath -Destination $destinationPath -Force
+            Write-Message "Moved steam.cfg to $destinationPath" -Level Success -Category "DEPLOY"
+        }
+    }
 }
 
 function Move-SteamBatToDesktop {
@@ -454,9 +616,13 @@ function Move-SteamBatToDesktop {
         [string]$SourcePath,
         [string]$FileName = "steam.bat"
     )
+    
     $destinationPath = Join-Path ([Environment]::GetFolderPath("Desktop")) $FileName
-    Copy-Item -Path $SourcePath -Destination $destinationPath -Force
-    Write-Message "Moved $FileName to desktop" -Level Info
+    if (-not (Test-Path $destinationPath)) {
+        Write-Message "Desktop::Deployment" -Category "DESKTOP"
+        Copy-Item -Path $SourcePath -Destination $destinationPath -Force
+        Write-Message "Moved $FileName to desktop" -Level Success -Category "DESKTOP"
+    }
 }
 
 function Move-SteamBatToStartMenu {
@@ -464,49 +630,59 @@ function Move-SteamBatToStartMenu {
         [string]$SourcePath,
         [string]$FileName = "steam.bat"
     )
-    try {
-        $startMenuPath = [System.IO.Path]::Combine($env:APPDATA, "Microsoft", "Windows", "Start Menu", "Programs", "Steam")
+    
+    $destinationPath = Join-Path ([Environment]::GetFolderPath("Desktop")) $FileName
+    if (-not (Test-Path $destinationPath)) {
+        Write-Message "StartMenu::Deployment" -Category "STARTMENU"
         
-        if (-not (Test-Path $startMenuPath)) {
-            New-Item -ItemType Directory -Path $startMenuPath -Force | Out-Null
-            Write-Message "Created Steam folder in Start Menu" -Level Info
+        try {
+            $startMenuPath = [System.IO.Path]::Combine($env:APPDATA, "Microsoft", "Windows", "Start Menu", "Programs", "Steam")
+            
+            if (-not (Test-Path $startMenuPath)) {
+                New-Item -ItemType Directory -Path $startMenuPath -Force | Out-Null
+                Write-Message "Created Steam folder in Start Menu" -Category "STARTMENU"
+            }
+            
+            $destinationPath = Join-Path $startMenuPath $FileName
+            Copy-Item -Path $SourcePath -Destination $destinationPath -Force
+            Write-Message "Moved $FileName to Start Menu Steam folder" -Level Success -Category "STARTMENU"
+            return $true
         }
-        
-        $destinationPath = Join-Path $startMenuPath $FileName
-        Copy-Item -Path $SourcePath -Destination $destinationPath -Force
-        Write-Message "Moved $FileName to Start Menu Steam folder" -Level Success
-        return $true
-    }
-    catch {
-        Write-Message "Failed to move $FileName to Start Menu: $_" -Level Error
-        return $false
+        catch {
+            Write-Message "Failed to move $FileName to Start Menu: $_" -Level Error -Category "STARTMENU"
+            return $false
+        }
     }
 }
 
 function Remove-TempFiles {
+    Write-Message "Cleanup::TempFiles" -Category "CLEANUP"
+    
     Remove-Item -Path (Join-Path $env:TEMP "Steam-*.bat") -Force -ErrorAction SilentlyContinue
     Remove-Item -Path (Join-Path $env:TEMP "Steam2025.bat") -Force -ErrorAction SilentlyContinue
     Remove-Item -Path (Join-Path $env:TEMP "Steam2022.bat") -Force -ErrorAction SilentlyContinue
     Remove-Item -Path (Join-Path $env:TEMP "steam.cfg") -Force -ErrorAction SilentlyContinue
-    Write-Message "Removed temporary files" -Level Info
+    Write-Message "Removed temporary files" -Level Success -Category "CLEANUP"
 }
 
 function Remove-SteamFromStartup {
+    Write-Message "Registry::StartupCleanup" -Category "REGISTRY"
+    
     try {
         $registryPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run"
         $steamEntry = Get-ItemProperty -Path $registryPath -Name "Steam" -ErrorAction SilentlyContinue
         
         if ($steamEntry) {
             Remove-ItemProperty -Path $registryPath -Name "Steam" -Force
-            Write-Message "Steam removed from startup registry successfully" -Level Success
+            Write-Message "Steam removed from startup registry successfully" -Level Success -Category "REGISTRY"
             return $true
         } else {
-            Write-Message "Steam entry not found in startup registry" -Level Warning
+            Write-Message "Steam entry not found in startup registry" -Level Warning -Category "REGISTRY"
             return $false
         }
     }
     catch {
-        Write-Message "Failed to remove Steam from startup: $_" -Level Error
+        Write-Message "Failed to remove Steam from startup: $_" -Level Error -Category "REGISTRY"
         return $false
     }
 }
@@ -517,7 +693,7 @@ function Start-SteamDebloat {
     )
     try {
         if (-not (Test-AdminPrivileges)) {
-            Write-Message "Requesting administrator privileges..." -Level Warning
+            Write-Message "Requesting administrator privileges..." -Level Warning -Category "SECURITY"
             $scriptPath = $MyInvocation.MyCommand.Path
             $arguments = "-File `"$scriptPath`" -Mode `"$SelectedMode`""
             foreach ($param in $PSBoundParameters.GetEnumerator()) {
@@ -531,23 +707,24 @@ function Start-SteamDebloat {
             Start-ProcessAsAdmin -FilePath "powershell.exe" -ArgumentList $arguments
             return
         }
-        
-        Write-Message "Starting $($script:config.Title) Optimization in $SelectedMode mode" -Level Info
+
+        # Check for existing files first
+        Write-Host ""
+        Test-ExistingFiles
 
         if ($SelectedMode -eq "NormalBoth2022-2025") {
-            Write-Message "Installing both Steam versions (2022 and 2025)..." -Level Info
+            Write-Message "Installing both Steam versions (2022 and 2025)..." -Category "MAIN"
             
             # Check Steam 2025 version
             $steamCheck2025 = Test-SteamInstallation -InstallDir $script:config.SteamInstallDir
             if (-not $steamCheck2025.Found) {
-                Write-Message "Installing Steam 2025 version..." -Level Info
+                Write-Message "Installing Steam 2025 version..." -Category "MAIN"
                 $installSuccess2025 = Install-Steam -InstallDir $script:config.SteamInstallDir
                 if (-not $installSuccess2025) {
-                    Write-Message "Failed to install Steam 2025 version" -Level Error
+                    Write-Message "Failed to install Steam 2025 version" -Level Error -Category "MAIN"
                     return
                 }
             } else {
-                Write-Message "Steam 2025 version already installed at: $($steamCheck2025.Path)" -Level Success
                 $script:config.SteamInstallDir = $steamCheck2025.Path
             }
             Start-SteamWithParameters -Mode "Normal2025July" -InstallDir $script:config.SteamInstallDir
@@ -555,14 +732,12 @@ function Start-SteamDebloat {
             # Check Steam 2022 version
             $steamCheck2022 = Test-SteamInstallation -InstallDir $script:config.SteamInstallDirV2
             if (-not $steamCheck2022.Found) {
-                Write-Message "Installing Steam 2022 version..." -Level Info
+                Write-Message "Installing Steam 2022 version..." -Category "MAIN"
                 $installSuccess2022 = Install-Steam -InstallDir $script:config.SteamInstallDirV2
                 if (-not $installSuccess2022) {
-                    Write-Message "Failed to install Steam 2022 version" -Level Error
+                    Write-Message "Failed to install Steam 2022 version" -Level Error -Category "MAIN"
                     return
                 }
-            } else {
-                Write-Message "Steam 2022 version already installed" -Level Success
             }
             Start-SteamWithParameters -Mode "Normal2022dec" -InstallDir $script:config.SteamInstallDirV2
             
@@ -573,105 +748,144 @@ function Start-SteamDebloat {
             Move-ConfigFile -SourcePath $files.SteamCfg -InstallDir $script:config.SteamInstallDir
             Move-ConfigFile -SourcePath $files.SteamCfg -InstallDir $script:config.SteamInstallDirV2
             
-            # Move batch files to desktop
-            Move-SteamBatToDesktop -SourcePath $files.SteamBat2025 -FileName "Steam2025.bat"
-            Move-SteamBatToDesktop -SourcePath $files.SteamBat2022 -FileName "Steam2022.bat"
+            # Move batch files to desktop only if they don't exist
+            if (-not $script:FilesStatus.DesktopSteam2025Bat) {
+                Move-SteamBatToDesktop -SourcePath $files.SteamBat2025 -FileName "Steam2025.bat"
+            }
+            if (-not $script:FilesStatus.DesktopSteam2022Bat) {
+                Move-SteamBatToDesktop -SourcePath $files.SteamBat2022 -FileName "Steam2022.bat"
+            }
             
-            # Ask about Start Menu for both versions
-            Write-Host ""
-            $addToStartMenu = Show-YesNoMenu -Title "Do you want to add Steam batch files to Start Menu?" -Line ([Console]::CursorTop + 1)
-            if ($addToStartMenu) {
-                Move-SteamBatToStartMenu -SourcePath $files.SteamBat2025 -FileName "Steam2025.bat"
-                Move-SteamBatToStartMenu -SourcePath $files.SteamBat2022 -FileName "Steam2022.bat"
-            } else {
-                Write-Message "Start Menu shortcuts skipped." -Level Info
+            # Ask about Start Menu only if files don't exist
+            if (-not ($script:FilesStatus.StartMenuSteam2025Bat -and $script:FilesStatus.StartMenuSteam2022Bat)) {
+                Write-Host ""
+                $addToStartMenu = Show-YesNoMenu -Title "Do you want to add Steam batch files to Start Menu?" -Line ([Console]::CursorTop + 1)
+                if ($addToStartMenu) {
+                    Write-Message "Yes" -Category "QUESTION"
+                    if (-not $script:FilesStatus.StartMenuSteam2025Bat) {
+                        Move-SteamBatToStartMenu -SourcePath $files.SteamBat2025 -FileName "Steam2025.bat"
+                    }
+                    if (-not $script:FilesStatus.StartMenuSteam2022Bat) {
+                        Move-SteamBatToStartMenu -SourcePath $files.SteamBat2022 -FileName "Steam2022.bat"
+                    }
+                } else {
+                    Write-Message "No" -Category "QUESTION"
+                    Write-Message "Start Menu shortcuts skipped." -Category "MAIN"
+                }
             }
             
             Remove-TempFiles
         }
         else {
-            Write-Message "Checking Steam installation..." -Level Info
-            
             # Enhanced Steam detection
             $steamCheck = Test-SteamInstallation
             
             if (-not $steamCheck.Found) {
-                Write-Message "Steam is not installed or not found." -Level Warning
+                Write-Message "Steam is not installed or not found." -Level Warning -Category "MAIN"
                 if (-not $NoInteraction) {
+                    Write-Host ""
                     $installSteam = Show-YesNoMenu -Title "Would you like to install Steam?" -Line ([Console]::CursorTop + 1)
                     if (-not $installSteam) {
-                        Write-Message "Cannot proceed without Steam installation." -Level Error
+                        Write-Message "No" -Category "QUESTION"
+                        Write-Message "Cannot proceed without Steam installation." -Level Error -Category "MAIN"
                         return
+                    } else {
+                        Write-Message "Yes" -Category "QUESTION"
                     }
                 } else {
-                    Write-Message "NoInteraction mode: Installing Steam automatically..." -Level Info
+                    Write-Message "NoInteraction mode: Installing Steam automatically..." -Category "MAIN"
                 }
                 $installSuccess = Install-Steam
                 if (-not $installSuccess) {
-                    Write-Message "Cannot proceed without Steam installation." -Level Error
+                    Write-Message "Cannot proceed without Steam installation." -Level Error -Category "MAIN"
                     return
                 }
             } else {
-                Write-Message "Using Steam installation at: $($steamCheck.Path)" -Level Success
                 $script:config.SteamInstallDir = $steamCheck.Path
             }
             
-            $steamResult = Start-SteamWithParameters -Mode $SelectedMode -InstallDir $script:config.SteamInstallDir
-            if (-not $steamResult) {
-                Write-Message "Failed to start Steam with parameters" -Level Warning
+            # Ask about starting Steam with parameters for Normal2025July mode
+            if ($SelectedMode -eq "Normal2025July" -and -not $NoInteraction) {
+                Write-Host ""
+                $startWithParams = Show-YesNoMenu -Title "Do you want to start Steam with parameters to get the latest Steam update?" -Line ([Console]::CursorTop + 1)
+                if ($startWithParams) {
+                    Write-Message "Yes" -Category "QUESTION"
+                    $steamResult = Start-SteamWithParameters -Mode $SelectedMode -InstallDir $script:config.SteamInstallDir
+                    if (-not $steamResult) {
+                        Write-Message "Failed to start Steam with parameters" -Level Warning -Category "MAIN"
+                    }
+                } else {
+                    Write-Message "No" -Category "QUESTION"
+                    Write-Message "Skipping Steam parameter startup" -Category "MAIN"
+                }
+            } else {
+                $steamResult = Start-SteamWithParameters -Mode $SelectedMode -InstallDir $script:config.SteamInstallDir
+                if (-not $steamResult) {
+                    Write-Message "Failed to start Steam with parameters" -Level Warning -Category "MAIN"
+                }
             }
             
             Stop-SteamProcesses
             
             # Generate files using the detected/installed Steam path
             $files = Get-RequiredFiles -SelectedMode $SelectedMode -SteamPath $script:config.SteamInstallDir
-            Move-ConfigFile -SourcePath $files.SteamCfg -InstallDir $script:config.SteamInstallDir
+            if ($files.SteamCfg) {
+                Move-ConfigFile -SourcePath $files.SteamCfg -InstallDir $script:config.SteamInstallDir
+            }
             
-            # Move batch file to desktop
-            Move-SteamBatToDesktop -SourcePath $files.SteamBat -FileName "Steam.bat"
+            # Move batch file to desktop only if it doesn't exist
+            if (-not $script:FilesStatus.DesktopSteamBat) {
+                Move-SteamBatToDesktop -SourcePath $files.SteamBat -FileName "Steam.bat"
+            }
             
-            # Ask about Start Menu
-            Write-Host ""
-            $addToStartMenu = Show-YesNoMenu -Title "Do you want to add the optimized Steam batch file to Start Menu?" -Line ([Console]::CursorTop + 1)
-            if ($addToStartMenu) {
-                Move-SteamBatToStartMenu -SourcePath $files.SteamBat -FileName "Steam.bat"
-            } else {
-                Write-Message "Start Menu shortcut skipped." -Level Info
+            # Ask about Start Menu only if file doesn't exist
+            if (-not $script:FilesStatus.StartMenuSteamBat) {
+                Write-Host ""
+                $addToStartMenu = Show-YesNoMenu -Title "Do you want to add the optimized Steam batch file to Start Menu?" -Line ([Console]::CursorTop + 1)
+                if ($addToStartMenu) {
+                    Write-Message "Yes" -Category "QUESTION"
+                    Move-SteamBatToStartMenu -SourcePath $files.SteamBat -FileName "Steam.bat"
+                } else {
+                    Write-Message "No" -Category "QUESTION"
+                    Write-Message "Start Menu shortcut skipped." -Category "MAIN"
+                }
             }
             
             Remove-TempFiles
         }
 
-        # Ask about startup removal
+        # Ask about startup removal - single space before this section
         Write-Host ""
         $removeFromStartup = Show-YesNoMenu -Title "Do you want to remove Steam from Windows startup?" -Line ([Console]::CursorTop + 1)
         if ($removeFromStartup) {
+            Write-Message "Yes" -Category "QUESTION"
             $removeResult = Remove-SteamFromStartup
             if ($removeResult) {
-                Write-Message "Steam has been removed from Windows startup." -Level Success
+                Write-Message "Steam has been removed from Windows startup." -Level Success -Category "MAIN"
             }
         } else {
-            Write-Message "Steam startup configuration left unchanged." -Level Info
+            Write-Message "No" -Category "QUESTION"
+            Write-Message "Steam startup configuration left unchanged." -Category "MAIN"
         }
 
         Write-Host ""
-        Write-Message "Steam Optimization process completed successfully!" -Level Success
-        Write-Message "Steam has been updated and configured for optimal performance." -Level Success
-        Write-Message "Optimized batch file(s) have been created on your desktop." -Level Success
-        Write-Message "You can contribute to improve the repository at: $($script:config.GitHub)" -Level Success
+        Write-Message "Steam Optimization process completed successfully!" -Level Success -Category "COMPLETE"
+        Write-Message "Steam has been updated and configured for optimal performance." -Level Success -Category "COMPLETE"
+        Write-Message "Optimized batch file(s) have been created on your desktop." -Level Success -Category "COMPLETE"
+        Write-Message "You can contribute to improve the repository at: $($script:config.GitHub)" -Level Success -Category "COMPLETE"
         
         if (-not $NoInteraction) { 
             Write-Host ""
             Write-Host "Press any key to exit..." -ForegroundColor Yellow
             [System.Console]::ReadKey($true) | Out-Null
         } else {
-            Write-Message "Process completed. Exiting automatically in NoInteraction mode." -Level Info
+            Write-Message "Process completed. Exiting automatically in NoInteraction mode." -Category "MAIN"
             Start-Sleep -Seconds 2
         }
     }
     catch {
-        Write-Message "An error occurred: $_" -Level Error
-        Write-Message "For troubleshooting, visit: $($script:config.ErrorPage)" -Level Info
+        Write-Message "An error occurred: $_" -Level Error -Category "ERROR"
+        Write-Message "For troubleshooting, visit: $($script:config.ErrorPage)" -Category "ERROR"
     }
 }
 
@@ -687,6 +901,7 @@ if (-not $SkipIntro) {
     [System.Console]::CursorVisible = $false
     
     Write-Host @"
+
  ______     ______   ______     ______     __    __           
 /\  ___\   /\__  _\ /\  ___\   /\  __ \   /\ "-./  \          
 \ \___  \  \/_/\ \/ \ \  __\   \ \  __ \  \ \ \-./\ \         
@@ -700,7 +915,6 @@ if (-not $SkipIntro) {
                  \/_/  \/_/   \/_____/   \/_/ \/_/   \/_____/ 
                                                               
 "@ -ForegroundColor Green
-    Write-Message "$($script:config.Version)" -Level Info
     
     if (-not $NoInteraction) {
         Write-Host ""
@@ -720,10 +934,13 @@ if (-not $SkipIntro) {
             $modeOptions[3] { "NormalBoth2022-2025" }
         }
         
-        Write-Host ""
-        Write-Message "Selected mode: $Mode" -Level Info
+        # Clear screen after selection and show system info
+        Clear-Screen
+        Show-SystemInfo -SelectedMode $Mode
     } else {
-        Write-Message "NoInteraction mode: Using mode $Mode" -Level Info
+        Write-Message "NoInteraction mode: Using mode $Mode" -Category "INIT"
+        Clear-Screen
+        Show-SystemInfo -SelectedMode $Mode
     }
 }
 
