@@ -15,7 +15,7 @@ Add-Type -AssemblyName System.Windows.Forms
 $script:config = @{
     Title               = "Steam Debloat"
     GitHub              = "Github.com/AltRossell/Steam-Debloat"
-    Version            = "v11.04"
+    Version            = "v11.07 HF"
     Color              = @{
         Info = "White"
         Success = "White"
@@ -79,6 +79,24 @@ function Clear-Screen {
     [System.Console]::Clear()
 }
 
+function Get-ConfigMode {
+    param(
+        [string]$ConfigPath
+    )
+    
+    if (Test-Path $ConfigPath) {
+        try {
+            $content = Get-Content $ConfigPath -Raw
+            if ($content -match "Mode:\s*(.+)") {
+                return $matches[1].Trim()
+            }
+        } catch {
+            # Ignore errors when reading config
+        }
+    }
+    return "Not Found"
+}
+
 function Show-SystemInfo {
     param(
         [string]$SelectedMode
@@ -93,6 +111,9 @@ function Show-SystemInfo {
     Write-Message "OS Arch: $osArch" -Category "SYSTEM"
     Write-Message "------------------------------" -Category "SYSTEM"
     
+    # Show selected mode
+    Write-Message "Selected Mode: $SelectedMode" -Category "SYSTEM"
+    
     # Check Steam paths
     $steamPath = if (Test-Path $script:config.SteamInstallDir) { $script:config.SteamInstallDir } else { "No Found" }
     $steamv2Path = if (Test-Path $script:config.SteamInstallDirV2) { $script:config.SteamInstallDirV2 } else { "No Found" }
@@ -100,19 +121,51 @@ function Show-SystemInfo {
     Write-Message "Steam::DataPath = $steamPath" -Category "SYSTEM"
     Write-Message "Steamv2::DataPath = $steamv2Path" -Category "SYSTEM"
     
-    # Add steam.cfg detection
+    # Add steam.cfg detection and show mode from config
     $steamCfgPath = if (Test-Path $script:config.SteamInstallDir) { 
         $cfgPath = Join-Path $script:config.SteamInstallDir "steam.cfg"
-        if (Test-Path $cfgPath) { $cfgPath } else { "No Found" }
-    } else { "No Found" }
-    Write-Message "Steam.cfg::DataPath = $steamCfgPath" -Category "SYSTEM"
+        if (Test-Path $cfgPath) { 
+            $configMode = Get-ConfigMode -ConfigPath $cfgPath
+            Write-Message "Steam.cfg::DataPath = $cfgPath" -Category "SYSTEM"
+            Write-Message "Steam.cfg::Mode = $configMode" -Category "SYSTEM"
+            $cfgPath 
+        } else { 
+            Write-Message "Steam.cfg::DataPath = No Found" -Category "SYSTEM"
+            Write-Message "Steam.cfg::Mode = No Found" -Category "SYSTEM"
+            "No Found" 
+        }
+    } else { 
+        Write-Message "Steam.cfg::DataPath = No Found" -Category "SYSTEM"
+        Write-Message "Steam.cfg::Mode = No Found" -Category "SYSTEM"
+        "No Found" 
+    }
+    
+    # Check steamv2 config if applicable
+    if ($SelectedMode -eq "NormalBoth2022-2025") {
+        $steamv2CfgPath = if (Test-Path $script:config.SteamInstallDirV2) {
+            $cfgPathV2 = Join-Path $script:config.SteamInstallDirV2 "steam.cfg"
+            if (Test-Path $cfgPathV2) {
+                $configModeV2 = Get-ConfigMode -ConfigPath $cfgPathV2
+                Write-Message "Steamv2.cfg::DataPath = $cfgPathV2" -Category "SYSTEM"
+                Write-Message "Steamv2.cfg::Mode = $configModeV2" -Category "SYSTEM"
+                $cfgPathV2
+            } else {
+                Write-Message "Steamv2.cfg::DataPath = No Found" -Category "SYSTEM"
+                Write-Message "Steamv2.cfg::Mode = No Found" -Category "SYSTEM"
+                "No Found"
+            }
+        } else {
+            Write-Message "Steamv2.cfg::DataPath = No Found" -Category "SYSTEM"
+            Write-Message "Steamv2.cfg::Mode = No Found" -Category "SYSTEM"
+            "No Found"
+        }
+    }
     
     Write-Message "------------------------------" -Category "SYSTEM"
     Write-Message "Script Name: Steam Debloat" -Category "SYSTEM"
     Write-Message "Script Developer: AltRossell" -Category "SYSTEM"
     Write-Message "------------------------------" -Category "SYSTEM"
     
-    # Remove the selected mode message as requested
     Write-Host ""
 }
 
@@ -337,6 +390,7 @@ function Create-SteamBatch {
 @echo off
 cd /d "$SteamPath"
 start Steam.exe $($STEAM_MODES[$modeKey]["steam2025"])
+:: Mode: Normal2025July
 "@
             $batchContent2025 | Out-File -FilePath $batchPath2025 -Encoding ASCII -Force
             Write-Message "Created Steam 2025 batch file: $batchPath2025" -Level Success -Category "GENERATOR"
@@ -347,6 +401,7 @@ start Steam.exe $($STEAM_MODES[$modeKey]["steam2025"])
 @echo off
 cd /d "$($script:config.SteamInstallDirV2)"
 start Steam.exe $($STEAM_MODES[$modeKey]["steam2022"])
+:: Mode: Normal2022dec
 "@
             $batchContent2022 | Out-File -FilePath $batchPath2022 -Encoding ASCII -Force
             Write-Message "Created Steam 2022 batch file: $batchPath2022" -Level Success -Category "GENERATOR"
@@ -361,6 +416,7 @@ start Steam.exe $($STEAM_MODES[$modeKey]["steam2022"])
 @echo off
 cd /d "$SteamPath"
 start Steam.exe $($STEAM_MODES[$modeKey])
+:: Mode: $Mode
 "@
             $batchContent | Out-File -FilePath $batchPath -Encoding ASCII -Force
             Write-Message "Created Steam batch file: $batchPath" -Level Success -Category "GENERATOR"
@@ -535,7 +591,7 @@ function Invoke-SafeWebRequest {
 }
 
 function Stop-SteamProcesses {
-    # Removed Process::Cleanup message as requested
+    Write-Message "Process::Cleanup" -Category "CLEANUP"
     
     $steamProcesses = Get-Process -Name "*steam*" -ErrorAction SilentlyContinue
     foreach ($process in $steamProcesses) {
@@ -563,22 +619,18 @@ function Get-RequiredFiles {
     
     Write-Message "Config::Generator" -Category "CONFIG"
     
-    # Check if steam.cfg already exists and skip creation if it does
+    # Always create steam.cfg (overwrite if exists)
     $steamCfgPath = Join-Path $SteamPath "steam.cfg"
     $steamCfgTempPath = Join-Path $env:TEMP "steam.cfg"
     
-    if (-not (Test-Path $steamCfgPath)) {
-        # Create steam.cfg only if it doesn't exist
-        @"
+    # Create steam.cfg with mode information
+    @"
 BootStrapperInhibitAll=enable
 BootStrapperForceSelfUpdate=disable
+Mode: $SelectedMode
 "@ | Out-File -FilePath $steamCfgTempPath -Encoding ASCII -Force
 
-        Write-Message "Created steam.cfg configuration file" -Level Success -Category "CONFIG"
-    } else {
-        Write-Message "Steam.cfg already exists, skipping creation" -Level Warning -Category "CONFIG"
-        $steamCfgTempPath = $null
-    }
+    Write-Message "Created steam.cfg configuration file with mode: $SelectedMode" -Level Success -Category "CONFIG"
 
     if ($SelectedMode.ToLower() -eq "normalboth2022-2025") {
         return @{ 
@@ -600,14 +652,12 @@ function Move-ConfigFile {
         [string]$InstallDir = $script:config.SteamInstallDir
     )
     
-    # Only move if source exists and destination doesn't exist
+    # Always move/overwrite the config file
     if ($SourcePath -and (Test-Path $SourcePath)) {
         $destinationPath = Join-Path $InstallDir "steam.cfg"
-        if (-not (Test-Path $destinationPath)) {
-            Write-Message "Config::Deployment" -Category "DEPLOY"
-            Copy-Item -Path $SourcePath -Destination $destinationPath -Force
-            Write-Message "Moved steam.cfg to $destinationPath" -Level Success -Category "DEPLOY"
-        }
+        Write-Message "Config::Deployment" -Category "DEPLOY"
+        Copy-Item -Path $SourcePath -Destination $destinationPath -Force
+        Write-Message "Moved steam.cfg to $destinationPath" -Level Success -Category "DEPLOY"
     }
 }
 
@@ -663,6 +713,17 @@ function Remove-TempFiles {
     Remove-Item -Path (Join-Path $env:TEMP "Steam2022.bat") -Force -ErrorAction SilentlyContinue
     Remove-Item -Path (Join-Path $env:TEMP "steam.cfg") -Force -ErrorAction SilentlyContinue
     Write-Message "Removed temporary files" -Level Success -Category "CLEANUP"
+}
+
+function Test-SteamStartupEntry {
+    try {
+        $registryPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run"
+        $steamEntry = Get-ItemProperty -Path $registryPath -Name "Steam" -ErrorAction SilentlyContinue
+        return $steamEntry -ne $null
+    }
+    catch {
+        return $false
+    }
 }
 
 function Remove-SteamFromStartup {
@@ -727,6 +788,9 @@ function Start-SteamDebloat {
             } else {
                 $script:config.SteamInstallDir = $steamCheck2025.Path
             }
+            
+            # Close Steam processes before starting with parameters
+            Stop-SteamProcesses
             Start-SteamWithParameters -Mode "Normal2025July" -InstallDir $script:config.SteamInstallDir
             
             # Check Steam 2022 version
@@ -739,6 +803,9 @@ function Start-SteamDebloat {
                     return
                 }
             }
+            
+            # Close Steam processes before starting with parameters
+            Stop-SteamProcesses
             Start-SteamWithParameters -Mode "Normal2022dec" -InstallDir $script:config.SteamInstallDirV2
             
             Stop-SteamProcesses
@@ -810,6 +877,8 @@ function Start-SteamDebloat {
                 $startWithParams = Show-YesNoMenu -Title "Do you want to start Steam with parameters to get the latest Steam update?" -Line ([Console]::CursorTop + 1)
                 if ($startWithParams) {
                     Write-Message "Yes" -Category "QUESTION"
+                    # Close Steam processes before starting with parameters
+                    Stop-SteamProcesses
                     $steamResult = Start-SteamWithParameters -Mode $SelectedMode -InstallDir $script:config.SteamInstallDir
                     if (-not $steamResult) {
                         Write-Message "Failed to start Steam with parameters" -Level Warning -Category "MAIN"
@@ -819,6 +888,8 @@ function Start-SteamDebloat {
                     Write-Message "Skipping Steam parameter startup" -Category "MAIN"
                 }
             } else {
+                # Close Steam processes before starting with parameters
+                Stop-SteamProcesses
                 $steamResult = Start-SteamWithParameters -Mode $SelectedMode -InstallDir $script:config.SteamInstallDir
                 if (-not $steamResult) {
                     Write-Message "Failed to start Steam with parameters" -Level Warning -Category "MAIN"
@@ -829,14 +900,10 @@ function Start-SteamDebloat {
             
             # Generate files using the detected/installed Steam path
             $files = Get-RequiredFiles -SelectedMode $SelectedMode -SteamPath $script:config.SteamInstallDir
-            if ($files.SteamCfg) {
-                Move-ConfigFile -SourcePath $files.SteamCfg -InstallDir $script:config.SteamInstallDir
-            }
+            Move-ConfigFile -SourcePath $files.SteamCfg -InstallDir $script:config.SteamInstallDir
             
-            # Move batch file to desktop only if it doesn't exist
-            if (-not $script:FilesStatus.DesktopSteamBat) {
-                Move-SteamBatToDesktop -SourcePath $files.SteamBat -FileName "Steam.bat"
-            }
+            # Always move batch file to desktop (regenerate it)
+            Move-SteamBatToDesktop -SourcePath $files.SteamBat -FileName "Steam.bat"
             
             # Ask about Start Menu only if file doesn't exist
             if (-not $script:FilesStatus.StartMenuSteamBat) {
@@ -854,18 +921,24 @@ function Start-SteamDebloat {
             Remove-TempFiles
         }
 
-        # Ask about startup removal - single space before this section
-        Write-Host ""
-        $removeFromStartup = Show-YesNoMenu -Title "Do you want to remove Steam from Windows startup?" -Line ([Console]::CursorTop + 1)
-        if ($removeFromStartup) {
-            Write-Message "Yes" -Category "QUESTION"
-            $removeResult = Remove-SteamFromStartup
-            if ($removeResult) {
-                Write-Message "Steam has been removed from Windows startup." -Level Success -Category "MAIN"
+        # Check if Steam startup entry exists before asking
+        $steamStartupExists = Test-SteamStartupEntry
+        if ($steamStartupExists) {
+            Write-Host ""
+            $removeFromStartup = Show-YesNoMenu -Title "Do you want to remove Steam from Windows startup?" -Line ([Console]::CursorTop + 1)
+            if ($removeFromStartup) {
+                Write-Message "Yes" -Category "QUESTION"
+                $removeResult = Remove-SteamFromStartup
+                if ($removeResult) {
+                    Write-Message "Steam has been removed from Windows startup." -Level Success -Category "MAIN"
+                }
+            } else {
+                Write-Message "No" -Category "QUESTION"
+                Write-Message "Steam startup configuration left unchanged." -Category "MAIN"
             }
         } else {
-            Write-Message "No" -Category "QUESTION"
-            Write-Message "Steam startup configuration left unchanged." -Category "MAIN"
+            Write-Host ""
+            Write-Message "Steam is not configured to start with Windows." -Category "MAIN"
         }
 
         Write-Host ""
@@ -891,6 +964,9 @@ function Start-SteamDebloat {
 
 # Set window title
 $host.UI.RawUI.WindowTitle = "$($script:config.GitHub)"
+
+# Check if script was run with parameters (indicating it was called from a .bat file)
+$RunWithParameters = $PSBoundParameters.Count -gt 0 -or $args.Count -gt 0
 
 # Show intro unless skipped
 if (-not $SkipIntro) {
@@ -939,6 +1015,12 @@ if (-not $SkipIntro) {
         Show-SystemInfo -SelectedMode $Mode
     } else {
         Write-Message "NoInteraction mode: Using mode $Mode" -Category "INIT"
+        Clear-Screen
+        Show-SystemInfo -SelectedMode $Mode
+    }
+} else {
+    # If intro is skipped but script run with parameters, still show system info
+    if ($RunWithParameters) {
         Clear-Screen
         Show-SystemInfo -SelectedMode $Mode
     }

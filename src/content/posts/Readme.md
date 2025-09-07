@@ -70,7 +70,7 @@ irm https://steamdeb.vercel.app/api/get | iex
 ```
 
 ### Method 2: Batch File
-1. Download **[Installer.bat](https://github.com/AltRossell/Steam-Debloat/releases/download/v11.04/Installer.bat)**
+1. Download **[Installer.bat](https://github.com/AltRossell/Steam-Debloat/releases/download/v11.07HF/Installer.bat)**
 2. Right-click → "Run as Administrator"
 3. Follow the on-screen prompts
 
@@ -101,7 +101,7 @@ irm https://steamdeb.vercel.app/api/get | iex
 
 ### Troubleshooting
 If you experience any issues:
-1. **Download:** [Uninstall.bat](https://github.com/AltRossell/Steam-Debloat/releases/download/v11.04/Uninstall.bat)
+1. **Download:** [Uninstall.bat](https://github.com/AltRossell/Steam-Debloat/releases/download/v11.07HF/Uninstall.bat)
 2. **Run as Administrator** to restore original Steam
 3. **Restart Steam** and verify everything works
 
