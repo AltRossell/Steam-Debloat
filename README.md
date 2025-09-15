@@ -13,10 +13,13 @@
 
 > [!IMPORTANT]
 > **🆕 Major Update**
-> Steam Debloat has evolved into a modern Windows desktop application with a Material Design interface and real-time monitoring capabilities.  
-> Legacy PowerShell scripts have been moved to a separate branch called `Legacy-Scripts` for advanced users.  
-> Any false positives are due to the digital signature.  
-> The source code of the application is available at [https://github.com/AltRossell/Steam-Debloat/tree/main/desktop-app](https://github.com/AltRossell/Steam-Debloat/tree/main/desktop-app).
+
+**Steam Debloat** has evolved into a modern Windows desktop application with a **Material Design interface** and **real-time monitoring capabilities**.
+
+- The **legacy PowerShell scripts** have been moved to a separate branch called `Legacy-Scripts` for advanced users.
+- Any **false positives** are due to the digital signature.
+- The **source code** of the application is available at: [https://github.com/AltRossell/Steam-Debloat/tree/main/desktop-app](https://github.com/AltRossell/Steam-Debloat/tree/main/desktop-app)
+
 
 ## 🌟 Why Choose Steam Debloat?
 
