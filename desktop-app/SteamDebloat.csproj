@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ApplicationIcon>steam.ico</ApplicationIcon>
+    
+    <AssemblyTitle>Steam Debloat</AssemblyTitle>
+    <AssemblyDescription>Tool to downgrade Steam to Dec2022</AssemblyDescription>
+    <AssemblyVersion>1.914.1840</AssemblyVersion>
+    <FileVersion>1.914.1840</FileVersion>
+    <InformationalVersion>1.914.1840</InformationalVersion>
+    <Version>1.914.1840</Version>
+    <Copyright>© 2025 AltRossell</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MaterialDesignThemes" Version="4.9.0" />
+    <PackageReference Include="MaterialDesignColors" Version="2.1.4" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
+  </ItemGroup>
+
+</Project>

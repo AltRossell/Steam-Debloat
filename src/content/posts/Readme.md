@@ -13,39 +13,42 @@ lang: ''
 
 [![GitHub release](https://img.shields.io/github/v/release/AltRossell/Steam-Debloat?style=for-the-badge&color=4CAF50)](https://github.com/AltRossell/Steam-Debloat/releases)
 [![License](https://img.shields.io/github/license/AltRossell/Steam-Debloat?style=for-the-badge&color=FF9800)](LICENSE)
-[![VirusTotal](https://img.shields.io/badge/VirusTotal-Verified-brightgreen?style=for-the-badge&logo=virustotal)](https://www.virustotal.com/gui/file/099ab1fd3ee39acc48975d8e44d8b3f2a634fe3bf86ca7108a9e655dfa4334c8)
-
+[![VirusTotal](https://img.shields.io/badge/VirusTotal-Verified-brightgreen?style=for-the-badge&logo=virustotal)](https://www.virustotal.com/gui/file/b9868eb77ab2e76560c85ed53e7d7f609dc255876238df82f2eae654676211a4?nocache=1)
 </div>
 
 ---
 
 > [!IMPORTANT]
-> **Before You Start:** If any games don't work after installation, simply run `Uninstall.bat` to restore Steam to its original state.
+> **🆕 Major Update**
+> Steam Debloat has evolved into a modern Windows desktop application with a Material Design interface and real-time monitoring capabilities.  
+> Legacy PowerShell scripts have been moved to a separate branch called `Legacy-Scripts` for advanced users.  
+> Any false positives are due to the digital signature.  
+> The source code of the application is available at [GitHub - Steam-Debloat Desktop App](http://github.com/AltRossell/Steam-Debloat/desktop-app).
+
 
 ## 🌟 Why Choose Steam Debloat?
 
-Transform your Steam experience with measurable performance improvements that matter.
+Transform your Steam experience with our enterprise-grade optimization suite featuring cutting-edge desktop application technology.
 
 <table>
 <tr>
-<td width="60%">
+<td width="50%">
 
-### 📊 Proven Performance Gains
-
-- **⚡ 70% Faster Startup** - From sluggish to instant
-- **💾 50% Memory Reduction** - More RAM for your games
-- **🔄 86% Lower CPU Usage** - Cooler, quieter system
-- **📚 Instant Library Loading** - No more waiting screens
+### 🖥️ Modern Desktop Application
+- **Material Design Interface** - Intuitive, responsive UI
+- **Real-Time Monitoring** - Live system status updates
+- **Async Operations** - Non-blocking background processing  
+- **Smart Auto-Detection** - Automatic Steam installation discovery
+- **One-Click Management** - Simplified operation control
 
 </td>
-<td width="40%">
+<td width="50%">
 
-### 🛡️ Security & Trust
-
-- **Regular Security Audits** - Continuously monitored
-- **VirusTotal Verified** - Clean scan results
-- **100% Open Source** - Full transparency
-- **Community Tested** - Thousands of satisfied users
+### 📊 Proven Performance Gains
+- **⚡ 70% Faster Startup** - From sluggish to instant
+- **💾 50% Memory Reduction** - More RAM for your games
+- **🔥 86% Lower CPU Usage** - Cooler, quieter system
+- **📚 Instant Library Loading** - No more waiting screens
 
 </td>
 </tr>
@@ -59,38 +62,132 @@ Real-world testing on average gaming systems:
 |:------------------:|:-----------:|:-------------:|:-----------:|
 | ⚡ **Startup Time** | 12.3 seconds | 4.1 seconds | `▼ 66.7%` |
 | 💾 **RAM Usage** | 547 MB | 164 MB | `▼ 70.0%` |
-| 🔄 **CPU Usage** | 15.2% | 2.1% | `▼ 86.2%` |
+| 🔥 **CPU Usage** | 15.2% | 2.1% | `▼ 86.2%` |
 | 📚 **Library Load** | 3.8 seconds | 0.6 seconds | `▼ 84.2%` |
 
-## 🚀 Installation Guide
+## 🚀 Installation Options
 
-### Method 1: PowerShell (Recommended)
-```powershell
-irm https://steamdeb.vercel.app/api/get | iex
-```
-
-### Method 2: Batch File
-1. Download **[Installer.bat](https://github.com/AltRossell/Steam-Debloat/releases/download/v11.07HF/Installer.bat)**
-2. Right-click → "Run as Administrator"
-3. Follow the on-screen prompts
-
-### Method 3: Manual Installation
-1. Download the latest release
-2. Extract to desired location
-3. Run the installer with admin privileges
-
-
-## 🔧 Post-Installation Setup
-
-### Friends List Fix (Optional)
-> **Note:** Steam versions after December 2022 may experience friends/chat issues. This community fix restores functionality.
+### Method 1: Desktop Application (Recommended)
+**Modern WPF Application with Material Design Interface**
 
 <div align="center">
 <table>
 <tr>
-<td align="center" width="100%">
+<td align="center">
+<h4>🖥️ Windows Desktop App</h4>
+<p>Feature-rich GUI with real-time monitoring</p>
+<a href="https://github.com/AltRossell/Steam-Debloat/releases">
+<img src="https://img.shields.io/badge/Download-Desktop_App-blue?style=for-the-badge&logo=windows" alt="Download Desktop App">
+</a>
+</td>
+</tr>
+</table>
+</div>
+
+**Desktop App Features:**
+- 🎨 **Material Design Interface** - Modern, intuitive user experience
+- 📊 **System Information Panel** - Real-time Steam installation status
+- 🔄 **Automatic Detection** - Timer-based Steam installation monitoring
+- ⚡ **Async Operations** - Non-blocking UI with progress indicators
+- 🛠️ **Built-in Uninstaller** - Complete removal with data preservation
+- 🎯 **Dual Version Support** - Enhanced Steam 2022 & 2025 compatibility
+- 🔧 **Smart Configuration** - Automatic mode tracking and management
+
+### Method 2: PowerShell (Advanced Users)
+```powershell
+irm https://steamdeb.vercel.app/api/get | iex
+```
+
+### Method 3: Legacy Batch Scripts
+For users who prefer traditional command-line installation:
+
+<div align="center">
+
+| Installation Type | Target Version | Download |
+|:------------------|:--------------:|:--------:|
+| **Normal 2025** | Steam 2025 | [![Download](https://img.shields.io/badge/Download-BAT-green?style=flat-square)](https://github.com/AltRossell/Steam-Debloat/releases/download/v1.914.1840/Installer2025.bat) |
+| **Dual Version** | Steam 2022-2025 | [![Download](https://img.shields.io/badge/Download-BAT-green?style=flat-square)](https://github.com/AltRossell/Steam-Debloat/releases/download/v1.914.1840/Installer2022-2025.bat) |
+| **Lite 2022** | Steam 2022 Dec | [![Download](https://img.shields.io/badge/Download-BAT-green?style=flat-square)](https://github.com/AltRossell/Steam-Debloat/releases/download/v1.914.1840/Installerlite2022dec.bat) |
+| **Normal 2022** | Steam 2022 Dec | [![Download](https://img.shields.io/badge/Download-BAT-green?style=flat-square)](https://github.com/AltRossell/Steam-Debloat/releases/download/v1.914.1840/Installer2022dec.bat) |
+
+</div>
+
+## 💎 Advanced Features
+
+<table>
+<tr>
+<td width="33%">
+
+### 🔧 **System Integration**
+- **Registry Monitoring** - Multi-path Steam detection
+- **Admin Privilege Detection** - Color-coded status indicators  
+- **Configuration Management** - Mode consistency tracking
+- **Automatic Cleanup** - Temporary file management
+
+</td>
+<td width="33%">
+
+### 🛡️ **Reliability & Safety**
+- **Robust Error Handling** - Comprehensive exception management
+- **Graceful Operation Cancel** - Safe process termination
+- **Data Preservation** - Game libraries remain intact
+- **Easy Restoration** - Complete uninstall capability
+
+</td>
+<td width="33%">
+
+### ⚡ **Performance Engine**
+- **Smart Process Management** - Intelligent resource allocation
+- **Dynamic Memory Control** - Adaptive RAM optimization
+- **Cache Optimization** - Enhanced data access speeds
+- **Background Task Reduction** - Minimized CPU overhead
+
+</td>
+</tr>
+</table>
+
+## 🎮 Gaming Experience Enhancement
+
+### Performance Benefits
+- **🎯 Reduced Input Lag** - More responsive gaming experience
+- **📈 Higher FPS Stability** - Consistent frame rate performance  
+- **🚀 Faster Game Launches** - Minimized loading times
+- **💪 Lower System Overhead** - Maximum resources for gaming
+
+### User Interface Improvements
+- **🎨 Cleaner Interface** - Streamlined, distraction-free design
+- **⚡ Faster Navigation** - Responsive menu interactions
+- **📚 Enhanced Library** - Quick game discovery and access
+- **✨ Custom Elements** - Improved visual aesthetics
+
+## 🔧 Post-Installation Configuration
+
+### Uninstallation Process
+The desktop application includes a built-in uninstaller, or you can use the standalone uninstaller:
+
+<div align="center">
+<table>
+<tr>
+<td align="center">
+<h4>🗑️ Complete Removal</h4>
+<p>Safely restore Steam to original state</p>
+<a href="https://github.com/AltRossell/Steam-Debloat/releases/download/v1.914.1840/Uninstall.bat">
+<img src="https://img.shields.io/badge/Download-Uninstaller-red?style=for-the-badge&logo=trash" alt="Download Uninstaller">
+</a>
+</td>
+</tr>
+</table>
+</div>
+
+### Optional: Friends List Restoration
+> **Note:** Steam versions after December 2022 may experience friends/chat functionality issues. This community-developed fix restores full functionality.
+
+<div align="center">
+<table>
+<tr>
+<td align="center">
 <h4>👥 Steam Friends UI Fix</h4>
-<p>Restore full friends functionality</p>
+<p>Community solution for friends functionality</p>
 <a href="https://github.com/TiberiumFusion/FixedSteamFriendsUI/releases">
 <img src="https://img.shields.io/badge/Download-Friends_Fix-blue?style=for-the-badge&logo=steam" alt="Download Friends Fix">
 </a>
@@ -99,50 +196,42 @@ irm https://steamdeb.vercel.app/api/get | iex
 </table>
 </div>
 
-### Troubleshooting
-If you experience any issues:
-1. **Download:** [Uninstall.bat](https://github.com/AltRossell/Steam-Debloat/releases/download/v11.07HF/Uninstall.bat)
-2. **Run as Administrator** to restore original Steam
-3. **Restart Steam** and verify everything works
+## 🛡️ Security & Trust Framework
 
----
-
-## 💎 Feature Highlights
-
-<table>
-<tr>
-<td width="50%">
-
-### 🔧 **Performance Optimizations**
-- **Smart Process Management** - Intelligent resource allocation
-- **Dynamic Memory Control** - Adaptive RAM usage
-- **Cache Optimization** - Faster data access
-- **Background Task Reduction** - CPU efficiency
-
-</td>
-<td width="50%">
-
-### 🎨 **User Experience**
-- **Cleaner Interface** - Streamlined design
-- **Faster Navigation** - Responsive menus
-- **Enhanced Library** - Quick game access
-- **Custom Elements** - Improved aesthetics
-
-</td>
-</tr>
-</table>
-
-### 🎮 Gaming Benefits
-- **Reduced Input Lag** - More responsive gaming
-- **Higher FPS Stability** - Consistent frame rates
-- **Faster Game Launches** - Less waiting, more playing
-- **Lower System Overhead** - Resources freed for games
-
-## 🤝 Community & Support
+We maintain enterprise-level security standards with comprehensive verification processes:
 
 <div align="center">
 
-### Quick Access Links
+| Component | VirusTotal Status | Security Level |
+|:---------:|:-----------------:|:--------------:|
+| **Desktop Application** | [![VirusTotal](https://img.shields.io/badge/✅-Clean-brightgreen)](https://www.virustotal.com/gui/file/b9868eb77ab2e76560c85ed53e7d7f609dc255876238df82f2eae654676211a4?nocache=1) | **Enterprise** |
+| **Legacy Installers** | [![VirusTotal](https://img.shields.io/badge/✅-Clean-brightgreen)](https://www.virustotal.com/gui/file/4ae876ea94fd323b0b58f2cad70b477464315abd0ad09bf969de5c0b05ba72be?nocache=1) | **Verified** |
+
+</div>
+
+**Security Assurance:**
+- 🔍 **Continuous Security Audits** - Regular automated vulnerability scanning
+- 🌐 **100% Open Source Transparency** - Full code visibility and community review
+- 🛡️ **Safe System Integration** - No critical system modifications outside Steam
+- 🔄 **Reversible Operations** - Complete restoration capability maintained
+- 📋 **Community Validation** - Thousands of verified installations worldwide
+
+## 📈 System Requirements
+
+### Desktop Application
+- **OS:** Windows 10/11 (x64)
+- **Privileges:** Administrator access required for Steam modifications
+
+### Legacy Scripts
+- **OS:** Windows 7/8/10/11
+- **PowerShell:** Version 3.0 or higher
+- **Privileges:** Administrator access required
+
+## 🤝 Community & Professional Support
+
+<div align="center">
+
+### Resource Center
 
 [![Documentation](https://img.shields.io/badge/📚-Documentation-blue?style=for-the-badge)](https://github.com/AltRossell/Steam-Debloat/blob/main/wiki.md)
 [![Issues](https://img.shields.io/badge/🐛-Report_Bug-red?style=for-the-badge)](https://github.com/AltRossell/Steam-Debloat/issues)
@@ -151,46 +240,28 @@ If you experience any issues:
 
 </div>
 
-### 💖 Support the Project
+For detailed security policies and development guidelines, visit our [Security Policy](https://github.com/AltRossell/Steam-Debloat/blob/main/SECURITY.md).
 
-If Steam Debloat improved your gaming experience, consider supporting development:
-
-<div align="center">
-
-[![Ko-fi](https://img.shields.io/badge/☕-Buy_Me_Coffee-ff5f5f?style=for-the-badge&logo=ko-fi)](https://ko-fi.com/l1lkid)
-
-</div>
-
-## 🔒 Security & Verification
-
-We take security seriously. All releases undergo comprehensive scanning:
+## 📊 Project Analytics
 
 <div align="center">
 
-| Component | VirusTotal Status | Last Scan |
-|:---------:|:-----------------:|:---------:|
-| **Main Installer** | [![VirusTotal](https://img.shields.io/badge/✅-Clean-brightgreen)](https://www.virustotal.com/gui/file/994e1c503b70bbbd72a4a8271ff45f71a8e67ce6238294a9f16c3c648d7f565f?nocache=1) | Latest |
-| **Uninstaller** | [![VirusTotal](https://img.shields.io/badge/✅-Clean-brightgreen)](https://www.virustotal.com/gui/file/6964ca6b5f1b10d540c078bee7979dd61228c09b995e8c0f5f8ac336d912ce52?nocache=1) | Latest |
-
-</div>
-
-**Security Features:**
-- **Open Source Code** - Full transparency and community review
-- **Regular Audits** - Continuous security monitoring  
-- **Safe Installation** - No system modifications outside Steam
-- **Easy Removal** - Complete uninstall capability
-
-For detailed security information, see our [Security Policy](https://github.com/AltRossell/Steam-Debloat/blob/main/SECURITY.md).
-
-<div align="center">
-
-## ⭐ Star History
+### Growth & Adoption
 
 [![Star History](https://api.star-history.com/svg?repos=AltRossell/Steam-Debloat&type=Date)](https://star-history.com/#AltRossell/Steam-Debloat&Date)
 
 </div>
 
-<p align="center">
-<b>🎮 Made with 💖 for the Gaming Community</b><br>
-<i>Give us a ⭐ star if Steam Debloat enhanced your gaming experience!</i>
-</p>
+---
+
+<div align="center">
+
+**🎮 Made with ❤️ for the Gaming Community**
+
+*Transform your Steam experience today - Give us a ⭐ star if Steam Debloat enhanced your gaming performance!*
+
+---
+
+**© 2025 Steam Debloat Project** • **Licensed under MIT** • **Built for my, by Gamers**
+
+</div>
