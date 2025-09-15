@@ -1,7 +1,7 @@
 export default async function handler(req, res) {
 	try {
 		const url =
-			"https://raw.githubusercontent.com/AltRossell/Steam-Debloat/legacy-scripts/app.ps1";
+			"https://raw.githubusercontent.com/AltRossell/Steam-Debloat/legacy-scripts-archived/app.ps1";
 
 		const response = await fetch(url);
 
