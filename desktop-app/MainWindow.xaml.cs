@@ -12,16 +12,16 @@ namespace SteamDebloat
     public partial class MainWindow : Window
     {
         private readonly SteamDebloatService _steamService;
-        private CancellationTokenSource? _cancellationTokenSource;
+        private CancellationTokenSource _cancellationTokenSource;
         private bool _isProcessing = false;
-        private bool _steamInstalled = false; // Add this missing field
+        private bool _steamInstalled = false;
 
         public MainWindow()
         {
             InitializeComponent();
             _steamService = new SteamDebloatService();
             _steamService.ProgressChanged += OnProgressChanged;
-            _steamService.SteamDetectionChanged += OnSteamDetectionChanged; // Subscribe to Steam detection events
+            _steamService.SteamDetectionChanged += OnSteamDetectionChanged;
             
             InitializeUI();
         }
@@ -30,7 +30,7 @@ namespace SteamDebloat
         {
             CheckAdminPrivileges();
             ModeComboBox.SelectedIndex = 0;
-            await LoadSystemInfo();
+            await LoadSystemInfo().ConfigureAwait(false);
         }
 
         private void OnSteamDetectionChanged(bool steamInstalled)
@@ -65,22 +65,28 @@ namespace SteamDebloat
         {
             try
             {
-                var systemInfo = await _steamService.GetSystemInfoAsync();
+                var systemInfo = await _steamService.GetSystemInfoAsync().ConfigureAwait(false);
                 
-                OSVersionText.Text = systemInfo.OSVersion;
-                OSArchText.Text = systemInfo.Architecture;
-                SteamPathText.Text = systemInfo.SteamFound ? systemInfo.SteamPath : "Steam not found";
-                SteamConfigText.Text = systemInfo.ConfigExists ? "Steam.cfg found" : "No previous configuration";
-                
-                // Update the steam installation status
-                _steamInstalled = systemInfo.SteamFound;
-                
-                UpdateModeSpecificInfo();
+                Dispatcher.Invoke(() =>
+                {
+                    OSVersionText.Text = systemInfo.OSVersion;
+                    OSArchText.Text = systemInfo.Architecture;
+                    SteamPathText.Text = systemInfo.SteamFound ? systemInfo.SteamPath : "Steam not found";
+                    SteamConfigText.Text = systemInfo.ConfigExists ? "Steam.cfg found" : "No previous configuration";
+                    
+                    // Update the steam installation status
+                    _steamInstalled = systemInfo.SteamFound;
+                    
+                    UpdateModeSpecificInfo();
+                });
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error loading system information: {ex.Message}", 
-                              "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                Dispatcher.Invoke(() =>
+                {
+                    MessageBox.Show($"Error loading system information: {ex.Message}", 
+                                  "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                });
             }
         }
 
@@ -149,7 +155,7 @@ namespace SteamDebloat
                 return;
             }
 
-            await StartOptimization();
+            await StartOptimization().ConfigureAwait(false);
         }
 
         private async void UninstallButton_Click(object sender, RoutedEventArgs e)
@@ -182,7 +188,7 @@ namespace SteamDebloat
                 return;
             }
 
-            await StartUninstall();
+            await StartUninstall().ConfigureAwait(false);
         }
 
         private async Task StartOptimization()
@@ -192,46 +198,65 @@ namespace SteamDebloat
                 _isProcessing = true;
                 _cancellationTokenSource = new CancellationTokenSource();
                 
-                ShowProgressOverlay(true);
-                StartButton.IsEnabled = false;
-                UninstallButton.IsEnabled = false;
+                Dispatcher.Invoke(() =>
+                {
+                    ShowProgressOverlay(true);
+                    StartButton.IsEnabled = false;
+                    UninstallButton.IsEnabled = false;
+                });
 
                 var config = GetOptimizationConfig();
                 
-                var result = await _steamService.OptimizeSteamAsync(config, _cancellationTokenSource.Token);
+                var result = await _steamService.OptimizeSteamAsync(config, _cancellationTokenSource.Token).ConfigureAwait(false);
 
-                if (result.Success)
+                Dispatcher.Invoke(() =>
                 {
-                    MessageBox.Show($"Optimization completed successfully in {result.Duration:mm\\:ss}", 
-                                  "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-                else
-                {
-                    MessageBox.Show($"Error during optimization:\n{result.ErrorMessage}", 
-                                  "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+                    if (result.Success)
+                    {
+                        MessageBox.Show($"Optimization completed successfully in {result.Duration:mm\\:ss}", 
+                                      "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Error during optimization:\n{result.ErrorMessage}", 
+                                      "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                });
             }
             catch (OperationCanceledException)
             {
-                MessageBox.Show("Operation cancelled by user.", 
-                              "Cancelled", MessageBoxButton.OK, MessageBoxImage.Information);
+                Dispatcher.Invoke(() =>
+                {
+                    MessageBox.Show("Operation cancelled by user.", 
+                                  "Cancelled", MessageBoxButton.OK, MessageBoxImage.Information);
+                });
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Unexpected error: {ex.Message}", 
-                              "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Dispatcher.Invoke(() =>
+                {
+                    MessageBox.Show($"Unexpected error: {ex.Message}", 
+                                  "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                });
             }
             finally
             {
                 _isProcessing = false;
-                ShowProgressOverlay(false);
-                StartButton.IsEnabled = true;
-                UninstallButton.IsEnabled = true;
-                _cancellationTokenSource?.Dispose();
-                _cancellationTokenSource = null;
+                Dispatcher.Invoke(() =>
+                {
+                    ShowProgressOverlay(false);
+                    StartButton.IsEnabled = true;
+                    UninstallButton.IsEnabled = true;
+                });
+                
+                if (_cancellationTokenSource != null)
+                {
+                    _cancellationTokenSource.Dispose();
+                    _cancellationTokenSource = null;
+                }
                 
                 // Reload system info after operation
-                await LoadSystemInfo();
+                await LoadSystemInfo().ConfigureAwait(false);
             }
         }
 
@@ -242,44 +267,63 @@ namespace SteamDebloat
                 _isProcessing = true;
                 _cancellationTokenSource = new CancellationTokenSource();
                 
-                ShowProgressOverlay(true);
-                StartButton.IsEnabled = false;
-                UninstallButton.IsEnabled = false;
-
-                var result = await _steamService.UninstallAsync(_cancellationTokenSource.Token);
-
-                if (result.Success)
+                Dispatcher.Invoke(() =>
                 {
-                    MessageBox.Show("Uninstallation completed successfully.", 
-                                  "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-                else
+                    ShowProgressOverlay(true);
+                    StartButton.IsEnabled = false;
+                    UninstallButton.IsEnabled = false;
+                });
+
+                var result = await _steamService.UninstallAsync(_cancellationTokenSource.Token).ConfigureAwait(false);
+
+                Dispatcher.Invoke(() =>
                 {
-                    MessageBox.Show($"Error during uninstallation:\n{result.ErrorMessage}", 
-                                  "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+                    if (result.Success)
+                    {
+                        MessageBox.Show("Uninstallation completed successfully.", 
+                                      "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Error during uninstallation:\n{result.ErrorMessage}", 
+                                      "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                });
             }
             catch (OperationCanceledException)
             {
-                MessageBox.Show("Operation cancelled by user.", 
-                              "Cancelled", MessageBoxButton.OK, MessageBoxImage.Information);
+                Dispatcher.Invoke(() =>
+                {
+                    MessageBox.Show("Operation cancelled by user.", 
+                                  "Cancelled", MessageBoxButton.OK, MessageBoxImage.Information);
+                });
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Unexpected error: {ex.Message}", 
-                              "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Dispatcher.Invoke(() =>
+                {
+                    MessageBox.Show($"Unexpected error: {ex.Message}", 
+                                  "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                });
             }
             finally
             {
                 _isProcessing = false;
-                ShowProgressOverlay(false);
-                StartButton.IsEnabled = true;
-                UninstallButton.IsEnabled = true;
-                _cancellationTokenSource?.Dispose();
-                _cancellationTokenSource = null;
+                Dispatcher.Invoke(() =>
+                {
+                    ShowProgressOverlay(false);
+                    StartButton.IsEnabled = true;
+                    UninstallButton.IsEnabled = true;
+                });
+                
+                if (_cancellationTokenSource != null)
+                {
+                    _cancellationTokenSource.Dispose();
+                    _cancellationTokenSource = null;
+                }
                 
                 // Reload system info after operation
-                await LoadSystemInfo();
+                await LoadSystemInfo().ConfigureAwait(false);
             }
         }
 
@@ -304,7 +348,10 @@ namespace SteamDebloat
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            _cancellationTokenSource?.Cancel();
+            if (_cancellationTokenSource != null)
+            {
+                _cancellationTokenSource.Cancel();
+            }
         }
 
         private void OnProgressChanged(string status)
@@ -319,10 +366,21 @@ namespace SteamDebloat
         {
             try
             {
+                var currentProcess = Process.GetCurrentProcess();
+                var mainModule = currentProcess.MainModule;
+                var fileName = mainModule?.FileName ?? "";
+                
+                if (string.IsNullOrEmpty(fileName))
+                {
+                    MessageBox.Show("Could not determine application path for restart.",
+                                  "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
                 var startInfo = new ProcessStartInfo
                 {
                     UseShellExecute = true,
-                    FileName = Process.GetCurrentProcess().MainModule?.FileName ?? "",
+                    FileName = fileName,
                     Verb = "runas"
                 };
 
@@ -338,9 +396,17 @@ namespace SteamDebloat
 
         protected override void OnClosed(EventArgs e)
         {
-            _cancellationTokenSource?.Cancel();
-            _cancellationTokenSource?.Dispose();
-            _steamService?.Dispose();
+            if (_cancellationTokenSource != null)
+            {
+                _cancellationTokenSource.Cancel();
+                _cancellationTokenSource.Dispose();
+            }
+            
+            if (_steamService != null)
+            {
+                _steamService.Dispose();
+            }
+            
             base.OnClosed(e);
         }
     }

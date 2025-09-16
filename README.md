@@ -6,7 +6,7 @@
 
 [![GitHub release](https://img.shields.io/github/v/release/AltRossell/Steam-Debloat?style=for-the-badge&color=4CAF50)](https://github.com/AltRossell/Steam-Debloat/releases)
 [![License](https://img.shields.io/github/license/AltRossell/Steam-Debloat?style=for-the-badge&color=FF9800)](LICENSE)
-[![VirusTotal](https://img.shields.io/badge/VirusTotal-Verified-brightgreen?style=for-the-badge&logo=virustotal)](https://www.virustotal.com/gui/file/b9868eb77ab2e76560c85ed53e7d7f609dc255876238df82f2eae654676211a4?nocache=1)
+[![VirusTotal](https://img.shields.io/badge/VirusTotal-Verified-brightgreen?style=for-the-badge&logo=virustotal)](https://www.virustotal.com/gui/file/05369a2408cd304cc0ea79cce75ec3ff9e62949f4c446d7a47c655b75539fd4b/detection)
 </div>
 
 ---
@@ -16,8 +16,8 @@
 
 **Steam Debloat** has evolved into a modern Windows desktop application with a **Material Design interface** and **real-time monitoring capabilities**.
 
-- The **legacy PowerShell scripts** have been moved to a separate branch called `Legacy-Scripts` for advanced users.
-- Any **false positives** are due to the digital signature.
+- The **legacy PowerShell scripts** have been moved to a separate branch called `legacy-scripts-archived` for advanced users.
+- Any **false positives** are due to the digital signature. If you have any doubts about the application, use the PowerShell version. Here is the source code [https://raw.githubusercontent.com/AltRossell/Steam-Debloat/refs/heads/legacy-scripts-archived/app.ps1](https://raw.githubusercontent.com/AltRossell/Steam-Debloat/refs/heads/legacy-scripts-archived/app.ps1)
 - The **source code** of the application is available at: [https://github.com/AltRossell/Steam-Debloat/tree/main/desktop-app](https://github.com/AltRossell/Steam-Debloat/tree/main/desktop-app)
 
 
@@ -199,7 +199,7 @@ We maintain enterprise-level security standards with comprehensive verification 
 
 | Component | VirusTotal Status | Security Level |
 |:---------:|:-----------------:|:--------------:|
-| **Desktop Application** | [![VirusTotal](https://img.shields.io/badge/✅-Clean-brightgreen)](https://www.virustotal.com/gui/file/b9868eb77ab2e76560c85ed53e7d7f609dc255876238df82f2eae654676211a4?nocache=1) | **Enterprise** |
+| **Desktop Application** | [![VirusTotal](https://img.shields.io/badge/✅-Clean-brightgreen)](https://www.virustotal.com/gui/file/05369a2408cd304cc0ea79cce75ec3ff9e62949f4c446d7a47c655b75539fd4b/detection) | **Enterprise** |
 | **Legacy Installers** | [![VirusTotal](https://img.shields.io/badge/✅-Clean-brightgreen)](https://www.virustotal.com/gui/file/4ae876ea94fd323b0b58f2cad70b477464315abd0ad09bf969de5c0b05ba72be?nocache=1) | **Verified** |
 
 </div>
@@ -215,6 +215,7 @@ We maintain enterprise-level security standards with comprehensive verification 
 
 ### Desktop Application
 - **OS:** Windows 10/11 (x64)
+- **.Net:** Net framework 4.8
 - **Privileges:** Administrator access required for Steam modifications
 
 ### Legacy Scripts

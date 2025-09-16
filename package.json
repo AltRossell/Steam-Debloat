@@ -1,7 +1,7 @@
 {
 	"name": "Steam-Debloat",
 	"type": "module",
-	"version": "1.914.1840",
+	"version": "1.915.2300",
 	"scripts": {
 		"dev": "astro dev",
 		"start": "astro dev",

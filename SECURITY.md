@@ -87,7 +87,7 @@ In case of security issues:
 | Date | Version | Security Update |
 |------|---------|----------------|
 | 2024-11-13 | 1.0.021 | Initial security policy |
-| 2025-09-14 | 1.914.1840 | VirusTotal results update |
+| 2025-09-15 | 1.915.2300 | VirusTotal results update |
 
 ---
 
@@ -95,4 +95,4 @@ In case of security issues:
   <strong>Your security is our priority.</strong>
 </p>
 
-_This security policy is regularly updated. Last revision: 2025-09-14_
+_This security policy is regularly updated. Last revision: 2025-09-15_

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Weavers xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="FodyWeavers.xsd">
+  <Costura>
+    <ExcludeAssemblies>
+    </ExcludeAssemblies>
+    <IncludeAssemblies>
+      MaterialDesignThemes.Wpf
+      MaterialDesignColors
+      Microsoft.Xaml.Behaviors
+      System.Diagnostics.DiagnosticSource
+    </IncludeAssemblies>
+    <DisableCompression>false</DisableCompression>
+    <CreateTemporaryAssemblies>false</CreateTemporaryAssemblies>
+    <DisableCleanup>false</DisableCleanup>
+    <LoadAtModuleInit>true</LoadAtModuleInit>
+  </Costura>
+</Weavers>

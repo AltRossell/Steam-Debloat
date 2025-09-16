@@ -9,15 +9,15 @@ using System.Security.Principal;
 
 namespace SteamDebloat
 {
-    public class SteamDebloatService
+    public class SteamDebloatService : IDisposable
     {
         private readonly Dictionary<string, string> _steamModes;
         private const string DefaultSteamPath = @"C:\Program Files (x86)\Steam";
         private const string DefaultSteamV2Path = @"C:\Program Files (x86)\Steamv2";
-        private Timer? _steamDetectionTimer;
+        private Timer _steamDetectionTimer;
 
-        public event Action<string>? ProgressChanged;
-        public event Action<bool>? SteamDetectionChanged;
+        public event Action<string> ProgressChanged;
+        public event Action<bool> SteamDetectionChanged;
 
         public SteamDebloatService()
         {
@@ -36,7 +36,7 @@ namespace SteamDebloat
             _steamDetectionTimer = new Timer(CheckSteamInstallation, null, TimeSpan.Zero, TimeSpan.FromMinutes(1));
         }
 
-        private void CheckSteamInstallation(object? state)
+        private void CheckSteamInstallation(object state)
         {
             var steamFound = !string.IsNullOrEmpty(FindSteamInstallation());
             SteamDetectionChanged?.Invoke(steamFound);
@@ -60,7 +60,7 @@ namespace SteamDebloat
                     SteamFound = steamExists,
                     ConfigExists = configExists
                 };
-            });
+            }).ConfigureAwait(false);
         }
 
         public async Task<OptimizationResult> OptimizeSteamAsync(OptimizationConfig config, CancellationToken cancellationToken)
@@ -82,21 +82,21 @@ namespace SteamDebloat
 
                 OnProgressChanged($"Steam found at: {steamPath}");
                 
-                await StopSteamProcessesAsync();
+                await StopSteamProcessesAsync().ConfigureAwait(false);
                 OnProgressChanged("Steam processes stopped");
 
+                OptimizationResult result;
                 if (config.Mode == "NormalBoth2022-2025")
                 {
-                    var result = await ProcessBothVersionsMode(config, cancellationToken, steamPath);
-                    result.Duration = stopwatch.Elapsed;
-                    return result;
+                    result = await ProcessBothVersionsMode(config, cancellationToken, steamPath).ConfigureAwait(false);
                 }
                 else
                 {
-                    var result = await ProcessSingleVersionMode(config, cancellationToken, steamPath);
-                    result.Duration = stopwatch.Elapsed;
-                    return result;
+                    result = await ProcessSingleVersionMode(config, cancellationToken, steamPath).ConfigureAwait(false);
                 }
+                
+                result.Duration = stopwatch.Elapsed;
+                return result;
             }
             catch (OperationCanceledException)
             {
@@ -124,7 +124,7 @@ namespace SteamDebloat
                     };
                 }
                 
-                await StopSteamProcessesAsync();
+                await StopSteamProcessesAsync().ConfigureAwait(false);
                 OnProgressChanged("Steam processes stopped");
 
                 bool hasSteam = Directory.Exists(DefaultSteamPath);
@@ -217,11 +217,11 @@ namespace SteamDebloat
             if (config.UpdateSteam)
             {
                 OnProgressChanged($"Updating Steam for {config.Mode} mode...");
-                await UpdateSteamAsync(steamPath, config.Mode, cancellationToken);
+                await UpdateSteamAsync(steamPath, config.Mode, cancellationToken).ConfigureAwait(false);
             }
 
             OnProgressChanged("Applying optimization configuration...");
-            await CreateConfigurationFilesAsync(steamPath, config, cancellationToken);
+            await CreateConfigurationFilesAsync(steamPath, config, cancellationToken).ConfigureAwait(false);
             
             if (config.CreateDesktopShortcut)
             {
@@ -258,7 +258,7 @@ namespace SteamDebloat
                 try
                 {
                     Directory.CreateDirectory(steam2022Path);
-                    await CopyDirectoryAsync(existingSteamPath, steam2022Path, cancellationToken);
+                    await CopyDirectoryAsync(existingSteamPath, steam2022Path, cancellationToken).ConfigureAwait(false);
                     OnProgressChanged("Steam 2022 directory created");
                 }
                 catch (Exception ex)
@@ -272,15 +272,15 @@ namespace SteamDebloat
             }
 
             OnProgressChanged("Updating Steam 2025...");
-            await UpdateSteamAsync(steam2025Path, "Normal2025July", cancellationToken);
+            await UpdateSteamAsync(steam2025Path, "Normal2025July", cancellationToken).ConfigureAwait(false);
 
             OnProgressChanged("Updating Steam 2022...");
-            await UpdateSteamAsync(steam2022Path, "Normal2022dec", cancellationToken);
+            await UpdateSteamAsync(steam2022Path, "Normal2022dec", cancellationToken).ConfigureAwait(false);
 
             OnProgressChanged("Applying configurations...");
             
-            await CreateConfigurationFilesAsync(steam2025Path, new OptimizationConfig { Mode = "Normal2025July" }, cancellationToken);
-            await CreateConfigurationFilesAsync(steam2022Path, new OptimizationConfig { Mode = "Normal2022dec" }, cancellationToken);
+            await CreateConfigurationFilesAsync(steam2025Path, new OptimizationConfig { Mode = "Normal2025July" }, cancellationToken).ConfigureAwait(false);
+            await CreateConfigurationFilesAsync(steam2022Path, new OptimizationConfig { Mode = "Normal2022dec" }, cancellationToken).ConfigureAwait(false);
 
             if (config.CreateDesktopShortcut)
             {
@@ -322,7 +322,7 @@ namespace SteamDebloat
                         // Ignore errors when terminating processes
                     }
                 }
-            });
+            }).ConfigureAwait(false);
         }
 
         private async Task UpdateSteamAsync(string steamPath, string mode, CancellationToken cancellationToken)
@@ -352,36 +352,37 @@ namespace SteamDebloat
 
                 OnProgressChanged($"Starting Steam update for {mode} mode...");
                 
-                using var process = Process.Start(startInfo);
-                
-                await Task.Delay(3000, cancellationToken);
-                
-                var timeout = DateTime.Now.AddMinutes(10);
-                bool updateInProgress = true;
-                
-                while (DateTime.Now < timeout && updateInProgress && !cancellationToken.IsCancellationRequested)
+                using (var process = Process.Start(startInfo))
                 {
-                    await Task.Delay(2000, cancellationToken);
+                    await Task.Delay(3000, cancellationToken).ConfigureAwait(false);
                     
-                    var steamProcesses = Process.GetProcessesByName("steam");
+                    var timeout = DateTime.Now.AddMinutes(10);
+                    bool updateInProgress = true;
                     
-                    if (steamProcesses.Length == 0)
+                    while (DateTime.Now < timeout && updateInProgress && !cancellationToken.IsCancellationRequested)
                     {
-                        OnProgressChanged($"Steam update completed for {mode}");
-                        updateInProgress = false;
-                        break;
+                        await Task.Delay(2000, cancellationToken).ConfigureAwait(false);
+                        
+                        var steamProcesses = Process.GetProcessesByName("steam");
+                        
+                        if (steamProcesses.Length == 0)
+                        {
+                            OnProgressChanged($"Steam update completed for {mode}");
+                            updateInProgress = false;
+                            break;
+                        }
+                        else
+                        {
+                            OnProgressChanged($"Steam updating for {mode} mode... (visible on screen)");
+                        }
                     }
-                    else
+                    
+                    if (updateInProgress)
                     {
-                        OnProgressChanged($"Steam updating for {mode} mode... (visible on screen)");
+                        OnProgressChanged("Finalizing update...");
+                        await StopSteamProcessesAsync().ConfigureAwait(false);
+                        await Task.Delay(2000, cancellationToken).ConfigureAwait(false);
                     }
-                }
-                
-                if (updateInProgress)
-                {
-                    OnProgressChanged("Finalizing update...");
-                    await StopSteamProcessesAsync();
-                    await Task.Delay(2000, cancellationToken);
                 }
             }
             catch (Exception ex)
@@ -423,7 +424,7 @@ start Steam.exe {steamArgs}
 :: Mode: {config.Mode}";
 
                 File.WriteAllText(tempBatchPath, batchContent);
-            }, cancellationToken);
+            }, cancellationToken).ConfigureAwait(false);
         }
 
         private void CreateDesktopShortcut(string steamPath, string mode, string fileName)
@@ -474,11 +475,12 @@ start Steam.exe {steamArgs}
             try
             {
                 var registryPath = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
-                using var key = Registry.CurrentUser.OpenSubKey(registryPath, true);
-                
-                if (key?.GetValue("Steam") != null)
+                using (var key = Registry.CurrentUser.OpenSubKey(registryPath, true))
                 {
-                    key.DeleteValue("Steam");
+                    if (key?.GetValue("Steam") != null)
+                    {
+                        key.DeleteValue("Steam");
+                    }
                 }
             }
             catch
@@ -487,7 +489,7 @@ start Steam.exe {steamArgs}
             }
         }
 
-        private string? FindSteamInstallation()
+        private string FindSteamInstallation()
         {
             var commonPaths = new[]
             {
@@ -509,14 +511,15 @@ start Steam.exe {steamArgs}
 
             try
             {
-                using var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\WOW6432Node\Valve\Steam") ??
-                               Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Valve\Steam");
-                
-                if (key?.GetValue("InstallPath") is string registryPath && 
-                    Directory.Exists(registryPath) && 
-                    File.Exists(Path.Combine(registryPath, "steam.exe")))
+                using (var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\WOW6432Node\Valve\Steam") ??
+                               Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Valve\Steam"))
                 {
-                    return registryPath;
+                    if (key?.GetValue("InstallPath") is string registryPath && 
+                        Directory.Exists(registryPath) && 
+                        File.Exists(Path.Combine(registryPath, "steam.exe")))
+                    {
+                        return registryPath;
+                    }
                 }
             }
             catch { }
@@ -562,7 +565,7 @@ start Steam.exe {steamArgs}
             if (string.IsNullOrEmpty(sourcePath) || string.IsNullOrEmpty(destinationPath))
                 return;
 
-            await Task.Run(() => CopyDirectory(sourcePath, destinationPath), cancellationToken);
+            await Task.Run(() => CopyDirectory(sourcePath, destinationPath), cancellationToken).ConfigureAwait(false);
         }
 
         private void OnProgressChanged(string status)
