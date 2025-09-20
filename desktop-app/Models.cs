@@ -27,6 +27,7 @@ namespace SteamDebloat
         public bool CreateStartMenuShortcut { get; set; }
         public bool RemoveFromStartup { get; set; }
         public bool UpdateSteam { get; set; }
+        public string SteamPath { get; set; }
 
         public OptimizationConfig()
         {
@@ -35,6 +36,7 @@ namespace SteamDebloat
             CreateStartMenuShortcut = false;
             RemoveFromStartup = true;
             UpdateSteam = true;
+            SteamPath = string.Empty;
         }
     }
 

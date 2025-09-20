@@ -28,8 +28,7 @@ Currently supported versions of  with security updates and maintenance:
 
 ### VirusTotal Results
 Current security scan results:
-- [🔍 Steam Debloat on VirusTotal](https://www.virustotal.com/gui/file/dc17c9ec9510b9e0d741d9dd0ebb8af5ba80412cae14fd38545f44fe9ce10add)
-- [🛡️ Uninstall Script on VirusTotal](https://www.virustotal.com/gui/file/1fd1e16a6cc9540b4ba05f54cb9d455ba43b16ea4cdacc25eaac6e410c8479a8)
+- [🔍 Steam Debloat on VirusTotal](https://www.virustotal.com/gui/file/c60f4c30a17d77efd477e9c6dcc0726522626a76bc98c253846f27b96296651e)
 
 ## Reporting a Vulnerability
 
@@ -87,7 +86,7 @@ In case of security issues:
 | Date | Version | Security Update |
 |------|---------|----------------|
 | 2024-11-13 | 1.0.021 | Initial security policy |
-| 2025-09-15 | 1.915.2300 | VirusTotal results update |
+| 2025-09-19 | 1.919.2242 | VirusTotal results update |
 
 ---
 
@@ -95,4 +94,4 @@ In case of security issues:
   <strong>Your security is our priority.</strong>
 </p>
 
-_This security policy is regularly updated. Last revision: 2025-09-15_
+_This security policy is regularly updated. Last revision: 2025-09-19_

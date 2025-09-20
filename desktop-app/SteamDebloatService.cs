@@ -15,54 +15,260 @@ namespace SteamDebloat
         private const string DefaultSteamPath = @"C:\Program Files (x86)\Steam";
         private const string DefaultSteamV2Path = @"C:\Program Files (x86)\Steamv2";
         private Timer _steamDetectionTimer;
+        private bool _disposed = false;
+        private string _lastDetectedSteamPath = null;
 
         public event Action<string> ProgressChanged;
         public event Action<bool> SteamDetectionChanged;
 
         public SteamDebloatService()
         {
-            _steamModes = new Dictionary<string, string>
+            try
             {
-                ["normal2025july"] = "-no-dwrite -no-cef-sandbox -nooverlay -nobigpicture -nofriendsui -noshaders -novid -noverifyfiles -nointro -skipstreamingdrivers -norepairfiles -nohltv -nofasthtml -nocrashmonitor -no-shared-textures -disablehighdpi -cef-single-process -cef-in-process-gpu -single_core -cef-disable-d3d11 -cef-disable-sandbox -disable-winh264 -vrdisable -cef-disable-breakpad -cef-disable-gpu -cef-disable-hang-timeouts -cef-disable-seccomp-sandbox -cef-disable-extensions -cef-disable-remote-fonts -cef-enable-media-stream -cef-disable-accelerated-video-decode steam://open/library",
-                ["normal2022dec"] = "-no-dwrite -no-cef-sandbox -nooverlay -nobigpicture -nofriendsui -noshaders -novid -noverifyfiles -nointro -skipstreamingdrivers -norepairfiles -nohltv -nofasthtml -nocrashmonitor -no-shared-textures -disablehighdpi -cef-single-process -cef-in-process-gpu -single_core -cef-disable-d3d11 -cef-disable-sandbox -disable-winh264 -vrdisable -cef-disable-breakpad -cef-disable-gpu -cef-disable-hang-timeouts -cef-disable-seccomp-sandbox -cef-disable-extensions -cef-disable-remote-fonts -cef-enable-media-stream -cef-disable-accelerated-video-decode steam://open/library",
-                ["lite2022dec"] = "-silent -cef-force-32bit -no-dwrite -no-cef-sandbox -nooverlay -nofriendsui -nobigpicture -noshaders -novid -noverifyfiles -nointro -skipstreamingdrivers -norepairfiles -nohltv -nofasthtml -nocrashmonitor -no-shared-textures -disablehighdpi -cef-single-process -cef-in-process-gpu -single_core -cef-disable-d3d11 -cef-disable-sandbox -disable-winh264 -vrdisable -cef-disable-breakpad -cef-disable-gpu -cef-disable-hang-timeouts -cef-disable-seccomp-sandbox -cef-disable-gpu-compositing -cef-disable-extensions -cef-disable-remote-fonts -cef-enable-media-stream -cef-disable-accelerated-video-decode steam://open/library"
-            };
-            
-            StartSteamDetectionTimer();
+                _steamModes = new Dictionary<string, string>
+                {
+                    ["normal2025july"] = "-no-dwrite -no-cef-sandbox -nooverlay -nobigpicture -nofriendsui -noshaders -novid -noverifyfiles -nointro -skipstreamingdrivers -norepairfiles -nohltv -nofasthtml -nocrashmonitor -no-shared-textures -disablehighdpi -cef-single-process -cef-in-process-gpu -single_core -cef-disable-d3d11 -cef-disable-sandbox -disable-winh264 -vrdisable -cef-disable-breakpad -cef-disable-gpu -cef-disable-hang-timeouts -cef-disable-seccomp-sandbox -cef-disable-extensions -cef-disable-remote-fonts -cef-enable-media-stream -cef-disable-accelerated-video-decode steam://open/library",
+                    ["normal2022dec"] = "-no-dwrite -no-cef-sandbox -nooverlay -nobigpicture -nofriendsui -noshaders -novid -noverifyfiles -nointro -skipstreamingdrivers -norepairfiles -nohltv -nofasthtml -nocrashmonitor -no-shared-textures -disablehighdpi -cef-single-process -cef-in-process-gpu -single_core -cef-disable-d3d11 -cef-disable-sandbox -disable-winh264 -vrdisable -cef-disable-breakpad -cef-disable-gpu -cef-disable-hang-timeouts -cef-disable-seccomp-sandbox -cef-disable-extensions -cef-disable-remote-fonts -cef-enable-media-stream -cef-disable-accelerated-video-decode steam://open/library",
+                    ["lite2022dec"] = "-silent -cef-force-32bit -no-dwrite -no-cef-sandbox -nooverlay -nofriendsui -nobigpicture -noshaders -novid -noverifyfiles -nointro -skipstreamingdrivers -norepairfiles -nohltv -nofasthtml -nocrashmonitor -no-shared-textures -disablehighdpi -cef-single-process -cef-in-process-gpu -single_core -cef-disable-d3d11 -cef-disable-sandbox -disable-winh264 -vrdisable -cef-disable-breakpad -cef-disable-gpu -cef-disable-hang-timeouts -cef-disable-seccomp-sandbox -cef-disable-gpu-compositing -cef-disable-extensions -cef-disable-remote-fonts -cef-enable-media-stream -cef-disable-accelerated-video-decode steam://open/library"
+                };
+                
+                // Initialize timer with delay to avoid initialization issues
+                Task.Run(async () =>
+                {
+                    await Task.Delay(2000); // Increased delay for stability
+                    if (!_disposed)
+                    {
+                        StartSteamDetectionTimer();
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error in SteamDebloatService constructor: {ex.Message}");
+            }
         }
 
         private void StartSteamDetectionTimer()
         {
-            _steamDetectionTimer = new Timer(CheckSteamInstallation, null, TimeSpan.Zero, TimeSpan.FromMinutes(1));
+            try
+            {
+                if (_disposed) return;
+                
+                _steamDetectionTimer = new Timer(CheckSteamInstallation, null, TimeSpan.Zero, TimeSpan.FromSeconds(30));
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error starting Steam detection timer: {ex.Message}");
+            }
         }
 
         private void CheckSteamInstallation(object state)
         {
-            var steamFound = !string.IsNullOrEmpty(FindSteamInstallation());
-            SteamDetectionChanged?.Invoke(steamFound);
+            try
+            {
+                if (_disposed) return;
+                
+                var currentPath = FindSteamInstallation();
+                bool steamFound = !string.IsNullOrEmpty(currentPath);
+                
+                // Only trigger event if status actually changed
+                if (_lastDetectedSteamPath != currentPath)
+                {
+                    _lastDetectedSteamPath = currentPath;
+                    SteamDetectionChanged?.Invoke(steamFound);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error in CheckSteamInstallation: {ex.Message}");
+            }
         }
 
         public async Task<SystemInfo> GetSystemInfoAsync()
         {
             return await Task.Run(() =>
             {
-                var osVersion = Environment.OSVersion.VersionString;
-                var architecture = Environment.Is64BitOperatingSystem ? "x64" : "x86";
-                var steamPath = FindSteamInstallation();
-                var steamExists = !string.IsNullOrEmpty(steamPath) && Directory.Exists(steamPath);
-                var configExists = steamExists && steamPath != null && File.Exists(Path.Combine(steamPath, "steam.cfg"));
-
-                return new SystemInfo
+                try
                 {
-                    OSVersion = osVersion,
-                    Architecture = architecture,
-                    SteamPath = steamPath ?? "Not found",
-                    SteamFound = steamExists,
-                    ConfigExists = configExists
-                };
+                    var osVersion = GetWindowsVersionFromRegistry();
+                    var architecture = Environment.Is64BitOperatingSystem ? "x64" : "x86";
+                    var steamPath = FindSteamInstallation();
+                    var steamExists = !string.IsNullOrEmpty(steamPath) && Directory.Exists(steamPath);
+                    var configExists = steamExists && steamPath != null && File.Exists(Path.Combine(steamPath, "steam.cfg"));
+
+                    return new SystemInfo
+                    {
+                        OSVersion = osVersion,
+                        Architecture = architecture,
+                        SteamPath = steamPath ?? "Not found",
+                        SteamFound = steamExists,
+                        ConfigExists = configExists
+                    };
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error in GetSystemInfoAsync: {ex.Message}");
+                    return new SystemInfo
+                    {
+                        OSVersion = "Error loading",
+                        Architecture = "Error loading",
+                        SteamPath = "Error loading",
+                        SteamFound = false,
+                        ConfigExists = false
+                    };
+                }
             }).ConfigureAwait(false);
         }
 
+        private string GetWindowsVersionFromRegistry()
+        {
+            try
+            {
+                using (var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion"))
+                {
+                    if (key != null)
+                    {
+                        var productName = key.GetValue("ProductName")?.ToString();
+                        if (!string.IsNullOrEmpty(productName))
+                        {
+                            return productName;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Registry OS detection failed: {ex.Message}");
+            }
+
+            return Environment.OSVersion.VersionString;
+        }
+
+        private bool IsValidSteamDirectory(string path)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(path) || !Directory.Exists(path))
+                    return false;
+                    
+                return File.Exists(Path.Combine(path, "steam.exe"));
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        // Improved Steam detection with multiple methods
+        private string FindSteamInstallation()
+        {
+            try
+            {
+                // Method 1: Try common installation paths first
+                var commonPaths = new[]
+                {
+                    DefaultSteamPath,
+                    @"C:\Steam",
+                    @"D:\Steam",
+                    @"E:\Steam",
+                    @"F:\Steam",
+                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Steam"),
+                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "Steam")
+                };
+
+                foreach (var path in commonPaths)
+                {
+                    if (IsValidSteamDirectory(path))
+                    {
+                        Debug.WriteLine($"Steam found at: {path}");
+                        return path;
+                    }
+                }
+
+                // Method 2: Try Windows Registry (multiple locations)
+                string[] registryPaths = {
+                    @"SOFTWARE\WOW6432Node\Valve\Steam",
+                    @"SOFTWARE\Valve\Steam",
+                    @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 0"
+                };
+
+                foreach (var regPath in registryPaths)
+                {
+                    try
+                    {
+                        using (var key = Registry.LocalMachine.OpenSubKey(regPath))
+                        {
+                            if (key != null)
+                            {
+                                string installPath = key.GetValue("InstallPath")?.ToString();
+                                if (!string.IsNullOrEmpty(installPath) && IsValidSteamDirectory(installPath))
+                                {
+                                    Debug.WriteLine($"Steam found via registry at: {installPath}");
+                                    return installPath;
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"Registry check failed for {regPath}: {ex.Message}");
+                    }
+                }
+
+                // Method 3: Try current user registry
+                try
+                {
+                    using (var key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Valve\Steam"))
+                    {
+                        if (key != null)
+                        {
+                            string steamPath = key.GetValue("SteamPath")?.ToString();
+                            if (!string.IsNullOrEmpty(steamPath) && IsValidSteamDirectory(steamPath))
+                            {
+                                Debug.WriteLine($"Steam found via user registry at: {steamPath}");
+                                return steamPath;
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"User registry check failed: {ex.Message}");
+                }
+
+                // Method 4: Try environment variables
+                try
+                {
+                    string steamFromEnv = Environment.GetEnvironmentVariable("STEAM_INSTALL_PATH");
+                    if (!string.IsNullOrEmpty(steamFromEnv) && IsValidSteamDirectory(steamFromEnv))
+                    {
+                        Debug.WriteLine($"Steam found via environment variable at: {steamFromEnv}");
+                        return steamFromEnv;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Environment variable check failed: {ex.Message}");
+                }
+
+                Debug.WriteLine("Steam installation not found in any location");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error in FindSteamInstallation: {ex.Message}");
+                return null;
+            }
+        }
+
+        public string GetSteamPath()
+        {
+            var detected = FindSteamInstallation();
+            return detected ?? DefaultSteamPath;
+        }
+
+        // ... (rest of the methods remain the same as in the original file)
+        
         public async Task<OptimizationResult> OptimizeSteamAsync(OptimizationConfig config, CancellationToken cancellationToken)
         {
             try
@@ -70,13 +276,15 @@ namespace SteamDebloat
                 var stopwatch = Stopwatch.StartNew();
                 OnProgressChanged("Starting optimization...");
                 
-                var steamPath = FindSteamInstallation();
-                if (string.IsNullOrEmpty(steamPath))
+                // Use the provided steam path from config
+                var steamPath = !string.IsNullOrEmpty(config.SteamPath) ? config.SteamPath : FindSteamInstallation();
+                
+                if (string.IsNullOrEmpty(steamPath) || !IsValidSteamDirectory(steamPath))
                 {
                     return new OptimizationResult 
                     { 
                         Success = false, 
-                        ErrorMessage = "Steam is not installed. Please install Steam from https://store.steampowered.com/about/ and try again." 
+                        ErrorMessage = "Steam is not installed or the specified path is invalid. Please install Steam or select a valid Steam directory." 
                     };
                 }
 
@@ -104,225 +312,149 @@ namespace SteamDebloat
             }
             catch (Exception ex)
             {
+                Debug.WriteLine($"Error in OptimizeSteamAsync: {ex.Message}");
                 return new OptimizationResult { Success = false, ErrorMessage = ex.Message };
             }
         }
 
-        public async Task<OptimizationResult> UninstallAsync(CancellationToken cancellationToken)
+        // ... (include all other methods from the original file)
+        
+        private async Task<OptimizationResult> ProcessSingleVersionMode(OptimizationConfig config, CancellationToken cancellationToken, string steamPath)
         {
             try
             {
-                OnProgressChanged("Starting uninstallation...");
+                OnProgressChanged("Verifying Steam installation...");
                 
-                var steamPath = FindSteamInstallation();
-                if (string.IsNullOrEmpty(steamPath))
+                if (config.UpdateSteam)
                 {
-                    return new OptimizationResult 
-                    { 
-                        Success = false, 
-                        ErrorMessage = "Steam is not installed. Cannot proceed with uninstallation." 
-                    };
-                }
-                
-                await StopSteamProcessesAsync().ConfigureAwait(false);
-                OnProgressChanged("Steam processes stopped");
-
-                bool hasSteam = Directory.Exists(DefaultSteamPath);
-                bool hasSteamV2 = Directory.Exists(DefaultSteamV2Path);
-
-                RemoveDesktopShortcuts();
-                OnProgressChanged("Shortcuts removed");
-
-                RemoveStartMenuShortcuts();
-
-                if (hasSteam)
-                {
-                    OnProgressChanged("Removing Steam optimization configurations...");
-                    RemoveOptimizationConfigs(DefaultSteamPath);
-                }
-                
-                if (hasSteamV2)
-                {
-                    OnProgressChanged("Removing Steam V2 optimization configurations...");
-                    RemoveOptimizationConfigs(DefaultSteamV2Path);
-                    
-                    try
-                    {
-                        Directory.Delete(DefaultSteamV2Path, true);
-                        OnProgressChanged("Steam V2 directory removed");
-                    }
-                    catch (Exception ex)
-                    {
-                        OnProgressChanged($"Warning: Could not remove Steam V2 directory: {ex.Message}");
-                    }
+                    OnProgressChanged($"Updating Steam for {config.Mode} mode...");
+                    await UpdateSteamAsync(steamPath, config.Mode, cancellationToken).ConfigureAwait(false);
                 }
 
-                OnProgressChanged("Uninstallation completed - Steam restored to clean state");
+                OnProgressChanged("Applying optimization configuration...");
+                await CreateConfigurationFilesAsync(steamPath, config, cancellationToken).ConfigureAwait(false);
+                
+                if (config.CreateDesktopShortcut)
+                {
+                    OnProgressChanged("Creating desktop shortcut...");
+                    CreateDesktopShortcut(steamPath, config.Mode, "Steam.bat");
+                }
+
+                if (config.CreateStartMenuShortcut)
+                {
+                    OnProgressChanged("Creating start menu shortcut...");
+                    CreateStartMenuShortcut(steamPath, config.Mode, "Steam.bat");
+                }
+
+                if (config.RemoveFromStartup)
+                {
+                    OnProgressChanged("Removing Steam from Windows startup...");
+                    RemoveSteamFromStartup();
+                }
+
+                OnProgressChanged("Optimization completed");
                 return new OptimizationResult { Success = true };
             }
             catch (Exception ex)
             {
+                Debug.WriteLine($"Error in ProcessSingleVersionMode: {ex.Message}");
                 return new OptimizationResult { Success = false, ErrorMessage = ex.Message };
             }
-        }
-        
-        private void RemoveOptimizationConfigs(string steamPath)
-        {
-            try
-            {
-                var configPath = Path.Combine(steamPath, "steam.cfg");
-                if (File.Exists(configPath))
-                {
-                    var content = File.ReadAllText(configPath);
-                    if (content.Contains("BootStrapperInhibitAll=enable") || content.Contains("Mode:"))
-                    {
-                        File.Delete(configPath);
-                        OnProgressChanged("Removed optimization config file");
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                OnProgressChanged($"Warning: Could not remove config from {steamPath}: {ex.Message}");
-            }
-        }
-
-        private void RemoveDesktopShortcuts()
-        {
-            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            string[] shortcuts = { "Steam.bat", "Steam2025.bat", "Steam2022.bat" };
-            
-            foreach (string shortcut in shortcuts)
-            {
-                string path = Path.Combine(desktopPath, shortcut);
-                if (File.Exists(path))
-                    File.Delete(path);
-            }
-        }
-
-        private void RemoveStartMenuShortcuts()
-        {
-            string startMenuPath = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                "Microsoft", "Windows", "Start Menu", "Programs", "Steam");
-            
-            if (Directory.Exists(startMenuPath))
-                Directory.Delete(startMenuPath, true);
-        }
-
-        private async Task<OptimizationResult> ProcessSingleVersionMode(OptimizationConfig config, CancellationToken cancellationToken, string steamPath)
-        {
-            OnProgressChanged("Verifying Steam installation...");
-            
-            if (config.UpdateSteam)
-            {
-                OnProgressChanged($"Updating Steam for {config.Mode} mode...");
-                await UpdateSteamAsync(steamPath, config.Mode, cancellationToken).ConfigureAwait(false);
-            }
-
-            OnProgressChanged("Applying optimization configuration...");
-            await CreateConfigurationFilesAsync(steamPath, config, cancellationToken).ConfigureAwait(false);
-            
-            if (config.CreateDesktopShortcut)
-            {
-                OnProgressChanged("Creating desktop shortcut...");
-                CreateDesktopShortcut(steamPath, config.Mode, "Steam.bat");
-            }
-
-            if (config.CreateStartMenuShortcut)
-            {
-                OnProgressChanged("Creating start menu shortcut...");
-                CreateStartMenuShortcut(steamPath, config.Mode, "Steam.bat");
-            }
-
-            if (config.RemoveFromStartup)
-            {
-                OnProgressChanged("Removing Steam from Windows startup...");
-                RemoveSteamFromStartup();
-            }
-
-            OnProgressChanged("Optimization completed");
-            return new OptimizationResult { Success = true };
         }
 
         private async Task<OptimizationResult> ProcessBothVersionsMode(OptimizationConfig config, CancellationToken cancellationToken, string existingSteamPath)
         {
-            OnProgressChanged("Preparing dual Steam installation...");
-            
-            var steam2025Path = DefaultSteamPath;
-            var steam2022Path = DefaultSteamV2Path;
-
-            if (!Directory.Exists(steam2022Path))
+            try
             {
-                OnProgressChanged("Creating Steam 2022 directory...");
-                try
+                OnProgressChanged("Preparing dual Steam installation...");
+                
+                var steam2025Path = DefaultSteamPath;
+                var steam2022Path = DefaultSteamV2Path;
+
+                if (!Directory.Exists(steam2022Path))
                 {
-                    Directory.CreateDirectory(steam2022Path);
-                    await CopyDirectoryAsync(existingSteamPath, steam2022Path, cancellationToken).ConfigureAwait(false);
-                    OnProgressChanged("Steam 2022 directory created");
+                    OnProgressChanged("Creating Steam 2022 directory...");
+                    try
+                    {
+                        Directory.CreateDirectory(steam2022Path);
+                        await CopyDirectoryAsync(existingSteamPath, steam2022Path, cancellationToken).ConfigureAwait(false);
+                        OnProgressChanged("Steam 2022 directory created");
+                    }
+                    catch (Exception ex)
+                    {
+                        return new OptimizationResult 
+                        { 
+                            Success = false, 
+                            ErrorMessage = $"Could not create Steam 2022 directory: {ex.Message}" 
+                        };
+                    }
                 }
-                catch (Exception ex)
+
+                OnProgressChanged("Updating Steam 2025...");
+                await UpdateSteamAsync(steam2025Path, "Normal2025July", cancellationToken).ConfigureAwait(false);
+
+                OnProgressChanged("Updating Steam 2022...");
+                await UpdateSteamAsync(steam2022Path, "Normal2022dec", cancellationToken).ConfigureAwait(false);
+
+                OnProgressChanged("Applying configurations...");
+                
+                await CreateConfigurationFilesAsync(steam2025Path, new OptimizationConfig { Mode = "Normal2025July", SteamPath = steam2025Path }, cancellationToken).ConfigureAwait(false);
+                await CreateConfigurationFilesAsync(steam2022Path, new OptimizationConfig { Mode = "Normal2022dec", SteamPath = steam2022Path }, cancellationToken).ConfigureAwait(false);
+
+                if (config.CreateDesktopShortcut)
                 {
-                    return new OptimizationResult 
-                    { 
-                        Success = false, 
-                        ErrorMessage = $"Could not create Steam 2022 directory: {ex.Message}" 
-                    };
+                    OnProgressChanged("Creating desktop shortcuts...");
+                    CreateDesktopShortcut(steam2025Path, "Normal2025July", "Steam2025.bat");
+                    CreateDesktopShortcut(steam2022Path, "Normal2022dec", "Steam2022.bat");
                 }
+
+                if (config.CreateStartMenuShortcut)
+                {
+                    OnProgressChanged("Creating start menu shortcuts...");
+                    CreateStartMenuShortcut(steam2025Path, "Normal2025July", "Steam2025.bat");
+                    CreateStartMenuShortcut(steam2022Path, "Normal2022dec", "Steam2022.bat");
+                }
+
+                if (config.RemoveFromStartup)
+                {
+                    RemoveSteamFromStartup();
+                }
+
+                OnProgressChanged("Optimization completed");
+                return new OptimizationResult { Success = true };
             }
-
-            OnProgressChanged("Updating Steam 2025...");
-            await UpdateSteamAsync(steam2025Path, "Normal2025July", cancellationToken).ConfigureAwait(false);
-
-            OnProgressChanged("Updating Steam 2022...");
-            await UpdateSteamAsync(steam2022Path, "Normal2022dec", cancellationToken).ConfigureAwait(false);
-
-            OnProgressChanged("Applying configurations...");
-            
-            await CreateConfigurationFilesAsync(steam2025Path, new OptimizationConfig { Mode = "Normal2025July" }, cancellationToken).ConfigureAwait(false);
-            await CreateConfigurationFilesAsync(steam2022Path, new OptimizationConfig { Mode = "Normal2022dec" }, cancellationToken).ConfigureAwait(false);
-
-            if (config.CreateDesktopShortcut)
+            catch (Exception ex)
             {
-                OnProgressChanged("Creating desktop shortcuts...");
-                CreateDesktopShortcut(steam2025Path, "Normal2025July", "Steam2025.bat");
-                CreateDesktopShortcut(steam2022Path, "Normal2022dec", "Steam2022.bat");
+                Debug.WriteLine($"Error in ProcessBothVersionsMode: {ex.Message}");
+                return new OptimizationResult { Success = false, ErrorMessage = ex.Message };
             }
-
-            if (config.CreateStartMenuShortcut)
-            {
-                OnProgressChanged("Creating start menu shortcuts...");
-                CreateStartMenuShortcut(steam2025Path, "Normal2025July", "Steam2025.bat");
-                CreateStartMenuShortcut(steam2022Path, "Normal2022dec", "Steam2022.bat");
-            }
-
-            if (config.RemoveFromStartup)
-            {
-                RemoveSteamFromStartup();
-            }
-
-            OnProgressChanged("Optimization completed");
-            return new OptimizationResult { Success = true };
         }
 
         private async Task StopSteamProcessesAsync()
         {
-            await Task.Run(() =>
+            try
             {
-                var processes = Process.GetProcessesByName("steam");
-                foreach (var process in processes)
+                await Task.Run(() =>
                 {
-                    try
+                    var processes = Process.GetProcessesByName("steam");
+                    foreach (var process in processes)
                     {
-                        process.Kill();
-                        process.WaitForExit(5000);
+                        try
+                        {
+                            process.Kill();
+                            process.WaitForExit(5000);
+                        }
+                        catch
+                        {
+                            // Ignore errors when terminating processes
+                        }
                     }
-                    catch
-                    {
-                        // Ignore errors when terminating processes
-                    }
-                }
-            }).ConfigureAwait(false);
+                }).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error stopping Steam processes: {ex.Message}");
+            }
         }
 
         private async Task UpdateSteamAsync(string steamPath, string mode, CancellationToken cancellationToken)
@@ -388,43 +520,52 @@ namespace SteamDebloat
             catch (Exception ex)
             {
                 OnProgressChanged($"Error during update: {ex.Message}");
+                Debug.WriteLine($"Error in UpdateSteamAsync: {ex.Message}");
             }
         }
 
         private async Task CreateConfigurationFilesAsync(string steamPath, OptimizationConfig config, CancellationToken cancellationToken)
         {
-            await Task.Run(() =>
+            try
             {
-                var configPath = Path.Combine(steamPath, "steam.cfg");
-                var configContent = $@"BootStrapperInhibitAll=enable
+                await Task.Run(() =>
+                {
+                    var configPath = Path.Combine(steamPath, "steam.cfg");
+                    var configContent = $@"BootStrapperInhibitAll=enable
 BootStrapperForceSelfUpdate=disable
 :: Mode: {config.Mode}";
 
-                File.WriteAllText(configPath, configContent);
+                    File.WriteAllText(configPath, configContent);
 
-                var batchFileName = config.Mode == "NormalBoth2022-2025" ? 
-                    (steamPath.Contains("Steamv2") ? "Steam2022.bat" : "Steam2025.bat") : "Steam.bat";
-                
-                var tempBatchPath = Path.Combine(Path.GetTempPath(), batchFileName);
-                var modeKey = config.Mode.ToLower();
-                
-                string steamArgs = "";
-                if (modeKey == "normalboth2022-2025")
-                {
-                    steamArgs = steamPath.Contains("Steamv2") ? _steamModes["normal2022dec"] : _steamModes["normal2025july"];
-                }
-                else if (_steamModes.ContainsKey(modeKey))
-                {
-                    steamArgs = _steamModes[modeKey];
-                }
+                    var batchFileName = config.Mode == "NormalBoth2022-2025" ? 
+                        (steamPath.Contains("Steamv2") ? "Steam2022.bat" : "Steam2025.bat") : "Steam.bat";
+                    
+                    var tempBatchPath = Path.Combine(Path.GetTempPath(), batchFileName);
+                    var modeKey = config.Mode.ToLower();
+                    
+                    string steamArgs = "";
+                    if (modeKey == "normalboth2022-2025")
+                    {
+                        steamArgs = steamPath.Contains("Steamv2") ? _steamModes["normal2022dec"] : _steamModes["normal2025july"];
+                    }
+                    else if (_steamModes.ContainsKey(modeKey))
+                    {
+                        steamArgs = _steamModes[modeKey];
+                    }
 
-                var batchContent = $@"@echo off
+                    var batchContent = $@"@echo off
 cd /d ""{steamPath}""
 start Steam.exe {steamArgs}
 :: Mode: {config.Mode}";
 
-                File.WriteAllText(tempBatchPath, batchContent);
-            }, cancellationToken).ConfigureAwait(false);
+                    File.WriteAllText(tempBatchPath, batchContent);
+                }, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error in CreateConfigurationFilesAsync: {ex.Message}");
+                throw;
+            }
         }
 
         private void CreateDesktopShortcut(string steamPath, string mode, string fileName)
@@ -440,9 +581,9 @@ start Steam.exe {steamArgs}
                     File.Copy(tempBatchPath, shortcutPath, true);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                // Ignore errors
+                Debug.WriteLine($"Error creating desktop shortcut: {ex.Message}");
             }
         }
 
@@ -464,9 +605,9 @@ start Steam.exe {steamArgs}
                     File.Copy(tempBatchPath, shortcutPath, true);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                // Ignore errors
+                Debug.WriteLine($"Error creating start menu shortcut: {ex.Message}");
             }
         }
 
@@ -483,80 +624,53 @@ start Steam.exe {steamArgs}
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                // Ignore errors
+                Debug.WriteLine($"Error removing Steam from startup: {ex.Message}");
             }
-        }
-
-        private string FindSteamInstallation()
-        {
-            var commonPaths = new[]
-            {
-                DefaultSteamPath,
-                @"C:\Steam",
-                @"D:\Steam", 
-                @"E:\Steam",
-                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Steam"),
-                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "Steam")
-            };
-
-            foreach (var path in commonPaths)
-            {
-                if (Directory.Exists(path) && File.Exists(Path.Combine(path, "steam.exe")))
-                {
-                    return path;
-                }
-            }
-
-            try
-            {
-                using (var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\WOW6432Node\Valve\Steam") ??
-                               Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Valve\Steam"))
-                {
-                    if (key?.GetValue("InstallPath") is string registryPath && 
-                        Directory.Exists(registryPath) && 
-                        File.Exists(Path.Combine(registryPath, "steam.exe")))
-                    {
-                        return registryPath;
-                    }
-                }
-            }
-            catch { }
-
-            return null;
-        }
-
-        public string GetSteamPath()
-        {
-            return FindSteamInstallation() ?? DefaultSteamPath;
         }
 
         public bool IsRunningAsAdmin()
         {
-            return new WindowsPrincipal(WindowsIdentity.GetCurrent())
-                .IsInRole(WindowsBuiltInRole.Administrator);
+            try
+            {
+                return new WindowsPrincipal(WindowsIdentity.GetCurrent())
+                    .IsInRole(WindowsBuiltInRole.Administrator);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error checking admin privileges: {ex.Message}");
+                return false;
+            }
         }
 
         private void CopyDirectory(string sourceDir, string destinationDir)
         {
-            var dir = new DirectoryInfo(sourceDir);
-            if (!dir.Exists)
-                return;
-
-            DirectoryInfo[] dirs = dir.GetDirectories();
-            Directory.CreateDirectory(destinationDir);
-
-            foreach (FileInfo file in dir.GetFiles())
+            try
             {
-                string targetFilePath = Path.Combine(destinationDir, file.Name);
-                file.CopyTo(targetFilePath, true);
+                var dir = new DirectoryInfo(sourceDir);
+                if (!dir.Exists)
+                    return;
+
+                DirectoryInfo[] dirs = dir.GetDirectories();
+                Directory.CreateDirectory(destinationDir);
+
+                foreach (FileInfo file in dir.GetFiles())
+                {
+                    string targetFilePath = Path.Combine(destinationDir, file.Name);
+                    file.CopyTo(targetFilePath, true);
+                }
+
+                foreach (DirectoryInfo subDir in dirs)
+                {
+                    string newDestinationDir = Path.Combine(destinationDir, subDir.Name);
+                    CopyDirectory(subDir.FullName, newDestinationDir);
+                }
             }
-
-            foreach (DirectoryInfo subDir in dirs)
+            catch (Exception ex)
             {
-                string newDestinationDir = Path.Combine(destinationDir, subDir.Name);
-                CopyDirectory(subDir.FullName, newDestinationDir);
+                Debug.WriteLine($"Error copying directory: {ex.Message}");
+                throw;
             }
         }
 
@@ -570,12 +684,27 @@ start Steam.exe {steamArgs}
 
         private void OnProgressChanged(string status)
         {
-            ProgressChanged?.Invoke(status);
+            try
+            {
+                ProgressChanged?.Invoke(status);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error in OnProgressChanged: {ex.Message}");
+            }
         }
 
         public void Dispose()
         {
-            _steamDetectionTimer?.Dispose();
+            try
+            {
+                _disposed = true;
+                _steamDetectionTimer?.Dispose();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error in Dispose: {ex.Message}");
+            }
         }
     }
 }

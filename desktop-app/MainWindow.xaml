@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="Steam Debloat" Height="550" Width="900"
+        Title="Steam Debloat" Height="650" Width="950"
         Background="{DynamicResource MaterialDesignPaper}"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
@@ -23,111 +23,265 @@
 
         <!-- Main Content -->
         <Grid Grid.Row="0" Margin="24">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="400"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-            <!-- Left Panel - Configuration -->
-            <materialDesign:Card Grid.Column="0" Margin="0,0,12,0" materialDesign:ShadowAssist.ShadowDepth="Depth2">
-                <StackPanel Margin="24">
-                    <TextBlock Text="Configuration" FontSize="18" FontWeight="Bold" Margin="0,0,0,24"/>
+            <!-- Main Tabbed Interface -->
+            <materialDesign:Card Grid.Row="0" materialDesign:ShadowAssist.ShadowDepth="Depth2">
+                <TabControl materialDesign:ColorZoneAssist.Mode="PrimaryMid" 
+                           Style="{StaticResource MaterialDesignTabControl}">
                     
-                    <!-- Mode Selection -->
-                    <TextBlock Text="Optimization Mode:" FontWeight="Medium" Margin="0,0,0,8"/>
-                    <ComboBox Name="ModeComboBox" materialDesign:HintAssist.Hint="Select mode" 
-                              Style="{StaticResource MaterialDesignComboBox}" Margin="0,0,0,24"
-                              SelectionChanged="ModeComboBox_SelectionChanged">
-                        <ComboBoxItem Content="Normal 2025 July (Recommended)" Tag="Normal2025July"/>
-                        <ComboBoxItem Content="Normal 2022 Dec" Tag="Normal2022dec"/>
-                        <ComboBoxItem Content="Lite 2022 Dec" Tag="Lite2022dec"/>
-                        <ComboBoxItem Content="Both versions (Experimental)" Tag="NormalBoth2022-2025"/>
-                    </ComboBox>
+                    <!-- Installer Tab -->
+                    <TabItem Header="INSTALLER">
+                        <Grid Margin="24">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="400"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
 
-                    <!-- Options -->
-                    <TextBlock Text="Options:" FontWeight="Medium" Margin="0,0,0,8"/>
-                    <CheckBox Name="CreateDesktopShortcut" Content="Create desktop shortcut" 
-                              IsChecked="True" Margin="0,8"/>
-                    <CheckBox Name="CreateStartMenuShortcut" Content="Add to start menu" 
-                              IsChecked="False" Margin="0,8"/>
-                    <CheckBox Name="RemoveFromStartup" Content="Remove Steam from Windows startup" 
-                              IsChecked="True" Margin="0,8"/>
-                    <CheckBox Name="UpdateSteam" Content="Update Steam automatically" 
-                              IsChecked="True" Margin="0,8"/>
+                            <!-- Configuration Panel -->
+                            <StackPanel Grid.Column="0" Margin="0,0,24,0">
+                                <TextBlock Text="Optimization Configuration" FontSize="16" FontWeight="Bold" Margin="0,0,0,20"/>
+                                
+                                <!-- Steam Directory Selection -->
+                                <TextBlock Text="Steam Directory:" FontWeight="Medium" Margin="0,0,0,8"/>
+                                <Grid Margin="0,0,0,16">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox Name="SteamDirectoryTextBox" 
+                                             materialDesign:HintAssist.Hint="Steam installation path"
+                                             IsReadOnly="False" Margin="0,0,8,0"/>
+                                    <Button Name="BrowseSteamDirectoryButton" Grid.Column="1" Content="Browse"
+                                            Style="{StaticResource MaterialDesignOutlinedButton}"
+                                            Click="BrowseSteamDirectoryButton_Click" Width="80"/>
+                                </Grid>
 
-                    <!-- Action Buttons -->
-                    <Button Name="StartButton" Content="OPTIMIZE STEAM" 
-                            Style="{StaticResource MaterialDesignRaisedButton}"
-                            Background="{DynamicResource PrimaryHueMidBrush}"
-                            materialDesign:ButtonAssist.CornerRadius="8"
-                            Height="48" Margin="0,24,0,8" FontSize="14" FontWeight="Bold"
-                            Click="StartButton_Click"/>
-                    
-                    <Button Name="UninstallButton" Content="UNINSTALL OPTIMIZATION"
-                            Style="{StaticResource MaterialDesignOutlinedButton}"
-                            BorderBrush="Gray"
-                            Foreground="Gray"
-                            Background="Transparent"
-                            materialDesign:ButtonAssist.CornerRadius="8"
-                            Height="40" Margin="0,8,0,0" FontSize="12" FontWeight="Medium"
-                            Click="UninstallButton_Click"/>
-                </StackPanel>
-            </materialDesign:Card>
+                                <!-- Mode Selection -->
+                                <TextBlock Text="Optimization Mode:" FontWeight="Medium" Margin="0,0,0,8"/>
+                                <ComboBox Name="ModeComboBox" materialDesign:HintAssist.Hint="Select mode" 
+                                          Style="{StaticResource MaterialDesignComboBox}" Margin="0,0,0,20"
+                                          SelectionChanged="ModeComboBox_SelectionChanged">
+                                    <ComboBoxItem Content="Normal 2025 July (Recommended)" Tag="Normal2025July"/>
+                                    <ComboBoxItem Content="Normal 2022 Dec" Tag="Normal2022dec"/>
+                                    <ComboBoxItem Content="Lite 2022 Dec" Tag="Lite2022dec"/>
+                                    <ComboBoxItem Content="Both versions (Experimental)" Tag="NormalBoth2022-2025"/>
+                                </ComboBox>
 
-            <!-- Right Panel - System Info -->
-            <materialDesign:Card Grid.Column="1" Margin="12,0,0,0" materialDesign:ShadowAssist.ShadowDepth="Depth2">
-                <StackPanel Margin="24">
-                    <TextBlock Text="System Information" FontSize="18" FontWeight="Bold" Margin="0,0,0,24"/>
-                    
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        
-                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Operating System:" FontWeight="Medium" Margin="0,4"/>
-                        <TextBlock Grid.Row="0" Grid.Column="1" Name="OSVersionText" Text="Loading..." Margin="8,4"/>
-                        
-                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Architecture:" FontWeight="Medium" Margin="0,4"/>
-                        <TextBlock Grid.Row="1" Grid.Column="1" Name="OSArchText" Text="Loading..." Margin="8,4"/>
-                        
-                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Steam Path:" FontWeight="Medium" Margin="0,4"/>
-                        <TextBlock Grid.Row="2" Grid.Column="1" Name="SteamPathText" Text="Searching..." Margin="8,4" TextWrapping="Wrap"/>
-                        
-                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Steam V2 Path:" FontWeight="Medium" Margin="0,4" Name="SteamV2Label" Visibility="Collapsed"/>
-                        <TextBlock Grid.Row="3" Grid.Column="1" Name="SteamV2PathText" Text="N/A" Margin="8,4" Visibility="Collapsed" TextWrapping="Wrap"/>
-                        
-                        <TextBlock Grid.Row="4" Grid.Column="0" Text="Steam.CFG:" FontWeight="Medium" Margin="0,4"/>
-                        <TextBlock Grid.Row="4" Grid.Column="1" Name="SteamConfigText" Text="Searching..." Margin="8,4"/>
-                    </Grid>
-                    
-                    <!-- Admin Status -->
-                    <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="1" 
-                            CornerRadius="4" Padding="12" Margin="0,24,0,0">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Name="StatusIcon" Kind="ShieldAlert" 
-                                                   Width="20" Height="20" Foreground="Orange" Margin="0,0,8,0"/>
-                            <TextBlock Name="AdminStatusText" Text="Checking permissions..." VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </Border>
+                                <!-- Options -->
+                                <TextBlock Text="Options:" FontWeight="Medium" Margin="0,0,0,8"/>
+                                <CheckBox Name="CreateDesktopShortcut" Content="Create desktop shortcut" 
+                                          IsChecked="True" Margin="0,4"/>
+                                <CheckBox Name="CreateStartMenuShortcut" Content="Add to start menu" 
+                                          IsChecked="False" Margin="0,4"/>
+                                <CheckBox Name="RemoveFromStartup" Content="Remove Steam from Windows startup" 
+                                          IsChecked="True" Margin="0,4"/>
+                                <CheckBox Name="UpdateSteam" Content="Update Steam automatically" 
+                                          IsChecked="True" Margin="0,4,0,20"/>
 
-                    <!-- Version Info -->
-                    <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="1" 
-                            CornerRadius="4" Padding="12" Margin="0,16,0,0">
-                        <StackPanel>
-                            <TextBlock Text="Steam Debloat" FontWeight="Bold" FontSize="14" Margin="0,0,0,4"/>
-                            <TextBlock Text="Version 1.915.2300" FontSize="12" Opacity="0.7" Margin="0,0,0,4"/>
-                            <TextBlock Text="Developed by Github.com/AltRossell" FontSize="11" Opacity="0.6"/>
-                        </StackPanel>
-                    </Border>
-                </StackPanel>
+                                <!-- Install Button -->
+                                <Button Name="StartButton" Content="OPTIMIZE STEAM" 
+                                        Style="{StaticResource MaterialDesignRaisedButton}"
+                                        Background="{DynamicResource PrimaryHueMidBrush}"
+                                        materialDesign:ButtonAssist.CornerRadius="8"
+                                        Height="48" FontSize="14" FontWeight="Bold"
+                                        Click="StartButton_Click"/>
+                            </StackPanel>
+
+                            <!-- System Information Panel for Installer -->
+                            <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
+                                <StackPanel>
+                                    <!-- Tool Information -->
+                                    <Border BorderBrush="{DynamicResource PrimaryHueMidBrush}" BorderThickness="2" 
+                                            CornerRadius="8" Padding="16" Margin="0,0,0,20" Background="#F8F9FA">
+                                        <StackPanel>
+                                            <TextBlock Text="Steam Debloat" FontSize="18" FontWeight="Bold" 
+                                                     Foreground="{DynamicResource PrimaryHueMidBrush}" Margin="0,0,0,4"/>
+                                            <TextBlock Text="Version 1.919.2242 by AltRossell" FontSize="12" 
+                                                     Opacity="0.7" Margin="0,0,0,8"/>
+                                            <TextBlock Text="Optimize your Steam installation for better performance and reduced resource usage" 
+                                                     FontSize="13" TextWrapping="Wrap"/>
+                                        </StackPanel>
+                                    </Border>
+                                    
+                                    <TextBlock Text="System Information" FontSize="16" FontWeight="Bold" Margin="0,0,0,16"/>
+                                    
+                                    <!-- System Info Grid -->
+                                    <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="1" 
+                                            CornerRadius="4" Padding="16" Margin="0,0,0,20">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+                                            
+                                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Operating System:" FontWeight="Medium" Margin="0,2,12,2"/>
+                                            <TextBlock Grid.Row="0" Grid.Column="1" Name="OSVersionText" Text="Loading..." Margin="0,2"/>
+                                            
+                                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Architecture:" FontWeight="Medium" Margin="0,2,12,2"/>
+                                            <TextBlock Grid.Row="1" Grid.Column="1" Name="OSArchText" Text="Loading..." Margin="0,2"/>
+                                            
+                                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Administrator Status:" FontWeight="Medium" Margin="0,2,12,2"/>
+                                            <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Margin="0,2">
+                                                <materialDesign:PackIcon Name="StatusIcon" Kind="ShieldAlert" 
+                                                                       Width="16" Height="16" Foreground="Orange" Margin="0,0,6,0"/>
+                                                <TextBlock Name="AdminStatusText" Text="Checking permissions..." VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                            
+                                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Steam Path:" FontWeight="Medium" Margin="0,2,12,2"/>
+                                            <TextBlock Grid.Row="3" Grid.Column="1" Name="SteamPathText" Text="Searching..." Margin="0,2" TextWrapping="Wrap"/>
+                                            
+                                            <TextBlock Grid.Row="4" Grid.Column="0" Text="Steam Configuration:" FontWeight="Medium" Margin="0,2,12,2"/>
+                                            <TextBlock Grid.Row="4" Grid.Column="1" Name="SteamConfigText" Text="Searching..." Margin="0,2" TextWrapping="Wrap"/>
+                                            
+                                            <TextBlock Grid.Row="5" Grid.Column="0" Text="Steam V2 Path:" FontWeight="Medium" Margin="0,2,12,2" Name="SteamV2Label" Visibility="Collapsed"/>
+                                            <TextBlock Grid.Row="5" Grid.Column="1" Name="SteamV2PathText" Text="N/A" Margin="0,2" Visibility="Collapsed" TextWrapping="Wrap"/>
+                                        </Grid>
+                                    </Border>
+                                    
+                                    <TextBlock Text="Features" FontWeight="Medium" Margin="0,0,0,8"/>
+                                    <TextBlock TextWrapping="Wrap">
+                                        • Performance optimizations and reduced resource usage<LineBreak/>
+                                        • Disables unnecessary features (overlay, friends UI, CEF processes)<LineBreak/>
+                                        • Multiple Steam version support (2022 Dec / 2025 July)<LineBreak/>
+                                        • Preserves games and save files completely<LineBreak/>
+                                        • Safe and reversible modifications
+                                    </TextBlock>
+                                </StackPanel>
+                            </ScrollViewer>
+                        </Grid>
+                    </TabItem>
+
+                    <!-- Uninstaller Tab -->
+                    <TabItem Header="UNINSTALLER">
+                        <Grid Margin="24">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="400"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Uninstall Panel -->
+                            <StackPanel Grid.Column="0" Margin="0,0,24,0">
+                                <TextBlock Text="Remove Optimizations" FontSize="16" FontWeight="Bold" Margin="0,0,0,20"/>
+                                
+                                <TextBlock Text="Current Status:" FontWeight="Medium" Margin="0,0,0,8"/>
+                                <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="1" 
+                                        CornerRadius="4" Padding="16" Margin="0,0,0,20">
+                                    <StackPanel>
+                                        <TextBlock Text="Steam Configuration:" FontWeight="Medium" Margin="0,0,0,4"/>
+                                        <TextBlock Name="UninstallSteamConfigText" Text="Loading..." Margin="0,0,0,8"/>
+                                        
+                                        <TextBlock Text="Steam V2 Installation:" FontWeight="Medium" Margin="0,0,0,4"/>
+                                        <TextBlock Name="UninstallSteamV2StatusText" Text="Loading..." Margin="0,0,0,8"/>
+                                        
+                                        <TextBlock Text="Desktop Shortcuts:" FontWeight="Medium" Margin="0,0,0,4"/>
+                                        <TextBlock Name="UninstallShortcutsStatusText" Text="Loading..." Margin="0,0,0,8"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <TextBlock Text="Uninstall Options:" FontWeight="Medium" Margin="0,0,0,8"/>
+                                <CheckBox Name="RemoveDesktopShortcuts" Content="Remove desktop shortcuts" 
+                                          IsChecked="True" Margin="0,4"/>
+                                <CheckBox Name="RemoveStartMenuShortcuts" Content="Remove start menu shortcuts" 
+                                          IsChecked="True" Margin="0,4"/>
+                                <CheckBox Name="RemoveSteamV2Directory" Content="Remove Steam V2 directory (if exists)" 
+                                          IsChecked="True" Margin="0,4"/>
+                                <CheckBox Name="RestoreOriginalSettings" Content="Restore original Steam settings" 
+                                          IsChecked="True" Margin="0,4,0,20"/>
+
+                                <!-- Uninstall Button -->
+                                <Button Name="UninstallButton" Content="UNINSTALL OPTIMIZATION"
+                                        Style="{StaticResource MaterialDesignOutlinedButton}"
+                                        BorderBrush="OrangeRed"
+                                        Foreground="OrangeRed"
+                                        Background="Transparent"
+                                        materialDesign:ButtonAssist.CornerRadius="8"
+                                        Height="48" FontSize="14" FontWeight="Bold"
+                                        Click="UninstallButton_Click"/>
+                            </StackPanel>
+
+                            <!-- System Information Panel for Uninstaller -->
+                            <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
+                                <StackPanel>
+                                    <!-- Tool Information -->
+                                    <Border BorderBrush="OrangeRed" BorderThickness="2" 
+                                            CornerRadius="8" Padding="16" Margin="0,0,0,20" Background="#FFF5F5">
+                                        <StackPanel>
+                                            <TextBlock Text="Steam Debloat" FontSize="18" FontWeight="Bold" 
+                                                     Foreground="OrangeRed" Margin="0,0,0,4"/>
+                                            <TextBlock Text="Version 1.919.2242 by AltRossell" FontSize="12" 
+                                                     Opacity="0.7" Margin="0,0,0,8"/>
+                                            <TextBlock Text="Remove optimizations and restore Steam to original state" 
+                                                     FontSize="13" TextWrapping="Wrap"/>
+                                        </StackPanel>
+                                    </Border>
+                                    
+                                    <TextBlock Text="System Information" FontSize="16" FontWeight="Bold" Margin="0,0,0,16"/>
+                                    
+                                    <!-- System Info Grid (Duplicate for Uninstaller tab) -->
+                                    <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="1" 
+                                            CornerRadius="4" Padding="16" Margin="0,0,0,20">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+                                            
+                                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Operating System:" FontWeight="Medium" Margin="0,2,12,2"/>
+                                            <TextBlock Grid.Row="0" Grid.Column="1" Name="OSVersionText2" Text="Loading..." Margin="0,2"/>
+                                            
+                                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Architecture:" FontWeight="Medium" Margin="0,2,12,2"/>
+                                            <TextBlock Grid.Row="1" Grid.Column="1" Name="OSArchText2" Text="Loading..." Margin="0,2"/>
+                                            
+                                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Administrator Status:" FontWeight="Medium" Margin="0,2,12,2"/>
+                                            <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Margin="0,2">
+                                                <materialDesign:PackIcon Name="StatusIcon2" Kind="ShieldAlert" 
+                                                                       Width="16" Height="16" Foreground="Orange" Margin="0,0,6,0"/>
+                                                <TextBlock Name="AdminStatusText2" Text="Checking permissions..." VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                            
+                                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Steam Path:" FontWeight="Medium" Margin="0,2,12,2"/>
+                                            <TextBlock Grid.Row="3" Grid.Column="1" Name="SteamPathText2" Text="Searching..." Margin="0,2" TextWrapping="Wrap"/>
+                                            
+                                            <TextBlock Grid.Row="4" Grid.Column="0" Text="Steam Configuration:" FontWeight="Medium" Margin="0,2,12,2"/>
+                                            <TextBlock Grid.Row="4" Grid.Column="1" Name="SteamConfigText2" Text="Searching..." Margin="0,2" TextWrapping="Wrap"/>
+                                            
+                                            <TextBlock Grid.Row="5" Grid.Column="0" Text="Steam V2 Path:" FontWeight="Medium" Margin="0,2,12,2" Name="SteamV2Label2" Visibility="Collapsed"/>
+                                            <TextBlock Grid.Row="5" Grid.Column="1" Name="SteamV2PathText2" Text="N/A" Margin="0,2" Visibility="Collapsed" TextWrapping="Wrap"/>
+                                        </Grid>
+                                    </Border>
+                                    
+                                    <TextBlock Text="Uninstall Information" FontWeight="Medium" Margin="0,0,0,8"/>
+                                    <TextBlock TextWrapping="Wrap" Foreground="Green">
+                                        • All games and saves will be preserved<LineBreak/>
+                                        • Steam will return to original configuration<LineBreak/>
+                                        • Optimization files and shortcuts will be removed<LineBreak/>
+                                        • Process is completely safe and reversible<LineBreak/>
+                                        • You can reinstall optimizations anytime
+                                    </TextBlock>
+                                </StackPanel>
+                            </ScrollViewer>
+                        </Grid>
+                    </TabItem>
+                </TabControl>
             </materialDesign:Card>
         </Grid>
 

@@ -8,7 +8,7 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Steam Debloat")]
-[assembly: AssemblyDescription("Tool to downgrade Steam to Dec2022")]
+[assembly: AssemblyDescription("Tool to optimize Steam installation")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("AltRossell")]
 [assembly: AssemblyProduct("Steam Debloat")]
@@ -49,5 +49,5 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.915.2300.0")]
-[assembly: AssemblyFileVersion("1.915.2300.0")]
+[assembly: AssemblyVersion("1.919.2242.0")]
+[assembly: AssemblyFileVersion("1.919.2242.0")]
