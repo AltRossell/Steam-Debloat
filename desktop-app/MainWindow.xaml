@@ -64,7 +64,7 @@
                                 <ComboBox Name="ModeComboBox" materialDesign:HintAssist.Hint="Select mode" 
                                           Style="{StaticResource MaterialDesignComboBox}" Margin="0,0,0,20"
                                           SelectionChanged="ModeComboBox_SelectionChanged">
-                                    <ComboBoxItem Content="Normal 2025 July (Recommended)" Tag="Normal2025July"/>
+                                    <ComboBoxItem Content="Normal 2025 September (Recommended)" Tag="Normal2025September"/>
                                     <ComboBoxItem Content="Normal 2022 Dec" Tag="Normal2022dec"/>
                                     <ComboBoxItem Content="Lite 2022 Dec" Tag="Lite2022dec"/>
                                     <ComboBoxItem Content="Both versions (Experimental)" Tag="NormalBoth2022-2025"/>
@@ -99,7 +99,7 @@
                                         <StackPanel>
                                             <TextBlock Text="Steam Debloat" FontSize="18" FontWeight="Bold" 
                                                      Foreground="{DynamicResource PrimaryHueMidBrush}" Margin="0,0,0,4"/>
-                                            <TextBlock Text="Version 1.919.2242 by AltRossell" FontSize="12" 
+                                            <TextBlock Text="Version 1.920.1400 by AltRossell" FontSize="12" 
                                                      Opacity="0.7" Margin="0,0,0,8"/>
                                             <TextBlock Text="Optimize your Steam installation for better performance and reduced resource usage" 
                                                      FontSize="13" TextWrapping="Wrap"/>
@@ -153,7 +153,7 @@
                                     <TextBlock TextWrapping="Wrap">
                                         • Performance optimizations and reduced resource usage<LineBreak/>
                                         • Disables unnecessary features (overlay, friends UI, CEF processes)<LineBreak/>
-                                        • Multiple Steam version support (2022 Dec / 2025 July)<LineBreak/>
+                                        • Multiple Steam version support (2022 Dec / 2025 September)<LineBreak/>
                                         • Preserves games and save files completely<LineBreak/>
                                         • Safe and reversible modifications
                                     </TextBlock>
@@ -219,7 +219,7 @@
                                         <StackPanel>
                                             <TextBlock Text="Steam Debloat" FontSize="18" FontWeight="Bold" 
                                                      Foreground="OrangeRed" Margin="0,0,0,4"/>
-                                            <TextBlock Text="Version 1.919.2242 by AltRossell" FontSize="12" 
+                                            <TextBlock Text="Version 1.920.1400 by AltRossell" FontSize="12" 
                                                      Opacity="0.7" Margin="0,0,0,8"/>
                                             <TextBlock Text="Remove optimizations and restore Steam to original state" 
                                                      FontSize="13" TextWrapping="Wrap"/>

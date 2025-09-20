@@ -31,7 +31,7 @@ namespace SteamDebloat
 
         public OptimizationConfig()
         {
-            Mode = "Normal2025July";
+            Mode = "Normal2025September";
             CreateDesktopShortcut = true;
             CreateStartMenuShortcut = false;
             RemoveFromStartup = true;

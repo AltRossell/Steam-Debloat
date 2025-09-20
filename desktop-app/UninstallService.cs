@@ -62,24 +62,23 @@ namespace SteamDebloat
                 OnProgressChanged("Cleaning temporary files...");
                 CleanTempBatchFiles();
 
-                // Update Steam to July 2025 version after cleanup
+                // Update Steam to September 2025 version after cleanup
                 if (hasSteam)
                 {
-                    OnProgressChanged("Updating Steam to July 2025 version...");
-                    await UpdateSteamToJuly2025Async(DefaultSteamPath, cancellationToken).ConfigureAwait(false);
+                    OnProgressChanged("Updating Steam to September 2025 version...");
+                    await UpdateSteamToSeptember2025Async(DefaultSteamPath, cancellationToken).ConfigureAwait(false);
                 }
 
-                OnProgressChanged("Uninstallation completed - Steam restored to July 2025 version");
+                OnProgressChanged("Uninstallation completed - Steam restored to September 2025 version");
                 return new OptimizationResult { Success = true };
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error in UninstallAsync: {ex.Message}");
                 return new OptimizationResult { Success = false, ErrorMessage = ex.Message };
             }
         }
 
-        private async Task UpdateSteamToJuly2025Async(string steamPath, CancellationToken cancellationToken)
+        private async Task UpdateSteamToSeptember2025Async(string steamPath, CancellationToken cancellationToken)
         {
             try
             {
@@ -99,7 +98,7 @@ namespace SteamDebloat
                     WorkingDirectory = steamPath
                 };
 
-                OnProgressChanged("Starting Steam update to July 2025 version...");
+                OnProgressChanged("Starting Steam update to September 2025 version...");
                 
                 using (var process = Process.Start(startInfo))
                 {
@@ -116,13 +115,13 @@ namespace SteamDebloat
                         
                         if (steamProcesses.Length == 0)
                         {
-                            OnProgressChanged("Steam update to July 2025 completed");
+                            OnProgressChanged("Steam update to September 2025 completed");
                             updateInProgress = false;
                             break;
                         }
                         else
                         {
-                            OnProgressChanged("Steam updating to July 2025... (visible on screen)");
+                            OnProgressChanged("Steam updating to September 2025... (visible on screen)");
                         }
                     }
                     
@@ -137,7 +136,6 @@ namespace SteamDebloat
             catch (Exception ex)
             {
                 OnProgressChanged($"Error during Steam update: {ex.Message}");
-                Debug.WriteLine($"Error in UpdateSteamToJuly2025Async: {ex.Message}");
             }
         }
 
@@ -176,9 +174,8 @@ namespace SteamDebloat
                     ShortcutsStatus = hasShortcuts ? "Shortcuts found" : "No shortcuts found"
                 };
             }
-            catch (Exception ex)
+            catch
             {
-                Debug.WriteLine($"Error getting uninstall status: {ex.Message}");
                 return new UninstallStatus
                 {
                     HasOptimizationConfig = false,
@@ -394,9 +391,8 @@ namespace SteamDebloat
                 return new WindowsPrincipal(WindowsIdentity.GetCurrent())
                     .IsInRole(WindowsBuiltInRole.Administrator);
             }
-            catch (Exception ex)
+            catch
             {
-                Debug.WriteLine($"Error checking admin privileges: {ex.Message}");
                 return false;
             }
         }
@@ -407,9 +403,9 @@ namespace SteamDebloat
             {
                 ProgressChanged?.Invoke(status);
             }
-            catch (Exception ex)
+            catch
             {
-                Debug.WriteLine($"Error in OnProgressChanged: {ex.Message}");
+                // Ignore progress update errors
             }
         }
 

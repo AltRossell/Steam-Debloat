@@ -125,10 +125,9 @@ namespace SteamDebloat
                 if (SteamDirectoryTextBox != null)
                     SteamDirectoryTextBox.Text = "";
             }
-            catch (Exception ex)
+            catch
             {
-                // Log but don't show error for non-critical operations
-                Debug.WriteLine($"Error in SetDefaultValues: {ex.Message}");
+                // Ignore errors for non-critical operations
             }
         }
 
@@ -142,9 +141,9 @@ namespace SteamDebloat
                     Task.Run(async () => await LoadSystemInfoSafe());
                 }));
             }
-            catch (Exception ex)
+            catch
             {
-                Debug.WriteLine($"Error in OnSteamDetectionChanged: {ex.Message}");
+                // Ignore errors
             }
         }
 
@@ -169,9 +168,8 @@ namespace SteamDebloat
                 // Update both admin status elements
                 UpdateAdminStatusElements(isAdmin);
             }
-            catch (Exception ex)
+            catch
             {
-                Debug.WriteLine($"Error in CheckAdminPrivileges: {ex.Message}");
                 UpdateAdminStatusElements(false, "Unable to check privileges");
             }
         }
@@ -203,9 +201,9 @@ namespace SteamDebloat
                     StatusIcon2.Foreground = iconColor;
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                Debug.WriteLine($"Error in UpdateAdminStatusElements: {ex.Message}");
+                // Ignore errors
             }
         }
 
@@ -240,9 +238,9 @@ namespace SteamDebloat
                         }
                     }
                 }
-                catch (Exception ex)
+                catch
                 {
-                    Debug.WriteLine($"Registry detection failed: {ex.Message}");
+                    // Registry detection failed
                 }
 
                 // Fallback to version detection
@@ -295,9 +293,8 @@ namespace SteamDebloat
                 
                 return Environment.OSVersion.VersionString;
             }
-            catch (Exception ex)
+            catch
             {
-                Debug.WriteLine($"OS detection error: {ex.Message}");
                 return Environment.OSVersion.VersionString;
             }
         }
@@ -335,11 +332,10 @@ namespace SteamDebloat
                     UpdateModeSpecificInfo();
                 });
             }
-            catch (Exception ex)
+            catch
             {
                 await Dispatcher.InvokeAsync(() =>
                 {
-                    Debug.WriteLine($"Error in LoadSystemInfoSafe: {ex.Message}");
                     UpdateSystemInfoElements("Error loading system info", 
                                            "Error loading", 
                                            "Error loading", 
@@ -378,9 +374,9 @@ namespace SteamDebloat
                 if (SteamConfigText2 != null)
                     SteamConfigText2.Text = configStatus;
             }
-            catch (Exception ex)
+            catch
             {
-                Debug.WriteLine($"Error in UpdateSystemInfoElements: {ex.Message}");
+                // Ignore errors
             }
         }
 
@@ -418,9 +414,9 @@ namespace SteamDebloat
                         SteamDirectoryTextBox.Text = "";
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                Debug.WriteLine($"Error in UpdateSteamPathDisplay: {ex.Message}");
+                // Ignore errors
             }
         }
 
@@ -462,9 +458,8 @@ namespace SteamDebloat
                         new SolidColorBrush(Colors.Orange) : new SolidColorBrush(Colors.Gray);
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                Debug.WriteLine($"Error in UpdateUninstallStatus: {ex.Message}");
                 if (UninstallSteamConfigText != null)
                     UninstallSteamConfigText.Text = "Unable to check status";
                 if (UninstallSteamV2StatusText != null)
@@ -600,9 +595,9 @@ namespace SteamDebloat
             {
                 UpdateModeSpecificInfo();
             }
-            catch (Exception ex)
+            catch
             {
-                Debug.WriteLine($"Error in ModeComboBox_SelectionChanged: {ex.Message}");
+                // Ignore errors
             }
         }
 
@@ -662,9 +657,9 @@ namespace SteamDebloat
                     }
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                Debug.WriteLine($"Error in UpdateModeSpecificInfo: {ex.Message}");
+                // Ignore errors
             }
         }
 
@@ -906,7 +901,7 @@ namespace SteamDebloat
                 
                 return new OptimizationConfig
                 {
-                    Mode = selectedItem?.Tag?.ToString() ?? "Normal2025July",
+                    Mode = selectedItem?.Tag?.ToString() ?? "Normal2025September",
                     CreateDesktopShortcut = CreateDesktopShortcut?.IsChecked == true,
                     CreateStartMenuShortcut = CreateStartMenuShortcut?.IsChecked == true,
                     RemoveFromStartup = RemoveFromStartup?.IsChecked == true,
@@ -927,9 +922,9 @@ namespace SteamDebloat
                 if (ProgressOverlay != null)
                     ProgressOverlay.Visibility = show ? Visibility.Visible : Visibility.Collapsed;
             }
-            catch (Exception ex)
+            catch
             {
-                Debug.WriteLine($"Error in ShowProgressOverlay: {ex.Message}");
+                // Ignore errors
             }
         }
 
@@ -942,9 +937,9 @@ namespace SteamDebloat
                     _cancellationTokenSource.Cancel();
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                Debug.WriteLine($"Error in CancelButton_Click: {ex.Message}");
+                // Ignore errors
             }
         }
 
@@ -958,9 +953,9 @@ namespace SteamDebloat
                         ProgressText.Text = status;
                 }));
             }
-            catch (Exception ex)
+            catch
             {
-                Debug.WriteLine($"Error in OnProgressChanged: {ex.Message}");
+                // Ignore errors
             }
         }
 
@@ -1016,9 +1011,9 @@ namespace SteamDebloat
                     _uninstallService.Dispose();
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                Debug.WriteLine($"Error in OnClosed: {ex.Message}");
+                // Ignore errors during cleanup
             }
             
             base.OnClosed(e);

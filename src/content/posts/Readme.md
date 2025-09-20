@@ -13,7 +13,7 @@ lang: ''
 
   [![GitHub release](https://img.shields.io/github/v/release/AltRossell/Steam-Debloat?style=for-the-badge&color=4CAF50)](https://github.com/AltRossell/Steam-Debloat/releases)
   [![License](https://img.shields.io/github/license/AltRossell/Steam-Debloat?style=for-the-badge&color=FF9800)](LICENSE)
-  [![VirusTotal](https://img.shields.io/badge/VirusTotal-Verified-brightgreen?style=for-the-badge&logo=virustotal)](https://www.virustotal.com/gui/file/c60f4c30a17d77efd477e9c6dcc0726522626a76bc98c253846f27b96296651e)
+  [![VirusTotal](https://img.shields.io/badge/VirusTotal-Verified-brightgreen?style=for-the-badge&logo=virustotal)](https://www.virustotal.com/gui/file/48df7e5f33f45a4890575a0fedcc0a667e1e6823c3f2959bc660cda0b142aa7c?nocache=1)
 
   </div>
 
@@ -97,13 +97,13 @@ lang: ''
   - **Multi-Version Support**: Enhanced compatibility for Steam 2022 and 2025 editions
   - **Configuration Management**: Automatic mode detection and persistent settings management
 
-  ### Alternative Installation: PowerShell Script
+  ### Alternative Installation: PowerShell Script **no future updates**
 
   ```powershell
   irm https://steamdeb.vercel.app/api/get | iex
   ```
 
-  ### Legacy Installation: Batch Scripts
+  ### Legacy Installation: Batch Scripts **no future updates**
 
   Command-line installation options for traditional deployment scenarios:
 
@@ -198,7 +198,7 @@ lang: ''
 
   | Component | VirusTotal Analysis | Security Classification |
   |:---------:|:------------------:|:-----------------------:|
-  | **Desktop Application** | [![VirusTotal](https://img.shields.io/badge/Status-Clean-brightgreen)](https://www.virustotal.com/gui/file/c60f4c30a17d77efd477e9c6dcc0726522626a76bc98c253846f27b96296651e) | **Enterprise Grade** |
+  | **Desktop Application** | [![VirusTotal](https://img.shields.io/badge/Status-Clean-brightgreen)](https://www.virustotal.com/gui/file/48df7e5f33f45a4890575a0fedcc0a667e1e6823c3f2959bc660cda0b142aa7c?nocache=1) | **Enterprise Grade** |
   | **Legacy Installation Scripts** | [![VirusTotal](https://img.shields.io/badge/Status-Clean-brightgreen)](https://www.virustotal.com/gui/file/4ae876ea94fd323b0b58f2cad70b477464315abd0ad09bf969de5c0b05ba72be?nocache=1) | **Verified Safe** |
 
   </div>
