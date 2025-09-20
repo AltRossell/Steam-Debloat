@@ -1,7 +1,7 @@
 {
 	"name": "steamdebloat",
 	"type": "module",
-	"version": "2025",
+	"version": "0.0.1",
 	"scripts": {
 		"dev": "astro dev",
 		"start": "astro dev",
