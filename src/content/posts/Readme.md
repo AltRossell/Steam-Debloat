@@ -1,6 +1,6 @@
 ---
 title: Steam Debloat - Complete Guide
-published: 2025-08-28
+published: 2024-04-24
 description: 'Transform your Steam experience with measurable performance improvements - 70% faster startup, 50% memory reduction, and 86% lower CPU usage.'
 image: 'https://raw.githubusercontent.com/AltRossell/Steam-Debloat/main/assets/logo.png'
 tags: ['steam', 'optimization', 'performance', 'gaming', 'guide']
@@ -243,7 +243,7 @@ lang: ''
 
   ### Adoption Metrics
 
-  [![Star History Chart](https://api.star-history.com/svg?repos=AltRossell/Steam-Debloat&type=Date)](https://star-history.com/#AltRossell/Steam-Debloat&Date)
+[![Stargazers over time](https://starchart.cc/AltRossell/Steam-Debloat.svg?variant=adaptive)](https://starchart.cc/AltRossell/Steam-Debloat)
 
   </div>
 
