@@ -236,7 +236,7 @@
 
   ### Adoption Metrics
 
-  [![Star History Chart](https://api.star-history.com/svg?repos=AltRossell/Steam-Debloat&type=Date)](https://star-history.com/#AltRossell/Steam-Debloat&Date)
+[![Stargazers over time](https://starchart.cc/AltRossell/Steam-Debloat.svg?variant=adaptive)](https://starchart.cc/AltRossell/Steam-Debloat)
 
   </div>
 
