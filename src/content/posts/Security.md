@@ -1,6 +1,6 @@
 ---
 title: Security Policy
-published: 2025-08-28
+published: 2024-11-13
 description: 'Comprehensive security policy for Steam Debloat - protecting your gaming experience with transparent security practices.'
 image: ''
 tags: ['security', 'policy', 'safety', 'protection']
