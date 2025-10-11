@@ -1,97 +1,60 @@
 # Security Policy
 
-<p align="center">
-  <strong>🔒 Protecting Your Gaming Experience</strong>
-</p>
-
 ## Supported Versions
-
-Currently supported versions of  with security updates and maintenance:
 
 | Version | Supported | Update Frequency |
 | ------- | --------- | ---------------- | 
-| Normal Mode | :white_check_mark: | Weekly | 
-| Lite Mode | :white_check_mark: | Weekly |
+| Desktop Application | ✓ | Weekly | 
+| PowerShell Script | ✓ | As needed |
 
-### Version Security Features
-
-- **Normal Mode**:
-  - Full security scanning
-  - Real-time protection
-  - Automatic security updates
-
-- **Lite Mode**:
-  - Essential security features
-  - Core protection systems
-  - Critical updates only
 ## Security Verification
 
-### VirusTotal Results
-Current security scan results:
-- [🔍 Steam Debloat on VirusTotal](https://www.virustotal.com/gui/file/c60f4c30a17d77efd477e9c6dcc0726522626a76bc98c253846f27b96296651e)
+All releases are scanned and verified. Current scan results: [VirusTotal Analysis](https://www.virustotal.com/gui/file/1934e4effc014796fb010b5e9db62067e36bc5dbc4fdea8a28783da0afed03a1?nocache=1)
 
 ## Reporting a Vulnerability
 
-### Reporting Channels
+Report security issues through [GitHub Issues](https://github.com/AltRossell/Steam-Debloat/issues).
 
-**GitHub Issues**: For non-sensitive security issues
+**Include in your report:**
+- Steam Debloat version
+- Steam client version (e.g., Dec 2022)
+- Operating system
+- Screenshots if applicable
 
+## Response Process
 
-### What to Include in Your Report
+1. Vulnerability verification
+2. Impact assessment
+3. Patch development
+4. Testing
+5. Deployment
 
-- Steam Debloat version affected
-- Steam client version(generally dec2022)
-- Operating system details
-- Screenshots/logs (if applicable) (the log is in %temp%/steam_downgrade.log)
-
-### Security Update Process
-
-1. **Verification**: All reported vulnerabilities are verified by our security team
-2. **Assessment**: Impact and severity evaluation
-3. **Development**: Security patch development
-4. **Testing**: Comprehensive testing in isolated environments
-5. **Deployment**: Rapid deployment for critical issues
+Critical issues receive priority treatment.
 
 ## Best Practices
 
-### For Users
-- Always download from official sources
-- Run as administrator only when required
-- Keep your Steam Debloat installation updated
+### Installation
+- Download only from official releases
+- Verify file integrity
+- Run with administrator privileges only when required
 
-### Safe Installation Guidelines
+### Updates
+- Keep your installation current
+- Review release notes for security updates
+- Monitor the repository for announcements
 
-1. Verify installer checksums
-2. Run security scans before installation
-3. Follow the official installation guide
-4. Monitor system changes during optimization
+## Recovery
 
-## Compliance & Transparency
+If you encounter security issues:
 
-- Open-source codebase for community review
-- Regular security audits
-- Transparent update process
+1. Use the integrated uninstaller
+2. Report the issue on GitHub
+3. Wait for guidance from maintainers
+
+## Transparency
+
+- Open-source codebase available for review
+- All releases publicly scanned
 - Community-driven security improvements
 
-## Emergency Recovery
-
-In case of security issues:
-
-1. Run the uninstall script
-2. Contact support team
-3. Follow recovery guidelines
-
-## Security Updates Log
-
-| Date | Version | Security Update |
-|------|---------|----------------|
-| 2024-11-13 | 1.0.021 | Initial security policy |
-| 2025-09-20 | 1.920.1400 | VirusTotal results update |
-
----
-
-<p align="center">
-  <strong>Your security is our priority.</strong>
-</p>
-
-_This security policy is regularly updated. Last revision: 2025-09-20_
+_Last updated: 2025-09-20_
