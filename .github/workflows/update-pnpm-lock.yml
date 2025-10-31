@@ -12,8 +12,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
+        with:
+          version: 8
       - run: pnpm install --lockfile-only
       - run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git diff --exit-code || (git commit -am "chore: update pnpm-lock.yaml" && git push)
+          if [ -n "$(git status --porcelain)" ]; then
+            git commit -am "chore: update pnpm-lock.yaml"
+            git push
+          fi
