@@ -57,4 +57,4 @@ If you encounter security issues:
 - All releases publicly scanned
 - Community-driven security improvements
 
-_Last updated: 2025-09-20_
+_Last updated: 2025-10-31_

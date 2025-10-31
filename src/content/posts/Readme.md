@@ -24,7 +24,6 @@ Download the latest version from [Releases](https://github.com/AltRossell/Steam-
 
 **Supported platforms:**
 - Windows (10/11)
-- Linux
 
 **Requirements:**
 - Steam installed

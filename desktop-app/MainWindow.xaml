@@ -1,0 +1,469 @@
+﻿<Window x:Class="SteamDebloat.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Steam Debloat"
+        Height="650"
+        Width="1000"
+        MinHeight="650"
+        MinWidth="1000"
+        Background="{StaticResource BackgroundPrimaryBrush}"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="CanResize"
+        WindowStyle="SingleBorderWindow"
+        RenderOptions.BitmapScalingMode="HighQuality"
+        UseLayoutRounding="True"
+        TextOptions.TextFormattingMode="Display">
+    
+    <Grid Background="{StaticResource BackgroundPrimaryBrush}">
+        <!-- Main Content -->
+        <Grid Margin="20,20,20,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="360"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Left Panel -->
+            <ScrollViewer Grid.Column="0" 
+                          VerticalScrollBarVisibility="Auto"
+                          Margin="0,0,16,0">
+                <StackPanel>
+                    <!-- Header -->
+                    <TextBlock Text="Configuration" 
+                               FontSize="26" 
+                               FontWeight="Bold"
+                               Foreground="{StaticResource TextPrimaryBrush}"
+                               Margin="0,0,0,20"/>
+
+                    <!-- Steam Directory Card -->
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <TextBlock Text="Steam Directory" 
+                                       FontSize="15" 
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource TextPrimaryBrush}"
+                                       Margin="0,0,0,10"/>
+                            
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                
+                                <TextBox x:Name="SteamDirectoryTextBox"
+                                         Grid.Column="0"
+                                         Margin="0,0,8,0"/>
+                                
+                                <Button x:Name="BrowseSteamDirectoryButton"
+                                        Grid.Column="1"
+                                        Content="Browse"
+                                        Width="90"
+                                        Style="{StaticResource SecondaryButton}"
+                                        Click="BrowseSteamDirectoryButton_Click"/>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Optimization Mode Card -->
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <TextBlock Text="Optimization Mode" 
+                                       FontSize="15" 
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource TextPrimaryBrush}"
+                                       Margin="0,0,0,10"/>
+                            
+                            <Button x:Name="ModeSelectionButton"
+                                    Content="Normal 2023 June"
+                                    Style="{StaticResource SecondaryButton}"
+                                    Click="ModeSelectionButton_Click"
+                                    HorizontalContentAlignment="Left"
+                                    Padding="14,11,14,11"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Options Card -->
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <TextBlock Text="Options" 
+                                       FontSize="15" 
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource TextPrimaryBrush}"
+                                       Margin="0,0,0,10"/>
+                            
+                            <CheckBox x:Name="CreateDesktopShortcut" 
+                                      Content="Create desktop shortcut"
+                                      IsChecked="True"/>
+                            <CheckBox x:Name="AddToStartMenu" 
+                                      Content="Add to Start Menu"
+                                      IsChecked="True"/>
+                            <CheckBox x:Name="RemoveFromStartup" 
+                                      Content="Remove from system startup"
+                                      IsChecked="True"/>
+                            <CheckBox x:Name="UpdateSteam" 
+                                      Content="Update Steam automatically"
+                                      IsChecked="True"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Action Button -->
+                    <Button x:Name="StartButton"
+                            Content="Optimize Steam"
+                            Style="{StaticResource PrimaryButton}"
+                            Click="StartButton_Click"
+                            Margin="0,4,0,0"/>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Right Panel -->
+            <Grid Grid.Column="1">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <!-- Info Banner -->
+                        <Border Background="{StaticResource AccentBrush}"
+                                CornerRadius="10"
+                                Padding="20,18,20,18"
+                                Margin="0,0,0,20">
+                            <StackPanel>
+                                <TextBlock Text="Steam Debloat" 
+                                           FontSize="22" 
+                                           FontWeight="Bold"
+                                           Foreground="White"
+                                           Margin="0,0,0,6"/>
+                                <TextBlock Text="Advanced optimization tool for Steam on Windows" 
+                                           FontSize="14"
+                                           Foreground="White"
+                                           Opacity="0.9"
+                                           TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- System Info -->
+                        <TextBlock Text="System Information" 
+                                   FontSize="20" 
+                                   FontWeight="Bold"
+                                   Foreground="{StaticResource TextPrimaryBrush}"
+                                   Margin="0,0,0,14"/>
+
+                        <Border Style="{StaticResource Card}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="140"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Row="0" Grid.Column="0"
+                                           Text="Operating System"
+                                           FontSize="13"
+                                           FontWeight="Medium"
+                                           Foreground="{StaticResource TextSecondaryBrush}"
+                                           Margin="0,0,0,12"/>
+                                <TextBlock Grid.Row="0" Grid.Column="1"
+                                           x:Name="OSVersionText"
+                                           Text="Loading..."
+                                           FontSize="13"
+                                           Foreground="{StaticResource TextPrimaryBrush}"
+                                           Margin="0,0,0,12"/>
+
+                                <TextBlock Grid.Row="1" Grid.Column="0"
+                                           Text="Architecture"
+                                           FontSize="13"
+                                           FontWeight="Medium"
+                                           Foreground="{StaticResource TextSecondaryBrush}"
+                                           Margin="0,0,0,12"/>
+                                <TextBlock Grid.Row="1" Grid.Column="1"
+                                           x:Name="OSArchText"
+                                           Text="Loading..."
+                                           FontSize="13"
+                                           Foreground="{StaticResource TextPrimaryBrush}"
+                                           Margin="0,0,0,12"/>
+
+                                <TextBlock Grid.Row="2" Grid.Column="0"
+                                           Text="Administrator"
+                                           FontSize="13"
+                                           FontWeight="Medium"
+                                           Foreground="{StaticResource TextSecondaryBrush}"
+                                           Margin="0,0,0,12"/>
+                                <TextBlock Grid.Row="2" Grid.Column="1"
+                                           x:Name="AdminStatusText"
+                                           Text="Checking..."
+                                           FontSize="13"
+                                           Foreground="{StaticResource TextPrimaryBrush}"
+                                           Margin="0,0,0,12"/>
+
+                                <TextBlock Grid.Row="3" Grid.Column="0"
+                                           Text="Steam Path"
+                                           FontSize="13"
+                                           FontWeight="Medium"
+                                           Foreground="{StaticResource TextSecondaryBrush}"
+                                           Margin="0,0,0,12"/>
+                                <TextBlock Grid.Row="3" Grid.Column="1"
+                                           x:Name="SteamPathText"
+                                           Text="Searching..."
+                                           FontSize="13"
+                                           Foreground="{StaticResource TextPrimaryBrush}"
+                                           TextWrapping="Wrap"
+                                           Margin="0,0,0,12"/>
+
+                                <TextBlock Grid.Row="4" Grid.Column="0"
+                                           Text="Configuration"
+                                           FontSize="13"
+                                           FontWeight="Medium"
+                                           Foreground="{StaticResource TextSecondaryBrush}"/>
+                                <TextBlock Grid.Row="4" Grid.Column="1"
+                                           x:Name="SteamConfigText"
+                                           Text="Searching..."
+                                           FontSize="13"
+                                           Foreground="{StaticResource TextPrimaryBrush}"
+                                           TextWrapping="Wrap"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Restore Section -->
+                        <TextBlock Text="Restore" 
+                                   FontSize="20" 
+                                   FontWeight="Bold"
+                                   Foreground="{StaticResource TextPrimaryBrush}"
+                                   Margin="0,26,0,14"/>
+
+                        <Border Style="{StaticResource Card}">
+                            <StackPanel>
+                                <TextBlock Text="Remove all optimizations and restore Steam to its original state." 
+                                           FontSize="13"
+                                           Foreground="{StaticResource TextSecondaryBrush}"
+                                           TextWrapping="Wrap"
+                                           Margin="0,0,0,12"/>
+                                
+                                <Button x:Name="UninstallButton"
+                                        Content="Restore Steam"
+                                        Style="{StaticResource DangerButton}"
+                                        Click="UninstallButton_Click"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </Grid>
+
+        <!-- Progress Overlay -->
+        <Grid x:Name="ProgressOverlay"
+              Background="#CC000000"
+              Visibility="Collapsed"
+              Panel.ZIndex="1000">
+            <Border Background="{StaticResource BackgroundSecondaryBrush}"
+                    Width="380"
+                    CornerRadius="12"
+                    Padding="28,24,28,24"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    BorderBrush="{StaticResource BorderBrush}"
+                    BorderThickness="1">
+                <StackPanel>
+                    <TextBlock x:Name="ProgressText"
+                               Text="Processing..."
+                               FontSize="18"
+                               FontWeight="SemiBold"
+                               Foreground="{StaticResource TextPrimaryBrush}"
+                               HorizontalAlignment="Center"
+                               Margin="0,0,0,20"/>
+                    
+                    <ProgressBar IsIndeterminate="True"
+                                 Height="4"
+                                 Margin="0,0,0,20"/>
+                    
+                    <Button x:Name="CancelButton"
+                            Content="Cancel"
+                            Style="{StaticResource SecondaryButton}"
+                            Width="110"
+                            Click="CancelButton_Click"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- Completion Overlay (Modern Success Dialog) -->
+        <Grid x:Name="CompletionOverlay"
+              Background="#CC000000"
+              Visibility="Collapsed"
+              Panel.ZIndex="1001">
+            <Border Background="{StaticResource BackgroundSecondaryBrush}"
+                    Width="420"
+                    CornerRadius="12"
+                    Padding="32,28,32,28"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    BorderBrush="{StaticResource BorderBrush}"
+                    BorderThickness="1">
+                <StackPanel>
+                    <!-- Success Icon -->
+                    <Ellipse Width="56" Height="56"
+                             Fill="{StaticResource SuccessBrush}"
+                             HorizontalAlignment="Center"
+                             Margin="0,0,0,18"/>
+                    
+                    <!-- Checkmark inside circle -->
+                    <Grid Width="56" Height="56" 
+                          HorizontalAlignment="Center"
+                          Margin="0,-74,0,18">
+                        <Path Data="M 15 28 L 24 37 L 41 20"
+                              Stroke="White"
+                              StrokeThickness="3"
+                              StrokeStartLineCap="Round"
+                              StrokeEndLineCap="Round"
+                              StrokeLineJoin="Round"/>
+                    </Grid>
+                    
+                    <TextBlock Text="Operation Completed"
+                               FontSize="22"
+                               FontWeight="Bold"
+                               Foreground="{StaticResource TextPrimaryBrush}"
+                               HorizontalAlignment="Center"
+                               Margin="0,0,0,12"/>
+                    
+                    <TextBlock x:Name="CompletionMessageText"
+                               Text="Operation completed successfully"
+                               FontSize="14"
+                               Foreground="{StaticResource TextSecondaryBrush}"
+                               TextWrapping="Wrap"
+                               TextAlignment="Center"
+                               HorizontalAlignment="Center"
+                               Margin="0,0,0,24"/>
+                    
+                    <Button x:Name="CompletionOkButton"
+                            Content="Done"
+                            Style="{StaticResource PrimaryButton}"
+                            Width="140"
+                            HorizontalAlignment="Center"
+                            Click="CompletionOkButton_Click"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- Confirmation Overlay (Modern Confirm Dialog) -->
+        <Grid x:Name="ConfirmationOverlay"
+              Background="#CC000000"
+              Visibility="Collapsed"
+              Panel.ZIndex="1001">
+            <Border Background="{StaticResource BackgroundSecondaryBrush}"
+                    Width="480"
+                    CornerRadius="12"
+                    Padding="32,28,32,28"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    BorderBrush="{StaticResource BorderBrush}"
+                    BorderThickness="1">
+                <StackPanel>
+                    <!-- Warning Icon -->
+                    <Ellipse Width="56" Height="56"
+                             Fill="{StaticResource WarningBrush}"
+                             HorizontalAlignment="Center"
+                             Margin="0,0,0,18"/>
+                    
+                    <!-- Question mark inside circle -->
+                    <Grid Width="56" Height="56" 
+                          HorizontalAlignment="Center"
+                          Margin="0,-74,0,18">
+                        <TextBlock Text="?"
+                                   FontSize="36"
+                                   FontWeight="Bold"
+                                   Foreground="White"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Margin="0,-4,0,0"/>
+                    </Grid>
+                    
+                    <TextBlock x:Name="ConfirmationTitleText"
+                               Text="Confirm Action"
+                               FontSize="22"
+                               FontWeight="Bold"
+                               Foreground="{StaticResource TextPrimaryBrush}"
+                               HorizontalAlignment="Center"
+                               Margin="0,0,0,12"/>
+                    
+                    <TextBlock x:Name="ConfirmationMessageText"
+                               Text="Are you sure you want to continue?"
+                               FontSize="14"
+                               Foreground="{StaticResource TextSecondaryBrush}"
+                               TextWrapping="Wrap"
+                               TextAlignment="Center"
+                               HorizontalAlignment="Center"
+                               Margin="0,0,0,24"
+                               LineHeight="22"/>
+                    
+                    <StackPanel Orientation="Horizontal" 
+                                HorizontalAlignment="Center">
+                        <Button x:Name="ConfirmationNoButton"
+                                Content="Cancel"
+                                Style="{StaticResource SecondaryButton}"
+                                Width="120"
+                                Margin="0,0,12,0"/>
+                        
+                        <Button x:Name="ConfirmationYesButton"
+                                Content="Continue"
+                                Style="{StaticResource DangerButton}"
+                                Width="120"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- Mode Selection Overlay -->
+        <Grid x:Name="ModeSelectionOverlay"
+              Background="#CC000000"
+              Visibility="Collapsed"
+              Panel.ZIndex="999">
+            
+            <Border Background="{StaticResource BackgroundSecondaryBrush}"
+                    MaxWidth="880"
+                    MaxHeight="580"
+                    CornerRadius="12"
+                    Padding="32,28,32,28"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    BorderBrush="{StaticResource BorderBrush}"
+                    BorderThickness="1">
+                
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Header -->
+                    <TextBlock Grid.Row="0"
+                               Text="Select Optimization Mode"
+                               FontSize="24"
+                               FontWeight="Bold"
+                               Foreground="{StaticResource TextPrimaryBrush}"
+                               HorizontalAlignment="Center"
+                               Margin="0,0,0,24"/>
+
+                    <!-- Content -->
+                    <ScrollViewer Grid.Row="1" 
+                                  VerticalScrollBarVisibility="Auto"
+                                  MaxHeight="380">
+                        <StackPanel x:Name="MainSelectionPanel">
+                            <UniformGrid x:Name="StableVersionsPanel" Columns="2" Rows="2" Margin="0,0,0,16"/>
+                            <WrapPanel x:Name="ExperimentalVersionsPanel" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <!-- Close Button -->
+                    <Button Grid.Row="2"
+                            x:Name="BackButton"
+                            Content="Close"
+                            Style="{StaticResource SecondaryButton}"
+                            Width="110"
+                            Margin="0,20,0,0"
+                            Click="BackButton_Click"/>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>
