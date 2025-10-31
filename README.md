@@ -38,7 +38,7 @@ Steam versions released after December 2022 may experience issues with the frien
 
 ## Security
 
-All components are verified and malware-free. See [VirusTotal analysis](https://www.virustotal.com/gui/file/1934e4effc014796fb010b5e9db62067e36bc5dbc4fdea8a28783da0afed03a1?nocache=1).
+All components are verified and malware-free. See [VirusTotal analysis](https://www.virustotal.com/gui/file/8b92c109fbf9711ae52c368195dc2a790eacda254f6f652924ec86a06ff14628/detection).
 
 ## License
 

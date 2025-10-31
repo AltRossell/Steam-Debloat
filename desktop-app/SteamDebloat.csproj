@@ -44,6 +44,8 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
+    <!-- IMPORTANT: Added System.Management for WMI support -->
+    <Reference Include="System.Management" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>

@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Management;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -23,7 +24,8 @@ namespace SteamDebloat
             {
                 OnProgressChanged("Starting uninstallation...");
 
-                await StopSteamProcessesAsync();
+                // Use WMI instead of Process.Kill()
+                await StopSteamProcessesUsingWMIAsync();
                 OnProgressChanged("Steam processes stopped");
 
                 bool hasSteam = Directory.Exists(_defaultSteamPath);
@@ -37,8 +39,8 @@ namespace SteamDebloat
                 OnProgressChanged("Restoring Steam startup registry entry...");
                 RestoreSteamStartup();
 
-                OnProgressChanged("Cleaning temporary files...");
-                CleanTempBatchFiles();
+                OnProgressChanged("Cleaning launch scripts...");
+                CleanLaunchScripts();
 
                 if (hasSteam)
                 {
@@ -113,7 +115,7 @@ namespace SteamDebloat
                 if (updateInProgress)
                 {
                     OnProgressChanged("Finalizing Steam update...");
-                    await StopSteamProcessesAsync();
+                    await StopSteamProcessesUsingWMIAsync();
                     await Task.Delay(2000, cancellationToken);
                 }
             }
@@ -198,14 +200,30 @@ namespace SteamDebloat
             }
         }
 
-        private void CleanTempBatchFiles()
+        // Clean launch scripts from desktop and temp
+        private void CleanLaunchScripts()
         {
             try
             {
-                string tempPath = Path.GetTempPath();
-                string[] tempFiles = { "Steam.bat", "Steam2025.bat", "Steam2022.bat", "Steam2023.bat" };
-
                 int removedCount = 0;
+
+                // Clean from desktop
+                string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                string desktopScript = Path.Combine(desktopPath, "Steam.bat");
+                if (File.Exists(desktopScript))
+                {
+                    try
+                    {
+                        File.Delete(desktopScript);
+                        removedCount++;
+                    }
+                    catch { }
+                }
+
+                // Also clean old temp files for backwards compatibility
+                string tempPath = Path.GetTempPath();
+                string[] tempFiles = { "Steam.bat", "Steam2025.bat", "Steam2022.bat", "Steam2023.bat", "SteamDebloat_Launch.bat" };
+
                 foreach (string fileName in tempFiles)
                 {
                     string filePath = Path.Combine(tempPath, fileName);
@@ -221,15 +239,16 @@ namespace SteamDebloat
                 }
 
                 if (removedCount > 0)
-                    OnProgressChanged($"Cleaned {removedCount} temporary file(s)");
+                    OnProgressChanged($"Cleaned {removedCount} launch script(s)");
             }
             catch (Exception ex)
             {
-                OnProgressChanged($"Warning: Error cleaning temp files: {ex.Message}");
+                OnProgressChanged($"Warning: Error cleaning scripts: {ex.Message}");
             }
         }
 
-        private Task StopSteamProcessesAsync()
+        // NEW: Use WMI to terminate processes (more legitimate)
+        private Task StopSteamProcessesUsingWMIAsync()
         {
             return Task.Run(() =>
             {
@@ -240,15 +259,44 @@ namespace SteamDebloat
 
                     foreach (var name in processNames)
                     {
-                        var processes = Process.GetProcessesByName(name);
-                        foreach (var process in processes)
+                        try
                         {
+                            string queryString = $"SELECT * FROM Win32_Process WHERE Name = '{name}.exe'";
+                            using (var searcher = new ManagementObjectSearcher(queryString))
+                            using (var results = searcher.Get())
+                            {
+                                foreach (ManagementObject process in results)
+                                {
+                                    try
+                                    {
+                                        process.InvokeMethod("Terminate", null);
+                                        stoppedCount++;
+                                        process.Dispose();
+                                    }
+                                    catch { }
+                                }
+                            }
+                        }
+                        catch
+                        {
+                            // Fallback to standard method if WMI fails
                             try
                             {
-                                process.Kill();
-                                process.WaitForExit(5000);
-                                process.Dispose();
-                                stoppedCount++;
+                                var processes = Process.GetProcessesByName(name);
+                                foreach (var process in processes)
+                                {
+                                    try
+                                    {
+                                        process.CloseMainWindow();
+                                        if (!process.WaitForExit(3000))
+                                        {
+                                            process.Kill();
+                                        }
+                                        process.Dispose();
+                                        stoppedCount++;
+                                    }
+                                    catch { }
+                                }
                             }
                             catch { }
                         }

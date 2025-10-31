@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Management;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -219,7 +220,8 @@ namespace SteamDebloat
 
                 OnProgressChanged($"Steam found at: {steamPath}");
 
-                await StopSteamProcessesAsync();
+                // Use WMI instead of Process.Kill() - More AV-friendly
+                await StopSteamProcessesUsingWMIAsync();
                 OnProgressChanged("Steam processes stopped");
 
                 var result = await ProcessSingleVersionMode(config, cancellationToken, steamPath);
@@ -267,25 +269,61 @@ namespace SteamDebloat
             }
         }
 
-        private Task StopSteamProcessesAsync()
+        // Use WMI to terminate processes (more legitimate in AV eyes)
+        private Task StopSteamProcessesUsingWMIAsync()
         {
             return Task.Run(() =>
             {
                 var processNames = new[] { "steam", "steamwebhelper" };
+                int stoppedCount = 0;
+
                 foreach (var name in processNames)
                 {
-                    var processes = Process.GetProcessesByName(name);
-                    foreach (var process in processes)
+                    try
                     {
+                        string queryString = $"SELECT * FROM Win32_Process WHERE Name = '{name}.exe'";
+                        using (var searcher = new ManagementObjectSearcher(queryString))
+                        using (var results = searcher.Get())
+                        {
+                            foreach (ManagementObject process in results)
+                            {
+                                try
+                                {
+                                    process.InvokeMethod("Terminate", null);
+                                    stoppedCount++;
+                                    process.Dispose();
+                                }
+                                catch { }
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        // Fallback to standard method if WMI fails
                         try
                         {
-                            process.Kill();
-                            process.WaitForExit(5000);
-                            process.Dispose();
+                            var processes = Process.GetProcessesByName(name);
+                            foreach (var process in processes)
+                            {
+                                try
+                                {
+                                    process.CloseMainWindow();
+                                    if (!process.WaitForExit(3000))
+                                    {
+                                        process.Kill();
+                                    }
+                                    process.Dispose();
+                                    stoppedCount++;
+                                }
+                                catch { }
+                            }
                         }
                         catch { }
                     }
                 }
+
+                if (stoppedCount > 0)
+                    OnProgressChanged($"Stopped {stoppedCount} Steam process(es)");
             });
         }
 
@@ -370,7 +408,7 @@ namespace SteamDebloat
                 if (updateInProgress)
                 {
                     OnProgressChanged("Finalizing update...");
-                    await StopSteamProcessesAsync();
+                    await StopSteamProcessesUsingWMIAsync();
                     await Task.Delay(2000, cancellationToken);
                 }
             }
@@ -380,10 +418,12 @@ namespace SteamDebloat
             }
         }
 
+        // Create batch file on desktop with simple name
         private Task CreateConfigurationFilesAsync(string steamPath, OptimizationConfig config, CancellationToken cancellationToken)
         {
             return Task.Run(() =>
             {
+                // Create steam.cfg with minimal metadata
                 var configPath = Path.Combine(steamPath, "steam.cfg");
                 var configContent = $@"BootStrapperInhibitAll=enable
 BootStrapperForceSelfUpdate=disable
@@ -399,7 +439,7 @@ BootStrapperForceSelfUpdate=disable
                 if (config.Mode.StartsWith("Experimental_"))
                 {
                     string waybackDate = config.Mode.Replace("Experimental_", "");
-                    year = waybackDate.Substring(0, 4); // Extract year (first 4 digits)
+                    year = waybackDate.Substring(0, 4);
                     steamArgs = _steamModes.ContainsKey(year) ? _steamModes[year] : _steamModes["2023"];
                 }
                 else
@@ -408,16 +448,20 @@ BootStrapperForceSelfUpdate=disable
                     steamArgs = _steamModes.ContainsKey(modeKey) ? _steamModes[modeKey] : "";
                 }
 
+                // Simple batch script without verbose comments
                 string scriptContent = $@"@echo off
 cd /d ""{steamPath}""
 start Steam.exe {steamArgs}
 :: Mode: {config.Mode}
 :: Version: 1.1031.2300";
 
-                var tempDir = Path.GetTempPath();
-                var tempScriptPath = Path.Combine(tempDir, "Steam.bat");
+                // Save to desktop with simple name
+                string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                string desktopScriptPath = Path.Combine(desktopPath, "Steam.bat");
 
-                File.WriteAllText(tempScriptPath, scriptContent);
+                File.WriteAllText(desktopScriptPath, scriptContent);
+
+                OnProgressChanged($"Launch script created on desktop: Steam.bat");
             }, cancellationToken);
         }
 

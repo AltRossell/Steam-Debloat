@@ -9,7 +9,7 @@
 
 ## Security Verification
 
-All releases are scanned and verified. Current scan results: [VirusTotal Analysis](https://www.virustotal.com/gui/file/1934e4effc014796fb010b5e9db62067e36bc5dbc4fdea8a28783da0afed03a1?nocache=1)
+All releases are scanned and verified. Current scan results: [VirusTotal Analysis](https://www.virustotal.com/gui/file/8b92c109fbf9711ae52c368195dc2a790eacda254f6f652924ec86a06ff14628/detection)
 
 ## Reporting a Vulnerability
 
