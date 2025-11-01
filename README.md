@@ -16,7 +16,7 @@ A performance optimization tool for the Steam client that removes unnecessary co
 Download the latest version from [Releases](https://github.com/AltRossell/Steam-Debloat/releases).
 
 **Supported platforms:**
-- Windows (10/11)
+- Windows (7/8.1/10/11)
 
 **Requirements:**
 - Steam installed
