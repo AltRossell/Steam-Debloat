@@ -29,12 +29,6 @@ Download the latest version from [Releases](https://github.com/AltRossell/Steam-
 - Steam installed
 - Administrator privileges
 
-### PowerShell Script (No future updates)
-
-```powershell
-irm https://steamdeb.vercel.app/api/get | iex
-```
-
 ## Uninstallation
 
 The desktop application includes an integrated uninstaller. Alternatively, use the uninstall functionality within the application settings.
