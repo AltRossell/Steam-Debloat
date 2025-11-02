@@ -31,4 +31,16 @@ namespace SteamDebloat
         public bool HasOptimizationConfig { get; set; }
         public string SteamConfigStatus { get; set; } = string.Empty;
     }
+
+    public class UpdateCheckResult
+    {
+        public bool Success { get; set; }
+        public bool UpdateAvailable { get; set; }
+        public string CurrentVersion { get; set; } = string.Empty;
+        public string LatestVersion { get; set; } = string.Empty;
+        public string ReleaseUrl { get; set; } = string.Empty;
+        public string ReleaseNotes { get; set; } = string.Empty;
+        public DateTime PublishedDate { get; set; }
+        public string ErrorMessage { get; set; } = string.Empty;
+    }
 }

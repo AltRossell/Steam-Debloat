@@ -24,7 +24,6 @@ namespace SteamDebloat
             {
                 OnProgressChanged("Starting uninstallation...");
 
-                // Use WMI instead of Process.Kill()
                 await StopSteamProcessesUsingWMIAsync();
                 OnProgressChanged("Steam processes stopped");
 
@@ -200,7 +199,6 @@ namespace SteamDebloat
             }
         }
 
-        // Clean launch scripts from desktop and temp
         private void CleanLaunchScripts()
         {
             try
@@ -220,7 +218,7 @@ namespace SteamDebloat
                     catch { }
                 }
 
-                // Also clean old temp files for backwards compatibility
+                // Clean temp files for backwards compatibility
                 string tempPath = Path.GetTempPath();
                 string[] tempFiles = { "Steam.bat", "Steam2025.bat", "Steam2022.bat", "Steam2023.bat", "SteamDebloat_Launch.bat" };
 
@@ -247,7 +245,7 @@ namespace SteamDebloat
             }
         }
 
-        // NEW: Use WMI to terminate processes (more legitimate)
+        // Use WMI to terminate processes (more legitimate method)
         private Task StopSteamProcessesUsingWMIAsync()
         {
             return Task.Run(() =>

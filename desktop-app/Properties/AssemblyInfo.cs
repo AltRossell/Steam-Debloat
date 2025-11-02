@@ -13,7 +13,7 @@ using System.Windows;
 [assembly: AssemblyCulture("")]
 
 // Additional metadata for transparency
-[assembly: AssemblyInformationalVersion("1.1031.2300 - GitHub: https://github.com/AltRossell/SteamDebloat")]
+[assembly: AssemblyInformationalVersion("1.1102.0400 - GitHub: https://github.com/AltRossell/SteamDebloat")]
 
 [assembly: ComVisible(false)]
 
@@ -22,5 +22,5 @@ using System.Windows;
     ResourceDictionaryLocation.SourceAssembly
 )]
 
-[assembly: AssemblyVersion("1.1031.2300.0")]
-[assembly: AssemblyFileVersion("1.1031.2300.0")]
+[assembly: AssemblyVersion("1.1102.0400.0")]
+[assembly: AssemblyFileVersion("1.1102.0400.0")]

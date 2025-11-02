@@ -44,7 +44,6 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
-    <!-- IMPORTANT: Added System.Management for WMI support -->
     <Reference Include="System.Management" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
@@ -66,6 +65,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="UpdateDialogWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -78,11 +81,18 @@
       <DependentUpon>MillenniumWarningWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="UpdateDialogWindow.xaml.cs">
+      <DependentUpon>UpdateDialogWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ThemeManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models.cs" />
     <Compile Include="SteamDebloatService.cs" />
     <Compile Include="UninstallService.cs" />
+    <Compile Include="UpdateService.cs" />
+    <Compile Include="Bootstrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -113,6 +123,14 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="steam.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="iNKORE.UI.WPF.Modern">
+      <Version>0.10.1</Version>
+    </PackageReference>
+    <PackageReference Include="System.Text.Json">
+      <Version>8.0.5</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

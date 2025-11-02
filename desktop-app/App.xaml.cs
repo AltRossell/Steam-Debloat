@@ -1,17 +1,35 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace SteamDebloat
 {
     public partial class App : Application
     {
-        protected override void OnStartup(StartupEventArgs e)
+        protected override async void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+
+            // Initialize theme system first
+            ThemeManager.Initialize();
 
             // Set up global exception handling
             AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
             DispatcherUnhandledException += OnDispatcherUnhandledException;
+
+            // Run bootstrapper
+            bool initSuccess = await Bootstrapper.InitializeAsync();
+            
+            if (!initSuccess)
+            {
+                Shutdown();
+                return;
+            }
+
+            // Log startup
+            Bootstrapper.LogStartup();
+
+            // Continue with normal startup - MainWindow will show after Millennium warning
         }
 
         private void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)

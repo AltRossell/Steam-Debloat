@@ -7,7 +7,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Input;
-using System.Windows.Media.Effects;
 
 namespace SteamDebloat
 {
@@ -15,6 +14,7 @@ namespace SteamDebloat
     {
         private SteamDebloatService _steamService;
         private UninstallService _uninstallService;
+        private UpdateService _updateService;
         private CancellationTokenSource _cancellationTokenSource;
         private bool _isProcessing = false;
         private string _customSteamPath = string.Empty;
@@ -27,10 +27,51 @@ namespace SteamDebloat
             this.Loaded += MainWindow_Loaded;
         }
 
+        private void ThemeToggleButton_Click(object sender, RoutedEventArgs e)
+        {
+            ThemeManager.ToggleTheme();
+            UpdateThemeToggleIcon();
+        }
+
+        private void UpdateThemeToggleIcon()
+        {
+            try
+            {
+                var button = ThemeToggleButton;
+                var template = button.Template;
+                
+                if (template != null)
+                {
+                    var moonIcon = template.FindName("MoonIcon", button) as System.Windows.Shapes.Path;
+                    var sunIcon = template.FindName("SunIcon", button) as System.Windows.Shapes.Path;
+                    
+                    if (moonIcon != null && sunIcon != null)
+                    {
+                        if (ThemeManager.CurrentTheme == AppTheme.Dark)
+                        {
+                            moonIcon.Visibility = Visibility.Visible;
+                            sunIcon.Visibility = Visibility.Collapsed;
+                        }
+                        else
+                        {
+                            moonIcon.Visibility = Visibility.Collapsed;
+                            sunIcon.Visibility = Visibility.Visible;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error updating theme icon: {ex.Message}");
+            }
+        }
+
         private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            // Show Millennium warning
-            await Task.Delay(300); // Small pause for window rendering
+            await Task.Delay(300);
+            
+            ThemeManager.ThemeChanged += OnThemeChanged;
+            UpdateThemeToggleIcon();
             
             var warningWindow = new MillenniumWarningWindow
             {
@@ -41,15 +82,27 @@ namespace SteamDebloat
             
             if (result != true)
             {
-                // User cancelled or closed without accepting
                 Application.Current.Shutdown();
                 return;
             }
             
-            // User accepted, continue with initialization
             InitializeBasicUI();
             InitializeModeButtons();
             await InitializeServicesAsync();
+        }
+
+        private void OnThemeChanged(AppTheme theme)
+        {
+            Dispatcher.InvokeAsync(() =>
+            {
+                UpdateThemeToggleIcon();
+                
+                var color = theme == AppTheme.Dark
+                    ? Color.FromRgb(28, 28, 30)
+                    : Color.FromRgb(242, 242, 247);
+                
+                this.Background = new SolidColorBrush(color);
+            });
         }
 
         private void InitializeModeButtons()
@@ -75,36 +128,35 @@ namespace SteamDebloat
 
                 var experimentalVersions = new[]
                 {
-                    new { Date = "29Apr2023", Wayback = "20230429120402", Mode = "Experimental_Normal2023April" },
-                    new { Date = "31May2023", Wayback = "20230531113527", Mode = "Experimental_Normal2023May" },
-                    new { Date = "11Jul2023", Wayback = "20230711162631", Mode = "Experimental_Normal2023July" },
-                    new { Date = "01Aug2023", Wayback = "20230801221717", Mode = "Experimental_Normal2023August" },
-                    new { Date = "30Sep2023", Wayback = "20230930002005", Mode = "Experimental_Normal2023September" },
-                    new { Date = "31Oct2023", Wayback = "20231031200154", Mode = "Experimental_Normal2023October" },
-                    new { Date = "30Nov2023", Wayback = "20231130095245", Mode = "Experimental_Normal2023November" },
-                    new { Date = "12Dec2023", Wayback = "20231212190321", Mode = "Experimental_Normal2023December" },
-                    new { Date = "13Jan2024", Wayback = "20240113112425", Mode = "Experimental_Normal2024January" },
-                    new { Date = "29Feb2024", Wayback = "20240229082406", Mode = "Experimental_Normal2024February" },
-                    new { Date = "08Mar2024", Wayback = "20240308104109", Mode = "Experimental_Normal2024March" },
-                    new { Date = "21May2024", Wayback = "20240521073345", Mode = "Experimental_Normal2024May" },
-                    new { Date = "21Jun2024", Wayback = "20240621083816", Mode = "Experimental_Normal2024June" },
-                    new { Date = "17Jul2024", Wayback = "20240717082107", Mode = "Experimental_Normal2024July" },
-                    new { Date = "18Sep2024", Wayback = "20240918104445", Mode = "Experimental_Normal2024September" },
-                    new { Date = "13Nov2024", Wayback = "20241113093224", Mode = "Experimental_Normal2024November" },
-                    new { Date = "04Dec2024", Wayback = "20241204072114", Mode = "Experimental_Normal2024December" },
-                    new { Date = "29Jan2025", Wayback = "20250129125321", Mode = "Experimental_Normal2025January" },
-                    new { Date = "11Mar2025", Wayback = "20250311093241", Mode = "Experimental_Normal2025March" },
-                    new { Date = "29Apr2025", Wayback = "20250429101123", Mode = "Experimental_Normal2025April" },
-                    new { Date = "21May2025", Wayback = "20250521085614", Mode = "Experimental_Normal2025May" },
-                    new { Date = "01Jul2025", Wayback = "20250701090002", Mode = "Experimental_Normal2025July" },
-                    new { Date = "10Sep2025", Wayback = "20250910074132", Mode = "Experimental_Normal2025September" },
-                    new { Date = "06Oct2025", Wayback = "20251006072943", Mode = "Experimental_Normal2025October" }
+                    new { Date = "29Apr2023", Wayback = "20230429120402" },
+                    new { Date = "31May2023", Wayback = "20230531113527" },
+                    new { Date = "11Jul2023", Wayback = "20230711162631" },
+                    new { Date = "01Aug2023", Wayback = "20230801221717" },
+                    new { Date = "30Sep2023", Wayback = "20230930002005" },
+                    new { Date = "31Oct2023", Wayback = "20231031200154" },
+                    new { Date = "30Nov2023", Wayback = "20231130095245" },
+                    new { Date = "12Dec2023", Wayback = "20231212190321" },
+                    new { Date = "13Jan2024", Wayback = "20240113112425" },
+                    new { Date = "29Feb2024", Wayback = "20240229082406" },
+                    new { Date = "08Mar2024", Wayback = "20240308104109" },
+                    new { Date = "21May2024", Wayback = "20240521073345" },
+                    new { Date = "21Jun2024", Wayback = "20240621083816" },
+                    new { Date = "17Jul2024", Wayback = "20240717082107" },
+                    new { Date = "18Sep2024", Wayback = "20240918104445" },
+                    new { Date = "13Nov2024", Wayback = "20241113093224" },
+                    new { Date = "04Dec2024", Wayback = "20241204072114" },
+                    new { Date = "29Jan2025", Wayback = "20250129125321" },
+                    new { Date = "11Mar2025", Wayback = "20250311093241" },
+                    new { Date = "29Apr2025", Wayback = "20250429101123" },
+                    new { Date = "21May2025", Wayback = "20250521085614" },
+                    new { Date = "01Jul2025", Wayback = "20250701090002" },
+                    new { Date = "10Sep2025", Wayback = "20250910074132" },
+                    new { Date = "06Oct2025", Wayback = "20251006072943" }
                 };
 
-                for (int i = 0; i < experimentalVersions.Length; i++)
+                foreach (var version in experimentalVersions)
                 {
-                    var version = experimentalVersions[i];
-                    var button = CreateExperimentalButton(version.Date, version.Mode, version.Wayback);
+                    var button = CreateExperimentalButton(version.Date, version.Wayback);
                     ExperimentalVersionsPanel.Children.Add(button);
                 }
             }
@@ -125,21 +177,17 @@ namespace SteamDebloat
                     Tag = tag,
                     Cursor = Cursors.Hand,
                     Background = new SolidColorBrush(Color.FromRgb(44, 44, 46)),
-                    BorderBrush = recommended ? 
-                        new SolidColorBrush(Color.FromRgb(10, 132, 255)) : 
-                        new SolidColorBrush(Color.FromRgb(72, 72, 74))
+                    BorderBrush = recommended ? new SolidColorBrush(Color.FromRgb(10, 132, 255)) : new SolidColorBrush(Color.FromRgb(72, 72, 74)),
+                    Margin = new Thickness(8, 8, 8, 8),
+                    BorderThickness = new Thickness(1.5)
                 };
-                
-                button.Margin = new Thickness(8, 8, 8, 8);
-                button.BorderThickness = new Thickness(1.5, 1.5, 1.5, 1.5);
 
                 var border = new Border
                 {
                     Background = Brushes.Transparent,
-                    Padding = new Thickness(14, 14, 14, 14)
+                    Padding = new Thickness(14),
+                    CornerRadius = new CornerRadius(8)
                 };
-                
-                border.CornerRadius = new CornerRadius(8);
 
                 var stackPanel = new StackPanel
                 {
@@ -152,12 +200,11 @@ namespace SteamDebloat
                     var badge = new Border
                     {
                         Background = new SolidColorBrush(Color.FromRgb(10, 132, 255)),
-                        HorizontalAlignment = HorizontalAlignment.Center
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        CornerRadius = new CornerRadius(3),
+                        Padding = new Thickness(7, 3, 7, 3),
+                        Margin = new Thickness(0, 0, 0, 7)
                     };
-                    
-                    badge.CornerRadius = new CornerRadius(3);
-                    badge.Padding = new Thickness(7, 3, 7, 3);
-                    badge.Margin = new Thickness(0, 0, 0, 7);
                     
                     var badgeText = new TextBlock
                     {
@@ -186,7 +233,6 @@ namespace SteamDebloat
                 border.Child = stackPanel;
                 button.Content = border;
 
-                // Hover effect
                 button.MouseEnter += (s, e) =>
                 {
                     button.Background = new SolidColorBrush(Color.FromRgb(58, 58, 60));
@@ -196,13 +242,10 @@ namespace SteamDebloat
                 button.MouseLeave += (s, e) =>
                 {
                     button.Background = new SolidColorBrush(Color.FromRgb(44, 44, 46));
-                    button.BorderBrush = recommended ? 
-                        new SolidColorBrush(Color.FromRgb(10, 132, 255)) : 
-                        new SolidColorBrush(Color.FromRgb(72, 72, 74));
+                    button.BorderBrush = recommended ? new SolidColorBrush(Color.FromRgb(10, 132, 255)) : new SolidColorBrush(Color.FromRgb(72, 72, 74));
                 };
 
                 button.Click += VersionButton_Click;
-
                 return button;
             }
             catch (Exception ex)
@@ -212,31 +255,28 @@ namespace SteamDebloat
             }
         }
 
-        private Button CreateExperimentalButton(string dateDisplay, string tag, string waybackDate)
+        private Button CreateExperimentalButton(string dateDisplay, string waybackDate)
         {
             try
             {
-                // Same design as stable buttons
                 var button = new Button
                 {
                     Width = 130,
-                    Height= 84,
-                    Tag = new { Mode = tag, Wayback = waybackDate },
+                    Height = 84,
+                    Tag = waybackDate,
                     Cursor = Cursors.Hand,
                     Background = new SolidColorBrush(Color.FromRgb(44, 44, 46)),
-                    BorderBrush = new SolidColorBrush(Color.FromRgb(72, 72, 74))
+                    BorderBrush = new SolidColorBrush(Color.FromRgb(72, 72, 74)),
+                    Margin = new Thickness(6),
+                    BorderThickness = new Thickness(1.5)
                 };
-                
-                button.Margin = new Thickness(6, 6, 6, 6);
-                button.BorderThickness = new Thickness(1.5, 1.5, 1.5, 1.5);
 
                 var border = new Border
                 {
                     Background = Brushes.Transparent,
-                    Padding = new Thickness(10, 10, 10, 10)
+                    Padding = new Thickness(10),
+                    CornerRadius = new CornerRadius(8)
                 };
-                
-                border.CornerRadius = new CornerRadius(8);
 
                 var stackPanel = new StackPanel
                 {
@@ -244,16 +284,14 @@ namespace SteamDebloat
                     HorizontalAlignment = HorizontalAlignment.Center
                 };
 
-                // BETA badge (like RECOMMENDED but orange)
                 var badge = new Border
                 {
                     Background = new SolidColorBrush(Color.FromRgb(255, 159, 10)),
-                    HorizontalAlignment = HorizontalAlignment.Center
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    CornerRadius = new CornerRadius(3),
+                    Padding = new Thickness(6, 3, 6, 3),
+                    Margin = new Thickness(0, 0, 0, 5)
                 };
-                
-                badge.CornerRadius = new CornerRadius(3);
-                badge.Padding = new Thickness(6, 3, 6, 3);
-                badge.Margin = new Thickness(0, 0, 0, 5);
                 
                 var badgeText = new TextBlock
                 {
@@ -281,7 +319,6 @@ namespace SteamDebloat
                 border.Child = stackPanel;
                 button.Content = border;
 
-                // Same hover as stable buttons
                 button.MouseEnter += (s, e) =>
                 {
                     button.Background = new SolidColorBrush(Color.FromRgb(58, 58, 60));
@@ -295,7 +332,6 @@ namespace SteamDebloat
                 };
 
                 button.Click += ExperimentalVersionButton_Click;
-
                 return button;
             }
             catch (Exception ex)
@@ -306,11 +342,6 @@ namespace SteamDebloat
         }
 
         private void ModeSelectionButton_Click(object sender, RoutedEventArgs e)
-        {
-            ShowModeSelectionOverlay();
-        }
-
-        private void ShowModeSelectionOverlay()
         {
             ModeSelectionOverlay.Visibility = Visibility.Visible;
         }
@@ -348,18 +379,14 @@ namespace SteamDebloat
 
         private void ExperimentalVersionButton_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is Button button && button.Tag != null)
+            if (sender is Button button && button.Tag is string wayback)
             {
-                dynamic tagData = button.Tag;
-                string mode = tagData.Mode;
-                string wayback = tagData.Wayback;
-                
                 _selectedMode = $"Experimental_{wayback}";
                 
                 var border = button.Content as Border;
                 var stackPanel = border?.Child as StackPanel;
                 var dateText = stackPanel?.Children[1] as TextBlock;
-                string displayDate = dateText?.Text ?? mode;
+                string displayDate = dateText?.Text ?? wayback;
                 
                 _selectedModeDisplay = $"Experimental {displayDate}";
                 ModeSelectionButton.Content = _selectedModeDisplay;
@@ -394,6 +421,9 @@ namespace SteamDebloat
 
                     _uninstallService = new UninstallService();
                     _uninstallService.ProgressChanged += OnProgressChanged;
+
+                    _updateService = new UpdateService();
+                    _updateService.ProgressChanged += OnProgressChanged;
                 });
 
                 await LoadSystemInfoSafe();
@@ -412,7 +442,6 @@ namespace SteamDebloat
                 OSArchText.Text = "Loading...";
                 SteamPathText.Text = "Searching...";
                 SteamConfigText.Text = "Searching...";
-
                 SteamDirectoryTextBox.Text = "";
             }
             catch { }
@@ -430,13 +459,10 @@ namespace SteamDebloat
         {
             try
             {
-                bool isAdmin = false;
-                string statusMessage = "";
-
                 var identity = System.Security.Principal.WindowsIdentity.GetCurrent();
                 var principal = new System.Security.Principal.WindowsPrincipal(identity);
-                isAdmin = principal.IsInRole(System.Security.Principal.WindowsBuiltInRole.Administrator);
-                statusMessage = isAdmin ? "Administrator" : "Standard user (will request elevation)";
+                bool isAdmin = principal.IsInRole(System.Security.Principal.WindowsBuiltInRole.Administrator);
+                string statusMessage = isAdmin ? "Administrator" : "Standard user (will request elevation)";
 
                 UpdateAdminStatusElements(isAdmin, statusMessage);
             }
@@ -467,10 +493,7 @@ namespace SteamDebloat
                 {
                     await Dispatcher.InvokeAsync(() =>
                     {
-                        UpdateSystemInfoElements("Service not available",
-                                                 "Loading...",
-                                                 "Loading...",
-                                                 "Service not available");
+                        UpdateSystemInfoElements("Service not available", "Loading...", "Loading...", "Service not available");
                     });
                     return;
                 }
@@ -479,14 +502,8 @@ namespace SteamDebloat
 
                 await Dispatcher.InvokeAsync(() =>
                 {
-                    string configStatus = systemInfo.ConfigExists ?
-                    "Optimization config found" : "No optimization config";
-
-                    UpdateSystemInfoElements(systemInfo.SteamPath,
-                                             systemInfo.OSVersion,
-                                             systemInfo.Architecture,
-                                             configStatus);
-
+                    string configStatus = systemInfo.ConfigExists ? "Optimization config found" : "No optimization config";
+                    UpdateSystemInfoElements(systemInfo.SteamPath, systemInfo.OSVersion, systemInfo.Architecture, configStatus);
                     UpdateSteamPathDisplay(systemInfo);
                     UpdateModeSpecificInfo();
                 });
@@ -495,10 +512,7 @@ namespace SteamDebloat
             {
                 await Dispatcher.InvokeAsync(() =>
                 {
-                    UpdateSystemInfoElements("Error loading system info",
-                                             "Error loading",
-                                             "Error loading",
-                                             "Error loading config status");
+                    UpdateSystemInfoElements("Error loading system info", "Error loading", "Error loading", "Error loading config status");
                 });
             }
         }
@@ -568,8 +582,7 @@ namespace SteamDebloat
                             try
                             {
                                 var configContent = File.ReadAllText(Path.Combine(selectedPath, "steam.cfg"));
-                                bool isOptimizationConfig = configContent.Contains("BootStrapperInhibitAll=enable") ||
-                                configContent.Contains("Mode:");
+                                bool isOptimizationConfig = configContent.Contains("BootStrapperInhibitAll=enable") || configContent.Contains("Mode:");
                                 configStatus = isOptimizationConfig ? "Optimization config found" : "Standard config found";
                             }
                             catch
@@ -593,8 +606,7 @@ namespace SteamDebloat
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error browsing for Steam directory: {ex.Message}", "Error",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error browsing for Steam directory: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -640,10 +652,103 @@ namespace SteamDebloat
             try
             {
                 UpdateSteam.IsEnabled = true;
-                UpdateSteam.Content = "Update Steam automatically";
+                UpdateSteam.Content = "Downgrade Steam to selected version";
                 UpdateSteam.IsChecked = true;
             }
             catch { }
+        }
+
+        private async void CheckUpdateButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_isProcessing) return;
+
+            try
+            {
+                _isProcessing = true;
+                CheckUpdateButton.IsEnabled = false;
+                
+                var checkingDialog = new UpdateDialogWindow { Owner = this };
+                checkingDialog.SetContent(
+                    UpdateDialogWindow.DialogType.Checking,
+                    "Checking for Updates",
+                    "Connecting to GitHub...",
+                    "Cancel",
+                    true);
+                
+                var dialogTask = Task.Run(() =>
+                {
+                    Dispatcher.Invoke(() => checkingDialog.ShowDialog());
+                });
+
+                var result = await _updateService.CheckForUpdatesAsync();
+
+                await Dispatcher.InvokeAsync(() =>
+                {
+                    checkingDialog.Close();
+                    
+                    var resultDialog = new UpdateDialogWindow { Owner = this };
+
+                    if (!result.Success)
+                    {
+                        resultDialog.SetContent(
+                            UpdateDialogWindow.DialogType.Error,
+                            "Update Check Failed",
+                            result.ErrorMessage,
+                            "OK",
+                            false);
+                        resultDialog.ShowDialog();
+                        return;
+                    }
+
+                    if (result.UpdateAvailable)
+                    {
+                        var message = $"Current version: {result.CurrentVersion}\n" +
+                                    $"Latest version: {result.LatestVersion}\n" +
+                                    $"Released: {result.PublishedDate:MMMM dd, yyyy}";
+
+                        resultDialog.SetContent(
+                            UpdateDialogWindow.DialogType.UpdateAvailable,
+                            "Update Available",
+                            message,
+                            "Download",
+                            true);
+
+                        if (resultDialog.ShowDialog() == true && resultDialog.DownloadRequested)
+                        {
+                            _updateService.OpenReleaseUrl(result.ReleaseUrl);
+                        }
+                    }
+                    else
+                    {
+                        resultDialog.SetContent(
+                            UpdateDialogWindow.DialogType.NoUpdate,
+                            "No Updates Available",
+                            $"You're using the latest version!\n\nCurrent version: {result.CurrentVersion}",
+                            "OK",
+                            false);
+                        resultDialog.ShowDialog();
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                await Dispatcher.InvokeAsync(() =>
+                {
+                    var errorDialog = new UpdateDialogWindow { Owner = this };
+                    errorDialog.SetContent(
+                        UpdateDialogWindow.DialogType.Error,
+                        "Error",
+                        $"An error occurred:\n\n{ex.Message}",
+                        "OK",
+                        false);
+                    errorDialog.ShowDialog();
+                });
+            }
+            finally
+            {
+                _isProcessing = false;
+                CheckUpdateButton.IsEnabled = true;
+            }
         }
 
         private async void StartButton_Click(object sender, RoutedEventArgs e)
@@ -685,8 +790,7 @@ namespace SteamDebloat
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error starting optimization: {ex.Message}", "Error",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error starting optimization: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -696,7 +800,6 @@ namespace SteamDebloat
 
             try
             {
-                // Show modern confirmation dialog
                 bool confirmed = await ShowConfirmationOverlay(
                     "Confirm Restore",
                     "Are you sure you want to restore Steam to its original state?\n\n" +
@@ -726,8 +829,7 @@ namespace SteamDebloat
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error starting restoration: {ex.Message}", "Error",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error starting restoration: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -743,10 +845,10 @@ namespace SteamDebloat
                     ShowProgressOverlay(true);
                     StartButton.IsEnabled = false;
                     UninstallButton.IsEnabled = false;
+                    CheckUpdateButton.IsEnabled = false;
                 });
 
                 var config = GetOptimizationConfig(steamPath);
-
                 var result = await _steamService.OptimizeSteamAsync(config, _cancellationTokenSource.Token);
 
                 await Dispatcher.InvokeAsync(() =>
@@ -757,8 +859,7 @@ namespace SteamDebloat
                     }
                     else
                     {
-                        MessageBox.Show($"Error during optimization:\n{result.ErrorMessage}",
-                            "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show($"Error during optimization:\n{result.ErrorMessage}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 });
             }
@@ -766,16 +867,14 @@ namespace SteamDebloat
             {
                 await Dispatcher.InvokeAsync(() =>
                 {
-                    MessageBox.Show("Operation cancelled by user.", "Cancelled",
-                        MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Operation cancelled by user.", "Cancelled", MessageBoxButton.OK, MessageBoxImage.Information);
                 });
             }
             catch (Exception ex)
             {
                 await Dispatcher.InvokeAsync(() =>
                 {
-                    MessageBox.Show($"Unexpected error: {ex.Message}", "Error",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"Unexpected error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 });
             }
             finally
@@ -786,11 +885,11 @@ namespace SteamDebloat
                     ShowProgressOverlay(false);
                     StartButton.IsEnabled = true;
                     UninstallButton.IsEnabled = true;
+                    CheckUpdateButton.IsEnabled = true;
                 });
 
                 _cancellationTokenSource?.Dispose();
                 _cancellationTokenSource = null;
-
                 await LoadSystemInfoSafe();
             }
         }
@@ -807,6 +906,7 @@ namespace SteamDebloat
                     ShowProgressOverlay(true);
                     StartButton.IsEnabled = false;
                     UninstallButton.IsEnabled = false;
+                    CheckUpdateButton.IsEnabled = false;
                 });
 
                 var result = await _uninstallService.UninstallAsync(_cancellationTokenSource.Token);
@@ -819,8 +919,7 @@ namespace SteamDebloat
                     }
                     else
                     {
-                        MessageBox.Show($"Error during restoration:\n{result.ErrorMessage}",
-                            "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show($"Error during restoration:\n{result.ErrorMessage}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 });
             }
@@ -828,16 +927,14 @@ namespace SteamDebloat
             {
                 await Dispatcher.InvokeAsync(() =>
                 {
-                    MessageBox.Show("Operation cancelled by user.", "Cancelled",
-                        MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Operation cancelled by user.", "Cancelled", MessageBoxButton.OK, MessageBoxImage.Information);
                 });
             }
             catch (Exception ex)
             {
                 await Dispatcher.InvokeAsync(() =>
                 {
-                    MessageBox.Show($"Unexpected error: {ex.Message}", "Error",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"Unexpected error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 });
             }
             finally
@@ -848,11 +945,11 @@ namespace SteamDebloat
                     ShowProgressOverlay(false);
                     StartButton.IsEnabled = true;
                     UninstallButton.IsEnabled = true;
+                    CheckUpdateButton.IsEnabled = true;
                 });
 
                 _cancellationTokenSource?.Dispose();
                 _cancellationTokenSource = null;
-
                 await LoadSystemInfoSafe();
             }
         }
@@ -973,8 +1070,7 @@ namespace SteamDebloat
 
                 if (string.IsNullOrEmpty(fileName))
                 {
-                    MessageBox.Show("Could not determine application path for restart.", "Error",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Could not determine application path for restart.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
 
@@ -990,8 +1086,7 @@ namespace SteamDebloat
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Could not restart with elevated privileges: {ex.Message}",
-                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Could not restart with elevated privileges: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -999,6 +1094,8 @@ namespace SteamDebloat
         {
             try
             {
+                ThemeManager.ThemeChanged -= OnThemeChanged;
+                
                 _cancellationTokenSource?.Cancel();
                 _cancellationTokenSource?.Dispose();
                 _cancellationTokenSource = null;
@@ -1016,6 +1113,13 @@ namespace SteamDebloat
                     _uninstallService.ProgressChanged -= OnProgressChanged;
                     _uninstallService.Dispose();
                     _uninstallService = null;
+                }
+
+                if (_updateService != null)
+                {
+                    _updateService.ProgressChanged -= OnProgressChanged;
+                    _updateService.Dispose();
+                    _updateService = null;
                 }
             }
             catch { }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -23,10 +23,9 @@ namespace SteamDebloat
         {
             _defaultSteamPath = @"C:\Program Files (x86)\Steam";
 
-            // Launch parameters by year
+            // Launch parameters by mode
             _steamModes = new Dictionary<string, string>
             {
-                // Stable versions
                 ["normal2025october"] = "-no-dwrite -no-cef-sandbox -nooverlay -nobigpicture -nofriendsui -noshaders -novid -noverifyfiles -nointro -skipstreamingdrivers -norepairfiles -nohltv -nofasthtml -nocrashmonitor -no-shared-textures -disablehighdpi -cef-single-process -cef-in-process-gpu -single_core -cef-disable-d3d11 -cef-disable-sandbox -disable-winh264 -vrdisable -cef-disable-breakpad -cef-disable-gpu -cef-disable-hang-timeouts -cef-disable-seccomp-sandbox -cef-disable-extensions -cef-disable-remote-fonts -cef-enable-media-stream -cef-disable-accelerated-video-decode steam://open/library",
                 ["normal2023june"] = "-no-dwrite -no-cef-sandbox -nooverlay -nobigpicture -nofriendsui -noshaders -novid -noverifyfiles -nointro -skipstreamingdrivers -norepairfiles -nohltv -nofasthtml -nocrashmonitor -no-shared-textures -disablehighdpi -cef-single-process -cef-in-process-gpu -single_core -cef-disable-d3d11 -cef-disable-sandbox -disable-winh264 -vrdisable -cef-disable-breakpad steam://open/library",
                 ["normal2022dec"] = "-no-dwrite -no-cef-sandbox -nooverlay -nobigpicture -nofriendsui -noshaders -novid -noverifyfiles -nointro -skipstreamingdrivers -norepairfiles -nohltv -nofasthtml -nocrashmonitor -no-shared-textures -disablehighdpi -cef-single-process -cef-in-process-gpu -single_core -cef-disable-d3d11 -cef-disable-sandbox -disable-winh264 -vrdisable -cef-disable-breakpad -cef-disable-gpu -cef-disable-hang-timeouts -cef-disable-seccomp-sandbox -cef-disable-extensions -cef-disable-remote-fonts -cef-enable-media-stream -cef-disable-accelerated-video-decode steam://open/library",
@@ -220,8 +219,7 @@ namespace SteamDebloat
 
                 OnProgressChanged($"Steam found at: {steamPath}");
 
-                // Use WMI instead of Process.Kill() - More AV-friendly
-                await StopSteamProcessesUsingWMIAsync();
+                await StopSteamProcessesAsync();
                 OnProgressChanged("Steam processes stopped");
 
                 var result = await ProcessSingleVersionMode(config, cancellationToken, steamPath);
@@ -245,10 +243,21 @@ namespace SteamDebloat
             {
                 OnProgressChanged("Verifying Steam installation...");
 
-                if (config.UpdateSteam)
+                bool isOctober2025 = config.Mode.Equals("Normal2025October", StringComparison.OrdinalIgnoreCase);
+                
+                // ONLY downgrade if UpdateSteam is checked AND it's NOT October 2025
+                if (config.UpdateSteam && !isOctober2025)
                 {
-                    OnProgressChanged($"Updating Steam for {config.Mode} mode...");
+                    OnProgressChanged($"Downgrading Steam to {config.Mode}...");
                     await UpdateSteamAsync(steamPath, config.Mode, cancellationToken);
+                }
+                else if (isOctober2025)
+                {
+                    OnProgressChanged("Using current Steam version (October 2025 - Latest)");
+                }
+                else
+                {
+                    OnProgressChanged("Skipping Steam downgrade (using current version)");
                 }
 
                 OnProgressChanged("Applying optimization configuration...");
@@ -269,61 +278,25 @@ namespace SteamDebloat
             }
         }
 
-        // Use WMI to terminate processes (more legitimate in AV eyes)
-        private Task StopSteamProcessesUsingWMIAsync()
+        private Task StopSteamProcessesAsync()
         {
             return Task.Run(() =>
             {
                 var processNames = new[] { "steam", "steamwebhelper" };
-                int stoppedCount = 0;
-
                 foreach (var name in processNames)
                 {
-                    try
+                    var processes = Process.GetProcessesByName(name);
+                    foreach (var process in processes)
                     {
-                        string queryString = $"SELECT * FROM Win32_Process WHERE Name = '{name}.exe'";
-                        using (var searcher = new ManagementObjectSearcher(queryString))
-                        using (var results = searcher.Get())
-                        {
-                            foreach (ManagementObject process in results)
-                            {
-                                try
-                                {
-                                    process.InvokeMethod("Terminate", null);
-                                    stoppedCount++;
-                                    process.Dispose();
-                                }
-                                catch { }
-                            }
-                        }
-                    }
-                    catch
-                    {
-                        // Fallback to standard method if WMI fails
                         try
                         {
-                            var processes = Process.GetProcessesByName(name);
-                            foreach (var process in processes)
-                            {
-                                try
-                                {
-                                    process.CloseMainWindow();
-                                    if (!process.WaitForExit(3000))
-                                    {
-                                        process.Kill();
-                                    }
-                                    process.Dispose();
-                                    stoppedCount++;
-                                }
-                                catch { }
-                            }
+                            process.Kill();
+                            process.WaitForExit(5000);
+                            process.Dispose();
                         }
                         catch { }
                     }
                 }
-
-                if (stoppedCount > 0)
-                    OnProgressChanged($"Stopped {stoppedCount} Steam process(es)");
             });
         }
 
@@ -342,24 +315,28 @@ namespace SteamDebloat
                 var modeKey = mode.ToLower();
                 string arguments;
 
-                // Check if it's an experimental version
+                // Check if it's an experimental version first
                 if (mode.StartsWith("Experimental_"))
                 {
                     string waybackDate = mode.Replace("Experimental_", "");
                     arguments = $"-forcesteamupdate -forcepackagedownload -overridepackageurl http://web.archive.org/web/{waybackDate}if_/media.steampowered.com/client -exitsteam";
-                    OnProgressChanged($"Updating to experimental version {waybackDate}...");
+                    OnProgressChanged($"Downgrading to experimental version {waybackDate}...");
                 }
                 else if (modeKey == "normal2023june")
                 {
                     arguments = "-forcesteamupdate -forcepackagedownload -overridepackageurl http://web.archive.org/web/20230615094110if_/media.steampowered.com/client -exitsteam";
+                    OnProgressChanged("Downgrading to Normal 2023 June...");
                 }
                 else if (modeKey == "normal2022dec" || modeKey == "lite2022dec")
                 {
                     arguments = "-forcesteamupdate -forcepackagedownload -overridepackageurl https://archive.org/download/dec2022steam -exitsteam";
+                    OnProgressChanged($"Downgrading to {mode}...");
                 }
                 else
                 {
-                    arguments = "-forcesteamupdate -forcepackagedownload -exitsteam";
+                    // Unknown mode - no downgrade
+                    OnProgressChanged($"Warning: Unknown mode {mode}, skipping downgrade");
+                    return;
                 }
 
                 var startInfo = new ProcessStartInfo
@@ -371,7 +348,7 @@ namespace SteamDebloat
                     WorkingDirectory = steamPath
                 };
 
-                OnProgressChanged($"Starting Steam update for {mode} mode...");
+                OnProgressChanged($"Starting Steam downgrade process...");
 
                 using (var process = Process.Start(startInfo))
                 {
@@ -392,12 +369,12 @@ namespace SteamDebloat
 
                     if (steamProcesses.Length == 0)
                     {
-                        OnProgressChanged($"Steam update completed for {mode}");
+                        OnProgressChanged($"Steam downgrade to {mode} completed");
                         updateInProgress = false;
                     }
                     else
                     {
-                        OnProgressChanged($"Steam updating for {mode} mode...");
+                        OnProgressChanged($"Downgrading Steam to {mode}...");
                         foreach (var proc in steamProcesses)
                         {
                             proc.Dispose();
@@ -407,39 +384,36 @@ namespace SteamDebloat
 
                 if (updateInProgress)
                 {
-                    OnProgressChanged("Finalizing update...");
-                    await StopSteamProcessesUsingWMIAsync();
+                    OnProgressChanged("Finalizing downgrade...");
+                    await StopSteamProcessesAsync();
                     await Task.Delay(2000, cancellationToken);
                 }
             }
             catch (Exception ex)
             {
-                OnProgressChanged($"Error during update: {ex.Message}");
+                OnProgressChanged($"Error during downgrade: {ex.Message}");
             }
         }
 
-        // Create batch file on desktop with simple name
         private Task CreateConfigurationFilesAsync(string steamPath, OptimizationConfig config, CancellationToken cancellationToken)
         {
             return Task.Run(() =>
             {
-                // Create steam.cfg with minimal metadata
                 var configPath = Path.Combine(steamPath, "steam.cfg");
                 var configContent = $@"BootStrapperInhibitAll=enable
 BootStrapperForceSelfUpdate=disable
 :: Mode: {config.Mode}
-:: Version: 1.1031.2300";
+:: Version: 1.1102.0400";
 
                 File.WriteAllText(configPath, configContent);
 
                 string steamArgs = "";
-                string year = "";
 
                 // Determine parameters according to mode
                 if (config.Mode.StartsWith("Experimental_"))
                 {
                     string waybackDate = config.Mode.Replace("Experimental_", "");
-                    year = waybackDate.Substring(0, 4);
+                    string year = waybackDate.Substring(0, 4);
                     steamArgs = _steamModes.ContainsKey(year) ? _steamModes[year] : _steamModes["2023"];
                 }
                 else
@@ -448,14 +422,12 @@ BootStrapperForceSelfUpdate=disable
                     steamArgs = _steamModes.ContainsKey(modeKey) ? _steamModes[modeKey] : "";
                 }
 
-                // Simple batch script without verbose comments
                 string scriptContent = $@"@echo off
 cd /d ""{steamPath}""
 start Steam.exe {steamArgs}
 :: Mode: {config.Mode}
-:: Version: 1.1031.2300";
+:: Version: 1.1102.0400";
 
-                // Save to desktop with simple name
                 string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
                 string desktopScriptPath = Path.Combine(desktopPath, "Steam.bat");
 

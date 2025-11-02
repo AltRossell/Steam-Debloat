@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- app.manifest - Windows application manifest -->
 <assembly manifestVersion="1.0" xmlns="urn:schemas-microsoft-com:asm.v1">
-  <assemblyIdentity version="1.1031.2300.0" name="SteamDebloat.app"/>
+  <assemblyIdentity version="1.1102.0400.0" name="SteamDebloat.app"/>
 
   <trustInfo xmlns="urn:schemas-microsoft-com:asm.v2">
     <security>
