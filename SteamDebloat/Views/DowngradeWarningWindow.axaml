@@ -1,0 +1,118 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:fa="using:FluentAvalonia.UI.Controls"
+        mc:Ignorable="d" d:DesignWidth="550" d:DesignHeight="450"
+        x:Class="SteamDebloat.DowngradeWarningWindow"
+        Title="Important Information"
+        Width="550" Height="450"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        Background="#1E1E1E"
+        Icon="/Assets/Icons/icon.ico">
+
+    <Grid RowDefinitions="*,Auto">
+        <!-- Content -->
+        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" Margin="20">
+            <StackPanel>
+                <TextBlock Text="Steam Downgrade Status" 
+                          FontSize="20" 
+                          FontWeight="Bold" 
+                          HorizontalAlignment="Center" 
+                          Margin="0,0,0,20"/>
+
+                <TextBlock TextWrapping="Wrap" 
+                          Margin="0,0,0,15"
+                          LineHeight="22"
+                          Text="Steam downgrade functionality is currently unavailable."/>
+
+                <Border Background="#252526"
+                       BorderBrush="#3F3F46"
+                       BorderThickness="1"
+                       CornerRadius="6"
+                       Padding="15"
+                       Margin="0,0,0,15">
+                    <StackPanel>
+                        <TextBlock Margin="0,5,0,5" TextWrapping="Wrap" FontWeight="SemiBold" Text="• Valve has implemented new protection mechanisms"/>
+                        <TextBlock Margin="0,5,0,5" TextWrapping="Wrap" Text="• We are actively working on a solution"/>
+                        <TextBlock Margin="0,5,0,5" TextWrapping="Wrap" Text="• This feature will be restored in a future update"/>
+                    </StackPanel>
+                </Border>
+
+                <TextBlock TextWrapping="Wrap" 
+                          Margin="0,0,0,15"
+                          LineHeight="22"
+                          FontWeight="SemiBold"
+                          Text="What still works:"/>
+
+                <Border Background="#252526"
+                       BorderBrush="#10B981"
+                       BorderThickness="2"
+                       CornerRadius="6"
+                       Padding="15"
+                       Margin="0,0,0,15">
+                    <StackPanel>
+                        <TextBlock Margin="0,5,0,5" TextWrapping="Wrap" Foreground="#10B981" Text="✓ Steam configuration optimization"/>
+                        <TextBlock Margin="0,5,0,5" TextWrapping="Wrap" Foreground="#10B981" Text="✓ Launch parameter configuration"/>
+                        <TextBlock Margin="0,5,0,5" TextWrapping="Wrap" Foreground="#10B981" Text="✓ Desktop shortcut creation"/>
+                        <TextBlock Margin="0,5,0,5" TextWrapping="Wrap" Foreground="#10B981" Text="✓ Startup management"/>
+                        <TextBlock Margin="0,5,0,5" TextWrapping="Wrap" Foreground="#10B981" Text="✓ Download cache cleaning"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Background="#252526"
+                       BorderBrush="#EAB308"
+                       BorderThickness="2"
+                       CornerRadius="6"
+                       Padding="15"
+                       Margin="0,0,0,15">
+                    <StackPanel>
+                        <TextBlock FontWeight="Bold" Margin="0,0,0,10" Foreground="#EAB308" Text="⚠ Important Note"/>
+                        <TextBlock TextWrapping="Wrap" LineHeight="20" Text="The 'Downgrade Steam' checkbox will be automatically disabled. All other optimization features remain fully functional and will significantly improve Steam's performance."/>
+                    </StackPanel>
+                </Border>
+
+                <TextBlock TextWrapping="Wrap" 
+                          Margin="0,5,0,10"
+                          LineHeight="20"
+                          FontSize="12"
+                          Foreground="#A0A0A0"
+                          Text="Follow updates on our GitHub repository for news about downgrade functionality restoration."/>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Navigation Buttons -->
+        <Border Grid.Row="1" 
+               BorderBrush="#3F3F46" 
+               BorderThickness="0,1,0,0" 
+               Background="#252526"
+               Padding="20">
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <Button x:Name="BackButton"
+                       Grid.Column="0"
+                       Content="Back" 
+                       MinWidth="100"
+                       Height="40"
+                       Click="BackButton_Click"
+                       IsVisible="False"/>
+
+                <TextBlock Grid.Column="1"
+                          x:Name="PageIndicator"
+                          Text="1 / 1"
+                          VerticalAlignment="Center"
+                          HorizontalAlignment="Center"
+                          Foreground="#A0A0A0"
+                          FontSize="12"/>
+
+                <Button x:Name="ContinueButton"
+                       Grid.Column="2"
+                       Content="I Understand" 
+                       Classes="accent"
+                       MinWidth="120"
+                       Height="40"
+                       Click="ContinueButton_Click"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

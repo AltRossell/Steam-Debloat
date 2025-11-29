@@ -1,0 +1,118 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:fa="using:FluentAvalonia.UI.Controls"
+        mc:Ignorable="d" d:DesignWidth="550" d:DesignHeight="400"
+        x:Class="SteamDebloat.MillenniumWarningWindow"
+        Title="Important Notice"
+        Width="550" Height="400"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        Background="#1E1E1E"
+        Icon="/Assets/Icons/icon.ico">
+
+    <Grid RowDefinitions="*,Auto">
+        <!-- Content -->
+        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" Margin="20">
+            <StackPanel>
+                <TextBlock Text="Millennium Compatibility Warning" 
+                          FontSize="20" 
+                          FontWeight="Bold" 
+                          HorizontalAlignment="Center" 
+                          Margin="0,0,0,20"/>
+
+                <TextBlock TextWrapping="Wrap" 
+                          Margin="0,0,0,15"
+                          LineHeight="22"
+                          Text="This tool is NOT compatible with Millennium (Steam skin manager)."/>
+
+                <TextBlock TextWrapping="Wrap" 
+                          Margin="0,0,0,15"
+                          LineHeight="22"
+                          Foreground="#A0A0A0"
+                          Text="If you have Millennium installed:"/>
+
+                <Border Background="#252526"
+                       BorderBrush="#3F3F46"
+                       BorderThickness="1"
+                       CornerRadius="6"
+                       Padding="15"
+                       Margin="0,0,0,15">
+                    <StackPanel>
+                        <TextBlock Text="• You must uninstall Millennium first" 
+                                  Margin="0,5,0,5"
+                                  TextWrapping="Wrap"/>
+                        <TextBlock Text="• Using both tools together will cause conflicts" 
+                                  Margin="0,5,0,5"
+                                  TextWrapping="Wrap"/>
+                        <TextBlock Text="• This may result in Steam malfunctions" 
+                                  Margin="0,5,0,5"
+                                  TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
+
+                <TextBlock TextWrapping="Wrap" 
+                          Margin="0,0,0,10"
+                          LineHeight="22"
+                          FontWeight="SemiBold"
+                          Text="By clicking 'Next', you confirm that:"/>
+
+                <Border Background="#252526"
+                       BorderBrush="#10B981"
+                       BorderThickness="2"
+                       CornerRadius="6"
+                       Padding="15"
+                       Margin="0,0,0,15">
+                    <StackPanel>
+                        <TextBlock Text="✓ You do NOT have Millennium installed" 
+                                  Margin="0,5,0,5"
+                                  TextWrapping="Wrap"
+                                  Foreground="#10B981"/>
+                        <TextBlock Text="✓ You understand the compatibility issues" 
+                                  Margin="0,5,0,5"
+                                  TextWrapping="Wrap"
+                                  Foreground="#10B981"/>
+                        <TextBlock Text="✓ You accept responsibility for any issues" 
+                                  Margin="0,5,0,5"
+                                  TextWrapping="Wrap"
+                                  Foreground="#10B981"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Buttons -->
+        <Border Grid.Row="1" 
+               BorderBrush="#3F3F46" 
+               BorderThickness="0,1,0,0" 
+               Background="#252526"
+               Padding="20">
+            <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Grid.Column="0"
+                          x:Name="PageIndicator"
+                          Text="1 / 2"
+                          VerticalAlignment="Center"
+                          HorizontalAlignment="Left"
+                          Foreground="#A0A0A0"
+                          FontSize="12"
+                          Margin="10,0,0,0"/>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button x:Name="CancelButton"
+                           Content="Cancel" 
+                           MinWidth="120"
+                           Height="40"
+                           Margin="0,0,10,0"
+                           Click="CancelButton_Click"/>
+                    <Button x:Name="AcceptButton"
+                           Content="Next →" 
+                           Classes="accent"
+                           MinWidth="180"
+                           Height="40"
+                           Click="AcceptButton_Click"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

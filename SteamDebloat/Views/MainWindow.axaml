@@ -1,0 +1,354 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:fa="using:FluentAvalonia.UI.Controls"
+        mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="650"
+        x:Class="SteamDebloat.MainWindow"
+        Title="Steam Debloat"
+        Width="1000" Height="650"
+        MinWidth="1000" MinHeight="650"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource ApplicationPageBackgroundThemeBrush}"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="PreferSystemChrome"
+        ExtendClientAreaTitleBarHeightHint="-1"
+        Icon="/Assets/Icons/icon.ico">
+
+    <Grid RowDefinitions="Auto,*">
+        <!-- Fixed System Information Bar -->
+        <Border Grid.Row="0"
+                Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                CornerRadius="6"
+                Padding="12,8"
+                Margin="20,40,20,10">
+            <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,*,Auto,Auto,Auto">
+                
+                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                    <!-- OS Version Icon -->
+                    <Path Data="M208,136H128a8,8,0,0,0-8,8v57.45a8,8,0,0,0,6.57,7.88l80,14.54A7.61,7.61,0,0,0,208,224a8,8,0,0,0,8-8V144A8,8,0,0,0,208,136Zm-8,70.41-64-11.63V152h64ZM96,136H32a8,8,0,0,0-8,8v40a8,8,0,0,0,6.57,7.87l64,11.64a8.54,8.54,0,0,0,1.43.13,8,8,0,0,0,8-8V144A8,8,0,0,0,96,136Zm-8,50.05-48-8.73V152H88ZM213.13,33.86a8,8,0,0,0-6.56-1.73l-80,14.55A8,8,0,0,0,120,54.55V112a8,8,0,0,0,8,8h80a8,8,0,0,0,8-8V40A8,8,0,0,0,213.13,33.86ZM200,104H136V61.22l64-11.63ZM101.13,54.22a8,8,0,0,0-6.56-1.73l-64,11.64A8,8,0,0,0,24,72v40a8,8,0,0,0,8,8H96a8,8,0,0,0,8-8V60.36A8,8,0,0,0,101.13,54.22ZM88,104H40V78.68L88,70Z" 
+                          Fill="{DynamicResource TextFillColorPrimaryBrush}" 
+                          Width="14" Height="14" 
+                          Stretch="Uniform" 
+                          VerticalAlignment="Center" 
+                          Margin="0,0,6,0"/>
+                    <TextBlock x:Name="OSVersionText" Text="Loading..." VerticalAlignment="Center" FontSize="12"/>
+                </StackPanel>
+
+                <Rectangle Grid.Column="1" Width="1" Fill="{DynamicResource SurfaceStrokeColorDefaultBrush}" Margin="5,0"/>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                    <!-- Architecture Icon -->
+                    <Path Data="M216,72a8,8,0,0,1-8,8H176a8,8,0,0,1,0-16h32A8,8,0,0,1,216,72Zm-8,24H176a8,8,0,0,0,0,16h32a8,8,0,0,0,0-16Zm40-48V208a16,16,0,0,1-16,16H152a16,16,0,0,1-16-16V192H96v16h16a8,8,0,0,1,0,16H64a8,8,0,0,1,0-16H80V192H32A24,24,0,0,1,8,168V96A24,24,0,0,1,32,72H136V48a16,16,0,0,1,16-16h80A16,16,0,0,1,248,48ZM136,176V88H32a8,8,0,0,0-8,8v72a8,8,0,0,0,8,8Zm96,32V48H152V208h80Zm-40-40a12,12,0,1,0,12,12A12,12,0,0,0,192,168Z" 
+                          Fill="{DynamicResource TextFillColorPrimaryBrush}" 
+                          Width="14" Height="14" 
+                          Stretch="Uniform" 
+                          VerticalAlignment="Center" 
+                          Margin="0,0,6,0"/>
+                    <TextBlock x:Name="OSArchText" Text="Loading..." VerticalAlignment="Center" FontSize="12"/>
+                </StackPanel>
+
+                <Rectangle Grid.Column="3" Width="1" Fill="{DynamicResource SurfaceStrokeColorDefaultBrush}" Margin="5,0"/>
+
+                <StackPanel Grid.Column="4" Orientation="Horizontal">
+                    <!-- Admin Status Icon -->
+                    <Path Data="M229,214.25A8,8,0,0,1,217.76,213C216.39,211.27,184,169.86,184,88A56,56,0,0,0,72,88c0,81.86-32.37,123.27-33.75,125a8,8,0,0,1-12.51-10c.15-.2,7.69-9.9,15.13-28.74C47.77,156.8,56,127.64,56,88a72,72,0,0,1,144,0c0,39.64,8.23,68.8,15.13,86.28,7.48,18.94,15.06,28.64,15.14,28.74A8,8,0,0,1,229,214.25ZM100,88a12,12,0,1,0,12,12A12,12,0,0,0,100,88Zm68,12a12,12,0,1,0-12,12A12,12,0,0,0,168,100ZM99.58,128.84a8,8,0,0,0-7.15,14.31l32,16a7.94,7.94,0,0,0,7.15,0l32-16a8,8,0,0,0-7.16-14.31L128,143.05ZM128,176a54.07,54.07,0,0,0-47,28.11,8,8,0,1,0,14,7.78,37.35,37.35,0,0,1,66,0,8,8,0,0,0,14-7.78A54.07,54.07,0,0,0,128,176Z" 
+                          Fill="{DynamicResource TextFillColorPrimaryBrush}" 
+                          Width="14" Height="14" 
+                          Stretch="Uniform" 
+                          VerticalAlignment="Center" 
+                          Margin="0,0,6,0"/>
+                    <TextBlock x:Name="AdminStatusText" Text="Checking..." VerticalAlignment="Center" FontSize="12"/>
+                </StackPanel>
+
+                <Rectangle Grid.Column="5" Width="1" Fill="{DynamicResource SurfaceStrokeColorDefaultBrush}" Margin="5,0"/>
+
+                <StackPanel Grid.Column="6" Orientation="Horizontal" x:Name="SteamProcessPanel" IsVisible="False">
+                    <!-- Steam Process Icon -->
+                    <Path Data="M152,96H104a8,8,0,0,0-8,8v48a8,8,0,0,0,8,8h48a8,8,0,0,0,8-8V104A8,8,0,0,0,152,96Zm-8,48H112V112h32Zm88,0H216V112h16a8,8,0,0,0,0-16H216V56a16,16,0,0,0-16-16H160V24a8,8,0,0,0-16,0V40H112V24a8,8,0,0,0-16,0V40H56A16,16,0,0,0,40,56V96H24a8,8,0,0,0,0,16H40v32H24a8,8,0,0,0,0,16H40v40a16,16,0,0,0,16,16H96v16a8,8,0,0,0,16,0V216h32v16a8,8,0,0,0,16,0V216h40a16,16,0,0,0,16-16V160h16a8,8,0,0,0,0-16Zm-32,56H56V56H200v95.87s0,.09,0,.13,0,.09,0,.13V200Z" 
+                          Fill="{DynamicResource SystemFillColorCriticalBrush}" 
+                          Width="14" Height="14" 
+                          Stretch="Uniform" 
+                          VerticalAlignment="Center" 
+                          Margin="0,0,6,0"/>
+                    <TextBlock Text="Steam Running" Foreground="{DynamicResource SystemFillColorCriticalBrush}" VerticalAlignment="Center" FontSize="12"/>
+                </StackPanel>
+
+                <Rectangle Grid.Column="7" Width="1" Fill="{DynamicResource SurfaceStrokeColorDefaultBrush}" Margin="5,0"/>
+
+                <TextBlock Grid.Column="8" 
+                           Text="v2.1129.1500 Pre-Release 5" 
+                           VerticalAlignment="Center" 
+                           HorizontalAlignment="Right"
+                           Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                           FontSize="12"/>
+
+                <Rectangle Grid.Column="9" Width="1" Fill="{DynamicResource SurfaceStrokeColorDefaultBrush}" Margin="5,0"/>
+
+                <Button Grid.Column="10"
+                        Background="{DynamicResource ControlFillColorDefaultBrush}"
+                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="4"
+                        Padding="8,6"
+                        Click="ThemeToggle_Click"
+                        ToolTip.Tip="Toggle Theme">
+                    <!-- Theme Toggle Icon (Moon) -->
+                    <Path Data="M233.54,142.23a8,8,0,0,0-8-2,88.08,88.08,0,0,1-109.8-109.8,8,8,0,0,0-10-10,104.84,104.84,0,0,0-52.91,37A104,104,0,0,0,136,224a103.09,103.09,0,0,0,62.52-20.88,104.84,104.84,0,0,0,37-52.91A8,8,0,0,0,233.54,142.23ZM188.9,190.34A88,88,0,0,1,65.66,67.11a89,89,0,0,1,31.4-26A106,106,0,0,0,96,56A104.11,104.11,0,0,0,200,160a106,106,0,0,0,14.92-1.06A89,89,0,0,1,188.9,190.34Z" 
+                          Fill="{DynamicResource TextFillColorPrimaryBrush}" 
+                          Width="14" Height="14" 
+                          Stretch="Uniform"/>
+                </Button>
+
+                <Button Grid.Column="11"
+                        Background="{DynamicResource ControlFillColorDefaultBrush}"
+                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="4"
+                        Padding="8,6"
+                        Margin="5,0,0,0"
+                        Click="GitHubButton_Click"
+                        ToolTip.Tip="Open GitHub Repository">
+                    <!-- GitHub Icon -->
+                    <Path Data="M12,2A10,10,0,0,0,8.84,21.5c.5.08.66-.23.66-.5V19.31C6.73,19.91,6.14,18,6.14,18A2.69,2.69,0,0,0,5,16.61c-.91-.62.05-.6.05-.6a2,2,0,0,1,1.48,1A2.06,2.06,0,0,0,9.43,18a2,2,0,0,1,.64-1.35c-2.38-.27-4.88-1.2-4.88-5.33a4.13,4.13,0,0,1,1.1-2.86,3.82,3.82,0,0,1,.11-2.83s.91-.29,3,1.1a10.31,10.31,0,0,1,5.5,0c2.1-1.39,3-1.1,3-1.1a3.82,3.82,0,0,1,.11,2.83,4.13,4.13,0,0,1,1.1,2.86c0,4.14-2.5,5.05-4.9,5.32a2.3,2.3,0,0,1,.67,1.79V21c0,.27.16.59.67.5A10,10,0,0,0,12,2Z" 
+                          Fill="{DynamicResource TextFillColorPrimaryBrush}" 
+                          Width="14" Height="14" 
+                          Stretch="Uniform"/>
+                </Button>
+
+                <Button Grid.Column="12"
+                        Background="{DynamicResource ControlFillColorDefaultBrush}"
+                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="4"
+                        Padding="8,6"
+                        Margin="5,0,0,0"
+                        Click="SteamButton_Click"
+                        ToolTip.Tip="Open Steam Profile">
+                    <!-- Steam Icon -->
+                    <Path Data="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24ZM117.39,185.92l62-50.55a36,36,0,1,0-51.14-50.23l-43,52.73L45.28,98A88,88,0,1,1,40,128a89.56,89.56,0,0,1,.8-11.88l34.57,34.57a28,28,0,0,0,42,35.23Zm4.19-67.37a36.18,36.18,0,0,0,23.87,23.87l-18.26,14.89a28.11,28.11,0,0,0-20.5-20.5ZM156,128a20,20,0,1,1,20-20A20,20,0,0,1,156,128Zm-56,24a12,12,0,1,1-12,12A12,12,0,0,1,100,152Z" 
+                          Fill="{DynamicResource TextFillColorPrimaryBrush}" 
+                          Width="14" Height="14" 
+                          Stretch="Uniform"/>
+                </Button>
+            </Grid>
+        </Border>
+
+        <!-- Main Content (No ScrollViewer) -->
+        <StackPanel Grid.Row="1" Margin="20,0,20,20">
+            
+            <!-- Steam Directory Card -->
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="6"
+                    Margin="0,0,0,15">
+                <StackPanel Margin="20">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <StackPanel Grid.Column="0">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                                <!-- Directory Icon -->
+                                <Path Data="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24ZM117.39,185.92l62-50.55a36,36,0,1,0-51.14-50.23l-43,52.73L45.28,98A88,88,0,1,1,40,128a89.56,89.56,0,0,1,.8-11.88l34.57,34.57a28,28,0,0,0,42,35.23Zm4.19-67.37a36.18,36.18,0,0,0,23.87,23.87l-18.26,14.89a28.11,28.11,0,0,0-20.5-20.5ZM156,128a20,20,0,1,1,20-20A20,20,0,0,1,156,128Zm-56,24a12,12,0,1,1-12,12A12,12,0,0,1,100,152Z" 
+                                      Fill="{DynamicResource TextFillColorPrimaryBrush}" 
+                                      Width="16" Height="16" 
+                                      Stretch="Uniform" 
+                                      VerticalAlignment="Center" 
+                                      Margin="0,0,8,0"/>
+                                <TextBlock Text="Steam Directory" FontSize="16" FontWeight="SemiBold"/>
+                            </StackPanel>
+                            <TextBlock x:Name="SteamStatusText" 
+                                      Text="Searching for Steam installation..." 
+                                      Foreground="{DynamicResource TextFillColorSecondaryBrush}" 
+                                      FontSize="12"
+                                      Margin="0,0,0,5"/>
+                        </StackPanel>
+                        
+                        <fa:SymbolIcon Grid.Column="1" 
+                                      x:Name="SteamStatusIcon"
+                                      Symbol="Help" 
+                                      FontSize="32"
+                                      Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                      VerticalAlignment="Center"/>
+                    </Grid>
+                    
+                    <Grid Margin="0,10,0,0" ColumnDefinitions="*,Auto">
+                        <TextBox x:Name="SteamDirectoryTextBox" 
+                                 Grid.Column="0"
+                                 Watermark="Enter Steam installation path or browse..."
+                                 Margin="0,0,10,0">
+                            <TextBox.InnerRightContent>
+                                <StackPanel Orientation="Horizontal">
+                                    <!-- Clear Button with X Icon -->
+                                    <Button x:Name="ClearPathButton"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            Padding="8"
+                                            Click="ClearPathButton_Click"
+                                            ToolTip.Tip="Clear">
+                                        <!-- X Icon -->
+                                        <Path Data="M214.75,211.71l-62.6-98.38,61.77-67.95a8,8,0,0,0-11.84-10.76L143.24,99.34,102.75,35.71A8,8,0,0,0,96,32H48a8,8,0,0,0-6.75,12.3l62.6,98.37-61.77,68a8,8,0,1,0,11.84,10.76l58.84-64.72,40.49,63.63A8,8,0,0,0,160,224h48a8,8,0,0,0,6.75-12.29ZM164.39,208,62.57,48h29L193.43,208Z" 
+                                              Fill="{DynamicResource TextFillColorPrimaryBrush}" 
+                                              Width="14" Height="14" 
+                                              Stretch="Uniform"/>
+                                    </Button>
+
+                                    <!-- Browse Button with Magnifying Glass Icon -->
+                                    <Button x:Name="BrowseSteamDirectoryButton" 
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            Padding="8"
+                                            Click="BrowseSteamDirectoryButton_Click"
+                                            ToolTip.Tip="Browse">
+                                        <!-- Magnifying Glass Icon -->
+                                        <Path Data="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z" 
+                                              Fill="{DynamicResource TextFillColorPrimaryBrush}" 
+                                              Width="16" Height="16" 
+                                              Stretch="Uniform"/>
+                                    </Button>
+                                </StackPanel>
+                            </TextBox.InnerRightContent>
+                        </TextBox>
+                        
+                        <Button x:Name="InstallSteamButton"
+                                Grid.Column="1"
+                                Content="Install Steam"
+                                Classes="accent"
+                                Margin="0,0,0,0"
+                                Click="InstallSteamButton_Click"
+                                IsVisible="False"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Optimization Mode Card -->
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="6"
+                    Margin="0,0,0,15">
+                <StackPanel Margin="20">
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                        <!-- Optimization Mode Icon (Gear) -->
+                        <Path Data="M128,80a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Zm88-29.84q.06-2.16,0-4.32l14.92-18.64a8,8,0,0,0,1.48-7.06,107.21,107.21,0,0,0-10.88-26.25,8,8,0,0,0-6-3.93l-23.72-2.64q-1.48-1.56-3-3L186,40.54a8,8,0,0,0-3.94-6,107.71,107.71,0,0,0-26.25-10.87,8,8,0,0,0-7.06,1.49L130.16,40Q128,40,125.84,40L107.2,25.11a8,8,0,0,0-7.06-1.48A107.6,107.6,0,0,0,73.89,34.51a8,8,0,0,0-3.93,6L67.32,64.27q-1.56,1.49-3,3L40.54,70a8,8,0,0,0-6,3.94,107.71,107.71,0,0,0-10.87,26.25,8,8,0,0,0,1.49,7.06L40,125.84Q40,128,40,130.16L25.11,148.8a8,8,0,0,0-1.48,7.06,107.21,107.21,0,0,0,10.88,26.25,8,8,0,0,0,6,3.93l23.72,2.64q1.49,1.56,3,3L70,215.46a8,8,0,0,0,3.94,6,107.71,107.71,0,0,0,26.25,10.87,8,8,0,0,0,7.06-1.49L125.84,216q2.16.06,4.32,0l18.64,14.92a8,8,0,0,0,7.06,1.48,107.21,107.21,0,0,0,26.25-10.88,8,8,0,0,0,3.93-6l2.64-23.72q1.56-1.48,3-3L215.46,186a8,8,0,0,0,6-3.94,107.71,107.71,0,0,0,10.87-26.25,8,8,0,0,0-1.49-7.06Zm-16.1-6.5a73.93,73.93,0,0,1,0,8.68,8,8,0,0,0,1.74,5.48l14.19,17.73a91.57,91.57,0,0,1-6.23,15L187,173.11a8,8,0,0,0-5.1,2.64,74.11,74.11,0,0,1-6.14,6.14,8,8,0,0,0-2.64,5.1l-2.51,22.58a91.32,91.32,0,0,1-15,6.23l-17.74-14.19a8,8,0,0,0-5-1.75h-.48a73.93,73.93,0,0,1-8.68,0,8,8,0,0,0-5.48,1.74L100.45,215.8a91.57,91.57,0,0,1-15-6.23L82.89,187a8,8,0,0,0-2.64-5.1,74.11,74.11,0,0,1-6.14-6.14,8,8,0,0,0-5.1-2.64L46.43,170.6a91.32,91.32,0,0,1-6.23-15l14.19-17.74a8,8,0,0,0,1.74-5.48,73.93,73.93,0,0,1,0-8.68,8,8,0,0,0-1.74-5.48L40.2,100.45a91.57,91.57,0,0,1,6.23-15L69,82.89a8,8,0,0,0,5.1-2.64,74.11,74.11,0,0,1,6.14-6.14A8,8,0,0,0,82.89,69L85.4,46.43a91.32,91.32,0,0,1,15-6.23l17.74,14.19a8,8,0,0,0,5.48,1.74,73.93,73.93,0,0,1,8.68,0,8,8,0,0,0,5.48-1.74L155.55,40.2a91.57,91.57,0,0,1,15,6.23L173.11,69a8,8,0,0,0,2.64,5.1,74.11,74.11,0,0,1,6.14,6.14,8,8,0,0,0,5.1,2.64l22.58,2.51a91.32,91.32,0,0,1,6.23,15l-14.19,17.74A8,8,0,0,0,199.87,123.66Z" 
+                              Fill="{DynamicResource TextFillColorPrimaryBrush}" 
+                              Width="16" Height="16" 
+                              Stretch="Uniform"
+                              VerticalAlignment="Center" 
+                              Margin="0,0,8,0"/>
+                        <TextBlock Text="Optimization Mode" FontSize="16" FontWeight="SemiBold"/>
+                    </StackPanel>
+                    <TextBlock Text="Select the Steam version you want to use" 
+                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" 
+                               Margin="0,0,0,10" 
+                               TextWrapping="Wrap"
+                               FontSize="13"/>
+                    
+                    <ComboBox x:Name="ModeComboBox" 
+                              HorizontalAlignment="Stretch"
+                              VerticalContentAlignment="Center"
+                              HorizontalContentAlignment="Left"
+                              Padding="12,0"
+                              Height="40"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Options Card (Collapsible) -->
+            <Expander Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                      BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                      BorderThickness="1"
+                      CornerRadius="6"
+                      Margin="0,0,0,15"
+                      IsExpanded="False">
+                <Expander.Header>
+                    <StackPanel Orientation="Horizontal" Margin="8,0">
+                        <!-- Options Icon -->
+                        <Path Data="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,16V88H40V56ZM40,200V104H216v96Z" 
+                              Fill="{DynamicResource TextFillColorPrimaryBrush}" 
+                              Width="16" Height="16" 
+                              Stretch="Uniform"
+                              VerticalAlignment="Center" 
+                              Margin="0,0,8,0"/>
+                        <TextBlock Text="Options" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Expander.Header>
+                <StackPanel Margin="20,10,20,20">
+                    <CheckBox x:Name="CreateDesktopShortcut" 
+                             Content="Create desktop launch shortcut (Steam.bat)" 
+                             IsChecked="True"
+                             VerticalContentAlignment="Center"
+                             Margin="0,0,0,8"/>
+                    
+                    <CheckBox x:Name="CreateSteamConfig" 
+                             Content="Create Steam configuration file (steam.cfg)" 
+                             IsChecked="True"
+                             VerticalContentAlignment="Center"
+                             Margin="0,0,0,8"/>
+                    
+                    <CheckBox x:Name="RemoveFromStartup" 
+                             Content="Remove Steam from Windows startup" 
+                             IsChecked="True"
+                             VerticalContentAlignment="Center"
+                             Margin="0,0,0,8"/>
+                    
+                    <CheckBox x:Name="ClearDownloadCache" 
+                             Content="Clear Steam download cache" 
+                             IsChecked="False"
+                             VerticalContentAlignment="Center"
+                             Margin="0,0,0,8"/>
+                    
+                    <CheckBox x:Name="UpdateSteam" 
+                             Content="Downgrade Steam to selected version" 
+                             IsChecked="False"
+                             VerticalContentAlignment="Center"
+                             Margin="0,0,0,0"/>
+                </StackPanel>
+            </Expander>
+
+            <!-- Action Buttons -->
+            <Grid Margin="0,5,0,0">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
+                    <!-- Start Optimization Button (Green) -->
+                    <Button x:Name="StartButton" 
+                            Classes="accent"
+                            Height="36"
+                            Padding="16,0"
+                            Click="StartButton_Click"
+                            Background="#28A745"
+                            BorderBrush="#28A745">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <!-- Play Icon SVG -->
+                            <Path Data="M232,112a8,8,0,0,1-3.56,6.66l-128,88A8,8,0,0,1,88,200V56a8,8,0,0,1,12.44-6.66l128,88A8,8,0,0,1,232,112Z" 
+                                  Fill="White" 
+                                  Width="12" Height="12" 
+                                  Stretch="Uniform"
+                                  VerticalAlignment="Center"/>
+                            <TextBlock Text="Start Optimization" 
+                                       VerticalAlignment="Center"
+                                       FontSize="13"/>
+                        </StackPanel>
+                    </Button>
+                    
+                    <!-- Restore Button -->
+                    <Button x:Name="UninstallButton" 
+                            Height="36"
+                            Padding="16,0"
+                            Click="UninstallButton_Click">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <!-- Restore/Refresh Icon SVG -->
+                            <Path Data="M240,56v48a8,8,0,0,1-8,8H184a8,8,0,0,1,0-16H211.4L184.81,71.64l-.25-.24a80,80,0,1,0-1.67,114.78,8,8,0,0,1,11,11.63A95.44,95.44,0,0,1,128,224h-1.32A96,96,0,1,1,195.75,60L224,85.8V56a8,8,0,1,1,16,0Z" 
+                                  Fill="{DynamicResource TextFillColorPrimaryBrush}" 
+                                  Width="12" Height="12" 
+                                  Stretch="Uniform"
+                                  VerticalAlignment="Center"/>
+                            <TextBlock Text="Restore" 
+                                       VerticalAlignment="Center"
+                                       FontSize="13"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</Window>
