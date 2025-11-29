@@ -11,6 +11,3 @@ Since this is a single-developer project, all roles are assigned to the same per
 ## Build and Signing Process
 All binaries are built from source using reproducible builds.
 Product name and version metadata are set consistently in all builds.
-
-## Privacy Policy
-This program will not transfer any information to other networked systems unless specifically requested by the user.
