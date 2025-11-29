@@ -33,7 +33,7 @@ Steam versions released after December 2022 may experience issues with the frien
 ## Security
 
 All components are verified and malware-free. See [VirusTotal analysis](https://www.virustotal.com/gui/file/64a8d81238cedb00580f6836d424601b077279b585772222bf9c093547fe8615).
-Any result lower than 2/71 on VirusTotal is due to false positives caused by the lack of a digital signature, which costs $350 per year.
+Steam-Debloat does not include malware or features that alter systems outside the Steam client.
 ## License
 
 MIT License - See [LICENSE](LICENSE) for details.
