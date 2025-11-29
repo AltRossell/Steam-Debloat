@@ -5,11 +5,10 @@
 | Version | Supported | Update Frequency |
 | ------- | --------- | ---------------- | 
 | Desktop Application | ✓ | Weekly | 
-| PowerShell Script | ✓ | As needed |
 
 ## Security Verification
 
-All releases are scanned and verified. Current scan results: [VirusTotal Analysis](https://www.virustotal.com/gui/file/8b92c109fbf9711ae52c368195dc2a790eacda254f6f652924ec86a06ff14628/detection)
+All releases are scanned and verified. Current scan results: [VirusTotal Analysis](https://www.virustotal.com/gui/file/64a8d81238cedb00580f6836d424601b077279b585772222bf9c093547fe8615)
 
 ## Reporting a Vulnerability
 
