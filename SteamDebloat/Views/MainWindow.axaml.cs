@@ -793,7 +793,7 @@ namespace SteamDebloat
         /// </summary>
         /// <remarks>
         /// User must manually restart the application as administrator.
-        /// Source: https://github.com/AltRossell/SteamDebloat
+        /// Source: https://github.com/AltRossell/Steam-Debloat
         /// </remarks>
         private async void RestartAsAdmin()
         {
@@ -897,7 +897,7 @@ namespace SteamDebloat
             {
                 Process.Start(new ProcessStartInfo
                 {
-                    FileName = "https://github.com/AltRossell/SteamDebloat",
+                    FileName = "https://github.com/AltRossell/Steam-Debloat",
                     UseShellExecute = true
                 });
             }
@@ -959,3 +959,4 @@ namespace SteamDebloat
         }
     }
 }
+
