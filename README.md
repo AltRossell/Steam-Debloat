@@ -1,3 +1,19 @@
+> [!IMPORTANT]
+> ## Repository Archived
+>
+> This repository has been **archived** due to recent changes in **Steam**.
+>
+> Valve has announced and started rolling out an update in which **Steam will no longer support 32-bit systems and binaries**, which directly impacts the functionality and purpose of this project.
+>
+> Additionally, the **downgrade method** previously used is **no longer working**, making it impossible to maintain a stable or functional solution.
+>
+> At the time of this announcement, the project was in **active development of version `v2.1215.0800`**, and this news came as a **complete surprise**.
+>
+> Due to these limitations, and because continuing maintenance is no longer viable under the current conditions, the decision was made to **archive this repository**.
+>
+> The content will remain available **for historical reference only**.
+>
+> Thank you to everyone who contributed to and supported this project.
 # Steam Debloat
 
 A performance optimization tool for the Steam client that removes unnecessary components and reduces resource usage.
